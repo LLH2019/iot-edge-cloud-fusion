@@ -39,9 +39,9 @@ public class CommonKafkaPublishDemo {
         return result;
     }
 
-    public static void sendMessageCallback(){
+    public static void sendMessageCallback(String topic, String key, String value){
         ProducerRecord<String,String> record = new ProducerRecord<String,String>(
-                "kafka-study","name","callback"
+                topic, key,value
         );
         kafkaProducer.send(record,new MyProducerCallback());
     }
