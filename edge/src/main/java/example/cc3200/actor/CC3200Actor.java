@@ -9,7 +9,11 @@ import akka.actor.typed.javadsl.Receive;
 import akka.actor.typed.javadsl.Behaviors;
 import example.cc3200.bean.CC3200Desc;
 import example.cc3200.bean.Command;
+import example.cc3200.kafka.CommonKafkaPublishDemo;
 import lombok.Data;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class CC3200Actor extends AbstractBehavior<Command> {
@@ -32,11 +36,13 @@ public class CC3200Actor extends AbstractBehavior<Command> {
 
     private Behavior<Command> onTemperatureUploadAction(TemperatureUpload tem) {
         handleTemperature(tem);
-
         return this;
     }
 
     private void handleTemperature(TemperatureUpload tem) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String key = df.format(new Date()) + "-temperature";
+        CommonKafkaPublishDemo.sendMessageForgetResult(desc.getName(), key, tem.getValue());
         System.out.println(this.desc.getName() + " " + tem.getValue());
     }
 

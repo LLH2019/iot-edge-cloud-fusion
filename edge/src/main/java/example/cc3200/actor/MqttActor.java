@@ -6,7 +6,6 @@ import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
-import example.cc3200.bean.Command;
 import example.cc3200.bean.MqttConfig;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -31,7 +30,7 @@ public class MqttActor extends AbstractBehavior<MqttActor.Command> {
     private void init(MqttConfig mqttConfig) {
         try {
             MqttClient client = new MqttClient(mqttConfig.brokerUrl, mqttConfig.clientId);
-            System.out.println("777");
+//            System.out.println("777");
             MqttConnectOptions options = new MqttConnectOptions();
             options.setCleanSession(false);
             // 设置连接的用户名
