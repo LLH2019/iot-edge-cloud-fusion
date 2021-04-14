@@ -28,7 +28,7 @@ public class CommonKafkaPublishDemo {
                 topic, key, value
         );
         kafkaProducer.send(record);
-        kafkaProducer.close();
+//        kafkaProducer.close();
     }
 
     public static RecordMetadata sendMessageSync(String topic, String key, String value) throws Exception{

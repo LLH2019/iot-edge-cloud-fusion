@@ -30,7 +30,6 @@ public class CC3200Actor extends AbstractBehavior<Command> {
     public Receive<Command> createReceive() {
         return newReceiveBuilder()
                 .onMessage(TemperatureUpload.class, this::onTemperatureUploadAction)
-
                 .build();
     }
 
@@ -42,8 +41,8 @@ public class CC3200Actor extends AbstractBehavior<Command> {
     private void handleTemperature(TemperatureUpload tem) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String key = df.format(new Date()) + "-temperature";
-        CommonKafkaPublishDemo.sendMessageForgetResult(desc.getName(), key, tem.getValue());
         System.out.println(this.desc.getName() + " " + tem.getValue());
+        CommonKafkaPublishDemo.sendMessageForgetResult(desc.getName(), key, tem.getValue());
     }
 
 
