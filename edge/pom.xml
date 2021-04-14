@@ -10,8 +10,8 @@
 
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
         <scala.binary.version>2.13</scala.binary.version>
     </properties>
 
@@ -42,6 +42,18 @@
             <artifactId>akka-actor-typed_${scala.binary.version}</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3 -->
+        <dependency>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sandinh</groupId>
+            <artifactId>paho-akka_2.11</artifactId>
+            <version>1.2.0</version>
+        </dependency>
 
 
 
