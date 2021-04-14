@@ -37,7 +37,7 @@ public class CC3200Actor extends AbstractBehavior<Command> {
     }
 
     private void handleTemperature(TemperatureUpload tem) {
-        System.out.println("CC3200 Actor tem is " + tem.getValue());
+        System.out.println(this.desc.getName() + " " + tem.getValue());
     }
 
 
