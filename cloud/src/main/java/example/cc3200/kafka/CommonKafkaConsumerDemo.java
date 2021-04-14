@@ -55,7 +55,7 @@ public class CommonKafkaConsumerDemo {
                 KafkaData data = new KafkaData();
                 data.setTopic(r.topic());
                 data.setKey(r.key());
-                data.setKey(r.value());
+                data.setValue(r.value());
                 ref.tell(data);
 //                LOGGER.error("partition:", r.partition());
 //                LOGGER.error("topic:", r.topic());

@@ -53,9 +53,9 @@ public class MqttActor extends AbstractBehavior<MqttActor.Command> {
             options.setWill(topic, "close".getBytes(), 1, true);
             client.connect(options);
             //订阅消息
-            int[] Qos = {1};//0：最多一次 、1：最少一次 、2：只有一次
-            String[] topic1 = {mqttConfig.topic};
-            client.subscribe(topic1, Qos);
+//            int[] Qos = {1};//0：最多一次 、1：最少一次 、2：只有一次
+//            String[] topic1 = {mqttConfig.topic};
+//            client.subscribe(topic1, Qos);
 
         } catch (MqttException e) {
             e.printStackTrace();
