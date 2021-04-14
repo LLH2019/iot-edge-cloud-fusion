@@ -8,6 +8,7 @@
 *.ctxt
 *.iml
 .idea
+123*
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
