@@ -1,25 +1,29 @@
 package example.cc3200.actor;
 
-import akka.actor.typed.ActorSystem;
+import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
+import example.cc3200.bean.Command;
 import example.cc3200.bean.MqttConfig;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
-public class MqttActor extends AbstractBehavior<MqttActor.Command> {
+public class MqttActor extends AbstractBehavior<Command> {
+
 
     public final MqttConfig mqttConfig;
 
-    public MqttActor(ActorContext<Command> context, MqttConfig mqttConfig) {
+    public final ActorRef<Command> ref;
 
+    public MqttActor(ActorContext<Command> context, MqttConfig mqttConfig, ActorRef<Command> ref) {
         super(context);
         this.mqttConfig = mqttConfig;
+        this.ref = ref;
         init(mqttConfig);
 
     }
@@ -42,7 +46,7 @@ public class MqttActor extends AbstractBehavior<MqttActor.Command> {
             options.setAutomaticReconnect(true);
             // 设置回调
             System.out.println("666");
-            client.setCallback(new PushCallback());
+            client.setCallback(new PushCallback(ref));
             System.out.println("222");
             MqttTopic topic = client.getTopic(mqttConfig.topic);
             //setWill方法，如果项目中需要知道客户端是否掉线可以调用该方法。设置最终端口的通知消息
@@ -60,12 +64,11 @@ public class MqttActor extends AbstractBehavior<MqttActor.Command> {
     }
 
 
-    public static Behavior<Command> create(MqttConfig mqttConfig) {
+    public static Behavior<Command> create(MqttConfig mqttConfig, ActorRef<Command> ref) {
         System.out.println("444");
-        return Behaviors.setup(context -> new MqttActor(context, mqttConfig));
+        return Behaviors.setup(context -> new MqttActor(context, mqttConfig, ref));
     }
 
-    interface Command{}
 
     @Override
     public Receive<Command> createReceive() {

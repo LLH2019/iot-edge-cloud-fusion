@@ -4,20 +4,14 @@ import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Receive;
 
-public class MqttAgent extends AbstractBehavior<MqttAgent.Command> {
-    public MqttAgent(ActorContext<Command> context) {
+public class BasicActor extends AbstractBehavior<Void> {
+    public BasicActor(ActorContext<Void> context) {
         super(context);
     }
 
 
     @Override
-    public Receive<Command> createReceive() {
+    public Receive<Void> createReceive() {
         return null;
     }
-
-    interface Command{}
-
-
-
-
 }
