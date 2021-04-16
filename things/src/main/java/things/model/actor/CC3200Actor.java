@@ -13,7 +13,7 @@ import things.model.connect.bean.MqttInMsg;
 /**
  * @author ：LLH
  * @date ：Created in 2021/4/16 11:00
- * @description：CC3200 actor类
+ * @description：CC3200 actor类，作为测试之用
  */
 public class CC3200Actor extends AbstractActorMqttInKafkaOutDownUp {
 
