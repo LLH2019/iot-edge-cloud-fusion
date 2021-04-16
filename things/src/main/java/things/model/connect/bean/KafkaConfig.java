@@ -1,6 +1,7 @@
 package things.model.connect.bean;
 
 import lombok.Data;
+import java.util.List;
 
 /**
  * @author ：LLH
@@ -11,5 +12,8 @@ import lombok.Data;
 @Data
 public class KafkaConfig {
     private String server;
+    private String groupId;
+    private List<String> topics;
+//    private
 
 }

@@ -9,6 +9,6 @@ import things.model.bean.BasicCommon;
  * @description：从设备端接收到的MQTT消息
  */
 @Data
-public class MqttInMsg extends BasicCommon {
+public class MqttInMsg implements BasicCommon {
     private final String msg;
 }

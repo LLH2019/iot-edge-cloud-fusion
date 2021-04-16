@@ -6,6 +6,6 @@ package things.model.connect;
  * @description：向上层发布一些消息
  */
 public interface UpConnectOut {
-    void connectOut();
+    void upConnectOut();
 
 }

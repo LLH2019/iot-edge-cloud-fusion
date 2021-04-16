@@ -10,6 +10,9 @@ import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.MqttConfig;
 import things.model.connect.bean.MqttInMsg;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * @author ：LLH
  * @date ：Created in 2021/4/16 11:00
@@ -25,8 +28,15 @@ public class CC3200Actor extends AbstractActorMqttInKafkaOutDownUp {
     @Override
     public void handleMqttMsg(MqttInMsg msg) {
         System.out.println("handleMqttMsg: " + msg.getMsg());
+        sendToKafka(msg);
 //        System.out.println(msg.getMsg());
 //        super.handleMqttMsg(msg);
+    }
+
+    private void sendToKafka(MqttInMsg msg) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String key = df.format(new Date()) + "-temperature";
+        getKafkaConnectOut().sendMessageForgetResult("cc3200-3", key, msg.getMsg());
     }
 
     public static Behavior<BasicCommon> create(MqttConfig mqttConfig, KafkaConfig kafkaConfig) {

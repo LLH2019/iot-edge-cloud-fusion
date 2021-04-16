@@ -6,5 +6,5 @@ package things.model.connect;
  * @description：接收来自于设备的消息
  */
 public interface DownConnectIn {
-    void DownConnectIn();
+    void downConnectIn();
 }

@@ -22,12 +22,12 @@ public class AbstractBasicActor extends AbstractBehavior<BasicCommon> implements
     }
 
     @Override
-    public void DownConnectIn() {
+    public void downConnectIn() {
 
     }
 
     @Override
-    public void connectOut() {
+    public void upConnectOut() {
 
     }
 

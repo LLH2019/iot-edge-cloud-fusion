@@ -25,8 +25,8 @@ public class AbstractActorMqttInKafkaOutDownUp extends AbstractBasicActor {
         this.mqttConfig = mqttConfig;
         this.kafkaConfig = kafkaConfig;
         this.ref = context.getSelf();
-        DownConnectIn();
-        connectOut();
+        downConnectIn();
+        upConnectOut();
     }
 
     private MqttConfig mqttConfig;
@@ -39,12 +39,12 @@ public class AbstractActorMqttInKafkaOutDownUp extends AbstractBasicActor {
     }
 
     @Override
-    public void DownConnectIn() {
+    public void downConnectIn() {
         new MqttConnectIn(mqttConfig, ref);
     }
 
     @Override
-    public void connectOut() {
+    public void upConnectOut() {
         this.kafkaConnectOut = new KafkaConnectOut(kafkaConfig);
     }
 
