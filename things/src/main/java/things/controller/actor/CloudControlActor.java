@@ -18,11 +18,11 @@ import java.util.Map;
  * @date ：Created in 2021/4/16 12:12
  * @description：控制actor的运行
  */
-public class BrainControlActor extends AbstractBehavior<BasicCommon> implements DownConnectIn, UpConnectOut {
+public class CloudControlActor extends AbstractBehavior<BasicCommon> implements DownConnectIn, UpConnectOut {
     private Map<Device, List<EdgeActor>> deviceListMap;
     private Map<Device, EdgeActor> onlineDeviceMap;
 
-    public BrainControlActor(ActorContext<BasicCommon> context) {
+    public CloudControlActor(ActorContext<BasicCommon> context) {
         super(context);
         init();
     }
@@ -50,8 +50,5 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
 
 
     public interface Command{};
-
-
-
 
 }

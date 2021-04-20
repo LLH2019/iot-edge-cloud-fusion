@@ -5,13 +5,10 @@ import akka.actor.typed.Behavior;
 import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
-import akka.actor.typed.javadsl.Receive;
 import java.util.List;
-import things.model.actor.CC3200Actor;
 import things.model.bean.BasicCommon;
 import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.KafkaMsg;
-import things.model.connect.bean.MqttConfig;
 
 import java.util.ArrayList;
 
@@ -20,7 +17,7 @@ import java.util.ArrayList;
  * @date ：Created in 2021/4/16 16:36
  * @description：CC3200 控制actor
  */
-public class CC3200ControlActor extends BrainControlActorKafkaInAndOut{
+public class CC3200ControlActor extends CloudControlActorKafkaInAndOut {
     public CC3200ControlActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
         super(context, kafkaConfig);
     }
@@ -37,7 +34,7 @@ public class CC3200ControlActor extends BrainControlActorKafkaInAndOut{
 
     public static void main(String[] args) {
 
-        ActorSystem<Void> system =ActorSystem.create(Behaviors.empty(), "cc3200");
+        ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "cc3200");
         System.out.println("111");
         init(system);
 

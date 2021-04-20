@@ -1,18 +1,14 @@
 package things.model.connect;
 
 import akka.actor.typed.ActorRef;
-import akka.actor.typed.javadsl.AbstractBehavior;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import things.controller.actor.BrainControlActor;
 import things.model.bean.BasicCommon;
 import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.KafkaMsg;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 /**

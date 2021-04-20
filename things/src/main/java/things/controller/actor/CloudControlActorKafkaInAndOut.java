@@ -14,13 +14,13 @@ import things.model.connect.bean.KafkaMsg;
  * @date ：Created in 2021/4/16 15:33
  * @description：kafka接收消息的控制actor
  */
-public class BrainControlActorKafkaInAndOut extends BrainControlActor{
+public class CloudControlActorKafkaInAndOut extends CloudControlActor {
 
 //    private KafkaConnectIn kafkaConnectIn;
     private KafkaConfig kafkaConfig;
     private ActorRef<BasicCommon> ref;
 
-    public BrainControlActorKafkaInAndOut(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
+    public CloudControlActorKafkaInAndOut(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
         super(context);
         this.ref = context.getSelf();
         this.kafkaConfig = kafkaConfig;
