@@ -1,6 +1,7 @@
 package things.model.bean;
 
 import lombok.Data;
+import things.model.connect.bean.MqttConfig;
 
 /**
  * @author ：LLH
@@ -10,4 +11,7 @@ import lombok.Data;
 @Data
 public class Profile {
     private String productKey;
+    private String productName;
+    private MqttConfig mqttConfig;
+
 }

@@ -9,13 +9,13 @@ import java.util.List;
  * @description：物模型抽象类
  */
 @Data
-public class AbstractModel {
+public class AbstractModel implements BasicCommon {
     private Status status;
 
     private Profile profile;
 
     private List<Property> properties;
 
-
+    private List<Event> events;
 
 }

@@ -1,10 +1,18 @@
 package things.brain.actor;
 
 import akka.actor.typed.ActorRef;
+import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Receive;
+import things.brain.bean.EdgeDevice;
+import things.brain.bean.NewDeviceConn;
+import things.controller.actor.CloudControlActor;
+import things.controller.actor.CloudControlActorKafkaInAndOut;
 import things.model.bean.BasicCommon;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author ：LLH
@@ -13,7 +21,10 @@ import things.model.bean.BasicCommon;
  */
 public class BrainControlActor extends AbstractBehavior<BasicCommon> {
 
+    private List<EdgeDevice> edgeDevices;
+
     ActorRef<BasicCommon> httpClientActorRef;
+    Map<String, ActorRef<BasicCommon>> refMaps;
 
     public BrainControlActor(ActorContext<BasicCommon> context) {
         super(context);
@@ -26,7 +37,19 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> {
 
     @Override
     public Receive<BasicCommon> createReceive() {
-        return null;
+        return newReceiveBuilder()
+                .onMessage(NewDeviceConn.class, this::onNewDeviceConnAction)
+
+
+                .build();
+    }
+
+    private Behavior<BasicCommon> onNewDeviceConnAction(NewDeviceConn conn) {
+        ActorRef<BasicCommon>  ref = getContext().spawn(CloudControlActorKafkaInAndOut.create(conn.getKafkaConfig()), conn.getName());
+//        ref.tell()
+        refMaps.put(conn.getName(), ref);
+
+        return this;
     }
 
 

@@ -24,14 +24,9 @@ public class CloudControlActor extends AbstractBehavior<BasicCommon> implements 
 
     public CloudControlActor(ActorContext<BasicCommon> context) {
         super(context);
-        init();
     }
 
-    public void init() {
-//        new Thread(new CheckRunningSituation());
 
-
-    }
 
     @Override
     public Receive<BasicCommon> createReceive() {

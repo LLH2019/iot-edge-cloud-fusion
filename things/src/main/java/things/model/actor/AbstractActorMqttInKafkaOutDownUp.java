@@ -11,6 +11,8 @@ import things.model.connect.MqttConnectIn;
 import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.MqttConfig;
 import things.model.connect.bean.MqttInMsg;
+import things.msg.bean.Message;
+import things.msg.handler.MessageHandler;
 
 /**
  * @author ：LLH
@@ -67,6 +69,10 @@ public class AbstractActorMqttInKafkaOutDownUp extends AbstractBasicActor {
     }
 
     public void handleMqttMsg(MqttInMsg msg) {
+        MessageHandler handler = new MessageHandler();
+        Message message = handler.handleMqttUpMsg(msg.getMsg());
+        System.out.println("handleMqttMsg: " + msg.getMsg());
+//        sendToKafka(msg);
 //        kafkaConnectOut.s
     }
 }
