@@ -27,6 +27,19 @@ public class AbstractModel implements BasicCommon {
 
     private KafkaConfig kafkaConfig;
 
+    public AbstractModel() {
+    }
+
+    public AbstractModel(Status status, String name, Profile profile, List<Property> properties, List<Event> events, MqttConfig mqttConfig, KafkaConfig kafkaConfig) {
+        this.status = status;
+        this.name = name;
+        this.profile = profile;
+        this.properties = properties;
+        this.events = events;
+        this.mqttConfig = mqttConfig;
+        this.kafkaConfig = kafkaConfig;
+    }
+
     public void setStatus(Status.ThingStatus offline) {
     }
 

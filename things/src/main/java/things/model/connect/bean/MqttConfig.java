@@ -17,6 +17,18 @@ public class MqttConfig {
 
     private String clientId;
 
+    public MqttConfig() {
+
+    }
+
+    public MqttConfig(String topic, String brokerUrl, String userName, String password, String clientId) {
+        this.topic = topic;
+        this.brokerUrl = brokerUrl;
+        this.userName = userName;
+        this.password = password;
+        this.clientId = clientId;
+    }
+
     @Override
     public String toString() {
         return "MqttConfig{" +

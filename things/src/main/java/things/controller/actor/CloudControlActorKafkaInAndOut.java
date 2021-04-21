@@ -126,21 +126,20 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
         kafkaConfig.setTopics(list);
         ActorRef<BasicCommon> ref = system.systemActorOf(CloudControlActorKafkaInAndOut.create(kafkaConfig),
                 "cloud-control-1", Props.empty());
-        AbstractModel model = new AbstractModel();
-        model.setStatus(Status.ThingStatus.OFFLINE);
-        model.setName("cc3200-1");
 
 
-        MqttConfig mqttConfig1 = new MqttConfig();
-        mqttConfig1.setTopic( "cc3200/humidity");
-        mqttConfig1.setBrokerUrl("tcp://192.168.123.247:1883");
-        mqttConfig1.setClientId("123456");
 
-        KafkaConfig kafkaConfig1 = new KafkaConfig();
-        kafkaConfig1.setServer("192.168.123.131:9092");
-        kafkaConfig1.setTopics(list);
-        model.setKafkaConfig(kafkaConfig1);
-        model.setMqttConfig(mqttConfig1);
+
+        MqttConfig mqttConfig1 = new MqttConfig("cc3200/humidity", "tcp://192.168.123.247:1883", null, null, "123456");
+//        mqttConfig1.setTopic( "cc3200/humidity");
+//        mqttConfig1.setBrokerUrl("tcp://192.168.123.247:1883");
+//        mqttConfig1.setClientId("123456");
+
+        KafkaConfig kafkaConfig1 = new KafkaConfig("192.168.123.131:9092", null, list);
+//        kafkaConfig1.setServer("192.168.123.131:9092");
+//        kafkaConfig1.setTopics(list);
+        AbstractModel model = new AbstractModel(null,"cc3200-1", null,
+                null,null, mqttConfig1,kafkaConfig1 );
         CreateEdgeActorMsg createEdgeActorMsg = new CreateEdgeActorMsg();
         createEdgeActorMsg.setModel(model);
 

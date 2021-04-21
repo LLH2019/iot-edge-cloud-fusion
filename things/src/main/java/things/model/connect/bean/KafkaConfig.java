@@ -16,6 +16,15 @@ public class KafkaConfig {
     private List<String> topics;
 //    private
 
+    public KafkaConfig() {
+
+    }
+
+    public KafkaConfig(String server, String groupId, List<String> topics) {
+        this.server = server;
+        this.groupId = groupId;
+        this.topics = topics;
+    }
 
     @Override
     public String toString() {
