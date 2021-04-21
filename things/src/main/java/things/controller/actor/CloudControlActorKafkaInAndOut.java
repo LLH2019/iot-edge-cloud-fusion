@@ -8,6 +8,7 @@ import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import com.alibaba.fastjson.JSON;
+import things.base.TopicKey;
 import things.brain.bean.CreateEdgeActorMsg;
 import things.brain.bean.EdgeDevice;
 import things.model.bean.AbstractModel;
@@ -78,9 +79,9 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
 
         KafkaMsg kafkaMsg = new KafkaMsg();
         kafkaMsg.setTopic("edge-pod-1");
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String key = df.format(new Date());
-        kafkaMsg.setKey(key);
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String key = df.format(new Date());
+        kafkaMsg.setKey(TopicKey.CREATE_EDGE_ACTOR);
         String jsonString = JSON.toJSONString(a);
         kafkaMsg.setValue(jsonString);
         kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
