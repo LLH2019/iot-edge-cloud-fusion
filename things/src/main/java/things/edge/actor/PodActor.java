@@ -8,6 +8,7 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import com.alibaba.fastjson.JSON;
 import things.base.TopicKey;
+import things.brain.bean.CreateEdgeActorMsg;
 import things.model.actor.AbstractActorMqttInKafkaOutDownUp;
 import things.model.bean.AbstractModel;
 import things.model.bean.BasicCommon;
@@ -55,7 +56,9 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
     private Behavior<BasicCommon> onKafkaMsgInAction(KafkaMsg msg) {
         if(TopicKey.CREATE_EDGE_ACTOR.equals(msg.getKey())) {
             System.out.println("111111");
-            AbstractModel model = JSON.parseObject(msg.getValue(), AbstractModel.class);
+            CreateEdgeActorMsg createEdgeActorMsg = JSON.parseObject(msg.getValue(), CreateEdgeActorMsg.class);
+            AbstractModel model = createEdgeActorMsg.getModel();
+            System.out.println("222 " + model);
             getContext().spawn(AbstractActorMqttInKafkaOutDownUp.create(model.getMqttConfig(), model.getKafkaConfig()), model.getName());
         }
         System.out.println("kafka-msg: " +msg);
