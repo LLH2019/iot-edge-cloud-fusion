@@ -28,9 +28,14 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
 
     public PodActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
         super(context);
-        this.ref = context.getSelf();
+        this.ref = getContext().getSelf();
         this.kafkaConfig = kafkaConfig;
-        upConnectIn();
+        new Thread(){
+            @Override
+            public void run() {
+                upConnectIn();
+            }
+        }.start();
     }
 
     public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig) {
@@ -49,10 +54,11 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
 
     private Behavior<BasicCommon> onKafkaMsgInAction(KafkaMsg msg) {
         if(TopicKey.CREATE_EDGE_ACTOR.equals(msg.getKey())) {
+            System.out.println("111111");
             AbstractModel model = JSON.parseObject(msg.getValue(), AbstractModel.class);
             getContext().spawn(AbstractActorMqttInKafkaOutDownUp.create(model.getMqttConfig(), model.getKafkaConfig()), model.getName());
         }
-        System.out.println(msg);
+        System.out.println("kafka-msg: " +msg);
         return this;
     }
 

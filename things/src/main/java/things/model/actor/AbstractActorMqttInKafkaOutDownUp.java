@@ -74,7 +74,7 @@ public class AbstractActorMqttInKafkaOutDownUp extends AbstractBasicActor {
     public void handleMqttMsg(MqttInMsg msg) {
 //        MessageHandler handler = new MessageHandler();
 //        Message message = handler.handleMqttUpMsg(msg.getMsg());
-//        System.out.println("handleMqttMsg: " + msg.getMsg());
+        System.out.println("handleMqttMsg: " + msg.getMsg());
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String key = df.format(new Date()) + "-temperature";
