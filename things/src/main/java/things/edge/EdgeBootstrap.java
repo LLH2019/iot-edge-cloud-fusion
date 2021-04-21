@@ -31,6 +31,9 @@ public class EdgeBootstrap {
         List<String> list = new ArrayList<>();
         list.add("edge-pod-1");
         kafkaConfig.setTopics(list);
+
+
+
         system.systemActorOf(PodActor.create(kafkaConfig), "edge-pod-1", Props.empty());
     }
 

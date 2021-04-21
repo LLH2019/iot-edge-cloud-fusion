@@ -14,6 +14,9 @@ import things.model.connect.bean.MqttInMsg;
 import things.msg.bean.Message;
 import things.msg.handler.MessageHandler;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * @author ：LLH
  * @date ：Created in 2021/4/16 11:00
@@ -69,9 +72,13 @@ public class AbstractActorMqttInKafkaOutDownUp extends AbstractBasicActor {
     }
 
     public void handleMqttMsg(MqttInMsg msg) {
-        MessageHandler handler = new MessageHandler();
-        Message message = handler.handleMqttUpMsg(msg.getMsg());
-        System.out.println("handleMqttMsg: " + msg.getMsg());
+//        MessageHandler handler = new MessageHandler();
+//        Message message = handler.handleMqttUpMsg(msg.getMsg());
+//        System.out.println("handleMqttMsg: " + msg.getMsg());
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String key = df.format(new Date()) + "-temperature";
+        getKafkaConnectOut().sendMessageForgetResult(kafkaConfig.getTopics().get(0), key, msg.getMsg());
 //        sendToKafka(msg);
 //        kafkaConnectOut.s
     }

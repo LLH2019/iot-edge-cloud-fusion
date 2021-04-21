@@ -17,6 +17,7 @@ import things.model.connect.KafkaConnectIn;
 import things.model.connect.KafkaConnectOut;
 import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.KafkaMsg;
+import things.model.connect.bean.MqttConfig;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
         KafkaMsg kafkaMsg = new KafkaMsg();
         kafkaMsg.setTopic("edge-pod-1");
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String key = df.format(new Date()) + "-temperature";
+        String key = df.format(new Date());
         kafkaMsg.setKey(key);
         String jsonString = JSON.toJSONString(a);
         kafkaMsg.setValue(jsonString);
@@ -126,6 +127,19 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
                 "cloud-control-1", Props.empty());
         AbstractModel model = new AbstractModel();
         model.setStatus(Status.ThingStatus.OFFLINE);
+        model.setName("cc3200-1");
+
+
+        MqttConfig mqttConfig1 = new MqttConfig();
+        mqttConfig1.setTopic( "cc3200/humidity");
+        mqttConfig1.setBrokerUrl("tcp://192.168.123.247:1883");
+        mqttConfig1.setClientId("123456");
+
+        KafkaConfig kafkaConfig1 = new KafkaConfig();
+        kafkaConfig1.setServer("192.168.123.131:9092");
+        kafkaConfig1.setTopics(list);
+        model.setKafkaConfig(kafkaConfig1);
+        model.setMqttConfig(mqttConfig1);
         CreateEdgeActorMsg createEdgeActorMsg = new CreateEdgeActorMsg();
         createEdgeActorMsg.setModel(model);
 

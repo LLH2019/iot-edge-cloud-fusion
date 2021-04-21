@@ -6,13 +6,15 @@ import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
-import things.model.actor.CC3200Actor;
+import com.alibaba.fastjson.JSON;
+import things.base.TopicKey;
+import things.model.actor.AbstractActorMqttInKafkaOutDownUp;
+import things.model.bean.AbstractModel;
 import things.model.bean.BasicCommon;
 import things.model.connect.KafkaConnectIn;
 import things.model.connect.UpConnectIn;
 import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.KafkaMsg;
-import things.model.connect.bean.MqttConfig;
 
 /**
  * @author ：LLH
@@ -46,6 +48,10 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
     }
 
     private Behavior<BasicCommon> onKafkaMsgInAction(KafkaMsg msg) {
+        if(TopicKey.CREATE_EDGE_ACTOR.equals(msg.getKey())) {
+            AbstractModel model = JSON.parseObject(msg.getValue(), AbstractModel.class);
+            getContext().spawn(AbstractActorMqttInKafkaOutDownUp.create(model.getMqttConfig(), model.getKafkaConfig()), model.getName());
+        }
         System.out.println(msg);
         return this;
     }
