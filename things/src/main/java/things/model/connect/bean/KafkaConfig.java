@@ -16,4 +16,13 @@ public class KafkaConfig {
     private List<String> topics;
 //    private
 
+
+    @Override
+    public String toString() {
+        return "KafkaConfig{" +
+                "server='" + server + '\'' +
+                ", groupId='" + groupId + '\'' +
+                ", topics=" + topics +
+                '}';
+    }
 }

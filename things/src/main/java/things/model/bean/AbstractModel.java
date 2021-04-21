@@ -29,4 +29,17 @@ public class AbstractModel implements BasicCommon {
 
     public void setStatus(Status.ThingStatus offline) {
     }
+
+    @Override
+    public String toString() {
+        return "AbstractModel{" +
+                "status=" + status +
+                ", name='" + name + '\'' +
+                ", profile=" + profile +
+                ", properties=" + properties +
+                ", events=" + events +
+                ", mqttConfig=" + mqttConfig +
+                ", kafkaConfig=" + kafkaConfig +
+                '}';
+    }
 }

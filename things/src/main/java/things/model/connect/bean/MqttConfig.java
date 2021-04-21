@@ -16,4 +16,15 @@ public class MqttConfig {
     private String password;
 
     private String clientId;
+
+    @Override
+    public String toString() {
+        return "MqttConfig{" +
+                "topic='" + topic + '\'' +
+                ", brokerUrl='" + brokerUrl + '\'' +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", clientId='" + clientId + '\'' +
+                '}';
+    }
 }
