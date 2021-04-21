@@ -18,4 +18,6 @@ public class AbstractModel implements BasicCommon {
 
     private List<Event> events;
 
+    public void setStatus(Status.ThingStatus offline) {
+    }
 }

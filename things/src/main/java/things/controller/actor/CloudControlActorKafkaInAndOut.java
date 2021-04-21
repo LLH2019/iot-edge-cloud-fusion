@@ -1,20 +1,25 @@
 package things.controller.actor;
 
 import akka.actor.typed.ActorRef;
+import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Behavior;
+import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
+import com.alibaba.fastjson.JSON;
 import things.brain.bean.CreateEdgeActorMsg;
 import things.brain.bean.EdgeDevice;
 import things.model.bean.AbstractModel;
 import things.model.bean.BasicCommon;
+import things.model.bean.Status;
 import things.model.connect.KafkaConnectIn;
 import things.model.connect.KafkaConnectOut;
 import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.KafkaMsg;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,19 +48,20 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
         super(context);
         this.ref = context.getSelf();
         this.kafkaConfig = kafkaConfig;
-        downConnectIn();
+
+
+        new Thread(){
+            @Override
+            public void run() {
+                downConnectIn();
+            }
+        }.start();
         upConnectOut();
 //        init();
     }
 
     public KafkaConnectOut getKafkaConnectOut() {
         return kafkaConnectOut;
-    }
-
-    public void createEdgeActor(KafkaMsg kafkaMsg) {
-//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        String key = df.format(new Date()) + "-temperature";
-        getKafkaConnectOut().sendMessageForgetResult(kafkaMsg.getTopic(), kafkaMsg.getKey(), kafkaMsg.getValue());
     }
 
     @Override
@@ -68,14 +74,16 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
     }
 
     private Behavior<BasicCommon> onCreateEdgeActorAction(CreateEdgeActorMsg a) {
+
         KafkaMsg kafkaMsg = new KafkaMsg();
         kafkaMsg.setTopic("edge-pod-1");
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String key = df.format(new Date()) + "-temperature";
         kafkaMsg.setKey(key);
-
-
-
+        String jsonString = JSON.toJSONString(a);
+        kafkaMsg.setValue(jsonString);
+        kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
+        System.out.println(kafkaMsg);
         return this;
     }
 
@@ -100,8 +108,27 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
 
     @Override
     public void upConnectOut() {
+//        System.out.println("5555");
         this.kafkaConnectOut = new KafkaConnectOut(kafkaConfig);
     }
 
 
+    public static void main(String[] args) {
+        ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "cc3200");
+        KafkaConfig kafkaConfig = new KafkaConfig();
+        kafkaConfig.setServer("192.168.123.131:9092");
+        kafkaConfig.setGroupId("1");
+        List<String> list = new ArrayList<>();
+//        list.add("cc3200-1");
+        list.add("cloud-control-1");
+        kafkaConfig.setTopics(list);
+        ActorRef<BasicCommon> ref = system.systemActorOf(CloudControlActorKafkaInAndOut.create(kafkaConfig),
+                "cloud-control-1", Props.empty());
+        AbstractModel model = new AbstractModel();
+        model.setStatus(Status.ThingStatus.OFFLINE);
+        CreateEdgeActorMsg createEdgeActorMsg = new CreateEdgeActorMsg();
+        createEdgeActorMsg.setModel(model);
+
+        ref.tell(createEdgeActorMsg);
+    }
 }

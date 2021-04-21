@@ -4,6 +4,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import things.model.connect.bean.KafkaConfig;
+import things.model.connect.bean.KafkaMsg;
 
 import java.util.Properties;
 
@@ -24,6 +25,14 @@ public class KafkaConnectOut {
         kafkaPropertie.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         kafkaProducer = new KafkaProducer(kafkaPropertie);
 
+    }
+
+    public void sendMessageForgetResult(KafkaMsg kafkaMsg) {
+        ProducerRecord<String, String> record = new ProducerRecord<String, String>(
+                kafkaMsg.getTopic(), kafkaMsg.getKey(), kafkaMsg.getValue()
+        );
+        kafkaProducer.send(record);
+//        kafkaProducer.close();
     }
 
     public void sendMessageForgetResult(String topic, String key, String value) {

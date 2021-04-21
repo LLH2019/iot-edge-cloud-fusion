@@ -148,6 +148,12 @@
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-http-jackson_${scala.binary.version}</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.76</version>
+        </dependency>
 
 
     </dependencies>
