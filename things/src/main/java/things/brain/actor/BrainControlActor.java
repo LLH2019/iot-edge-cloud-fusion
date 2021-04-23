@@ -6,8 +6,10 @@ import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
+import things.base.DataType;
 import things.brain.bean.EdgeDevice;
 import things.brain.bean.NewDeviceConn;
+import things.brain.bean.QueryMongoDBData;
 import things.controller.actor.CC3200ControlActor;
 import things.controller.actor.CloudControlActorKafkaInAndOut;
 import things.model.bean.BasicCommon;
@@ -41,9 +43,18 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> {
     public Receive<BasicCommon> createReceive() {
         return newReceiveBuilder()
                 .onMessage(NewDeviceConn.class, this::onNewDeviceConnAction)
-
+                .onMessage(QueryMongoDBData.class, this::onHandleMongoDBAction)
 
                 .build();
+    }
+
+    private Behavior<BasicCommon> onHandleMongoDBAction(QueryMongoDBData data) {
+
+        if(DataType.NEW_MODEl.equals(data.getType())) {
+            System.out.println(data.getDoc());
+        }
+
+        return this;
     }
 
     private Behavior<BasicCommon> onNewDeviceConnAction(NewDeviceConn conn) {
