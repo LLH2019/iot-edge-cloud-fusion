@@ -16,7 +16,10 @@ import things.model.connect.KafkaConnectIn;
 import things.model.connect.UpConnectIn;
 import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.KafkaMsg;
+import things.model.connect.bean.SubscribeTopic;
 
+import java.util.ArrayList;
+import java.util.List;
 /**
  * @author ：LLH
  * @date ：Created in 2021/4/20 21:48
@@ -26,22 +29,21 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
 
     private KafkaConfig kafkaConfig;
     private ActorRef<BasicCommon> ref;
+    private ActorRef<BasicCommon> upConnectInActorRef;
+    private List<String> topics;
 
-    public PodActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
+    public PodActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig, List<String> topics) {
         super(context);
         this.ref = getContext().getSelf();
         this.kafkaConfig = kafkaConfig;
-        new Thread(){
-            @Override
-            public void run() {
-                upConnectIn();
-            }
-        }.start();
+        this.topics = topics;
+        this.upConnectInActorRef = getContext().spawn(UpConnectActor.create(kafkaConfig), "up-connect-in");
+        upConnectIn();
     }
 
-    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig) {
+    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig, List<String> topics) {
 //        System.out.println("create");
-        return Behaviors.setup(context -> new PodActor(context, kafkaConfig));
+        return Behaviors.setup(context -> new PodActor(context, kafkaConfig, topics));
     }
 
 
@@ -67,6 +69,9 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
 
     @Override
     public void upConnectIn() {
-        new KafkaConnectIn(kafkaConfig, ref);
+        SubscribeTopic topic = new SubscribeTopic();
+        topic.setTopics(this.topics);
+//        topics.add()
+        upConnectInActorRef.tell(topic);
     }
 }

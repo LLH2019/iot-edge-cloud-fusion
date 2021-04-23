@@ -28,13 +28,12 @@ public class EdgeBootstrap {
         KafkaConfig kafkaConfig = new KafkaConfig();
         kafkaConfig.setServer("192.168.123.131:9092");
         kafkaConfig.setGroupId("1");
-        List<String> list = new ArrayList<>();
-        list.add("edge-pod-1");
-        kafkaConfig.setTopics(list);
+        List<String> topics = new ArrayList<>();
+        topics.add("edge-pod-1");
+//        kafkaConfig.setTopics(list);
 
 
-
-        system.systemActorOf(PodActor.create(kafkaConfig), "edge-pod-1", Props.empty());
+        system.systemActorOf(PodActor.create(kafkaConfig, topics), "edge-pod-1", Props.empty());
     }
 
 }

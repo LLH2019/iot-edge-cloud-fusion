@@ -4,12 +4,14 @@ import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
+import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import things.brain.bean.EdgeDevice;
 import things.brain.bean.NewDeviceConn;
-import things.controller.actor.CloudControlActor;
+import things.controller.actor.CC3200ControlActor;
 import things.controller.actor.CloudControlActorKafkaInAndOut;
 import things.model.bean.BasicCommon;
+import things.model.connect.bean.KafkaConfig;
 
 import java.util.List;
 import java.util.Map;
@@ -52,5 +54,8 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> {
         return this;
     }
 
+    public static Behavior<BasicCommon> create() {
+        return Behaviors.setup(context -> new BrainControlActor(    context));
+    }
 
 }

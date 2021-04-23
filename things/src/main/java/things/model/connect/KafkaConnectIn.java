@@ -9,7 +9,8 @@ import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.KafkaMsg;
 
 import java.time.Duration;
-import java.util.Properties;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author ：LLH
@@ -18,13 +19,22 @@ import java.util.Properties;
  */
 public class KafkaConnectIn {
 
+    final Set<String> subscribedTopics = new HashSet<>();
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
+    KafkaConsumer<String, String> consumer;
 
     public KafkaConnectIn(KafkaConfig kafkaConfig, ActorRef<BasicCommon> ref) {
         this.kafkaConfig = kafkaConfig;
         this.ref = ref;
         init();
+    }
+
+    public void addTopics(List<String> topics) {
+        for(String topic : topics) {
+            subscribedTopics.add(topic);
+        }
+        consumer.subscribe(new ArrayList<>(subscribedTopics));
     }
 
     private void init() {
@@ -38,7 +48,7 @@ public class KafkaConnectIn {
         //指定消费者所属的群组
         kafkaPropertie.put("group.id",kafkaConfig.getGroupId());
         //创建KafkaConsumer，将kafkaPropertie传入。
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(kafkaPropertie);
+        consumer = new KafkaConsumer<String, String>(kafkaPropertie);
         /*订阅主题，这里使用的是最简单的订阅testTopic主题，这里也可以出入正则表达式，来区分想要订阅的多个指定的主题，如：
          *Pattern pattern = new Pattern.compile("testTopic");
          * consumer.subscribe(pattern);

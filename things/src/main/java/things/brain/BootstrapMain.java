@@ -1,10 +1,15 @@
 package things.brain;
 
+import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
+import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.http.javadsl.Http;
 import akka.http.javadsl.ServerBinding;
+import things.brain.actor.BrainControlActor;
+import things.controller.actor.CloudControlActorKafkaInAndOut;
 import things.model.bean.AbstractModel;
+import things.model.bean.BasicCommon;
 import things.model.bean.Event;
 import things.model.bean.Profile;
 
@@ -22,7 +27,7 @@ public class BootstrapMain {
     public static void main(String[] args) throws IOException {
         ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "bootstrap");
         httpClientConn(system);
-        testCC3200(system);
+//        testCC3200(system);
     }
 
     private static void testCC3200(ActorSystem<Void> system) {
@@ -42,7 +47,10 @@ public class BootstrapMain {
 
     private static void httpClientConn(ActorSystem<Void> system) throws IOException {
         final Http http = Http.get(system);
-        HttpServer server = new HttpServer();
+        ActorRef<BasicCommon> ref = system.systemActorOf(BrainControlActor.create(),
+                "brain-control", Props.empty());
+
+        HttpServer server = new HttpServer(ref);
         final CompletionStage<ServerBinding> binding = http.newServerAt("localhost", 8080)
                 .bind(server.createRoute());
 

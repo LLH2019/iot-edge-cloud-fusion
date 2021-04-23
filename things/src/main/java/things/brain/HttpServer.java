@@ -1,11 +1,13 @@
 package things.brain;
 
 import akka.Done;
+import akka.actor.typed.ActorRef;
 import akka.http.javadsl.server.AllDirectives;
 import akka.http.javadsl.server.Route;
 
 import java.util.concurrent.CompletionStage;
 import akka.http.javadsl.marshallers.jackson.Jackson;
+import things.model.bean.BasicCommon;
 
 /**
  * @author ：LLH
@@ -13,6 +15,12 @@ import akka.http.javadsl.marshallers.jackson.Jackson;
  * @description：http server
  */
 public class HttpServer extends AllDirectives {
+    private ActorRef<BasicCommon> brainControlActorRef;
+
+    public HttpServer(ActorRef<BasicCommon> ref) {
+        this.brainControlActorRef = ref;
+    }
+
     public Route createRoute() {
         return concat(
                 path("hello", () ->
