@@ -7,6 +7,7 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.http.javadsl.Http;
 import akka.http.javadsl.ServerBinding;
 import things.brain.actor.BrainControlActor;
+import things.brain.actor.MongoDBConnActor;
 import things.controller.actor.CloudControlActorKafkaInAndOut;
 import things.model.bean.AbstractModel;
 import things.model.bean.BasicCommon;
@@ -47,10 +48,13 @@ public class BootstrapMain {
 
     private static void httpClientConn(ActorSystem<Void> system) throws IOException {
         final Http http = Http.get(system);
-        ActorRef<BasicCommon> ref = system.systemActorOf(BrainControlActor.create(),
+        ActorRef<BasicCommon> brainControlActorRef = system.systemActorOf(BrainControlActor.create(),
                 "brain-control", Props.empty());
 
-        HttpServer server = new HttpServer(ref);
+        ActorRef<BasicCommon> mongoDBActorRef = system.systemActorOf(MongoDBConnActor.create(brainControlActorRef),
+                "mongoDB-conn", Props.empty());
+
+        HttpServer server = new HttpServer(brainControlActorRef, mongoDBActorRef);
         final CompletionStage<ServerBinding> binding = http.newServerAt("localhost", 8080)
                 .bind(server.createRoute());
 

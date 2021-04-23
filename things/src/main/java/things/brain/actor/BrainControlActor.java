@@ -27,17 +27,17 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> {
 
     private List<EdgeDevice> edgeDevices;
 
-    ActorRef<BasicCommon> httpClientActorRef;
+//    ActorRef<BasicCommon> httpClientActorRef;
     Map<String, ActorRef<BasicCommon>> refMaps;
 
     public BrainControlActor(ActorContext<BasicCommon> context) {
         super(context);
-        init();
+//        init();
     }
 
-    private void init() {
-        httpClientActorRef = getContext().spawn(HttpClientActor.create(), "httpClientActor");
-    }
+//    private void init() {
+//        httpClientActorRef = getContext().spawn(HttpClientActor.create(), "httpClientActor");
+//    }
 
     @Override
     public Receive<BasicCommon> createReceive() {

@@ -4,6 +4,7 @@ import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
+import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -12,12 +13,11 @@ import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import things.base.DataType;
-import things.brain.bean.CreateNewMongoDBConn;
-import things.brain.bean.GetFirstMongoDBDoc;
-import things.brain.bean.InsertMongoDBDoc;
-import things.brain.bean.QueryMongoDBData;
+import things.brain.bean.*;
 import things.brain.util.MongoDBUtil;
+import things.controller.actor.CloudControlActorKafkaInAndOut;
 import things.model.bean.BasicCommon;
+import things.model.connect.bean.KafkaConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +31,9 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
     private Map<String, MongoDatabase> databaseMap = new HashMap<>();
     private ActorRef<BasicCommon> brainActorRef;
 
-    public MongoDBConnActor(ActorContext<BasicCommon> context) {
+    public MongoDBConnActor(ActorContext<BasicCommon> context, ActorRef<BasicCommon> brainActorRef) {
         super(context);
+        this.brainActorRef = brainActorRef;
     }
 
     @Override
@@ -62,6 +63,16 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
 
 
     private Behavior<BasicCommon> onHandleMongoDbDocAction(InsertMongoDBDoc doc) {
+        if(!databaseMap.containsKey(doc.getConnName())) {
+            CreateNewMongoDBConn conn = new CreateNewMongoDBConn();
+            conn.setConnName(doc.getConnName());
+            MongoDBConnConfig config = new MongoDBConnConfig();
+            config.setDbName("test");
+            config.setUsername("admin");
+            config.setPassword("admin");
+            createMongoDbConn(conn);
+        }
+
         MongoDatabase database = databaseMap.get(doc.getConnName());
         MongoCollection<Document> collection = database.getCollection(doc.getCollectionName());
         //要插入的数据
@@ -75,10 +86,20 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
     }
 
     private Behavior<BasicCommon> onHandleMongoDBConnAction(CreateNewMongoDBConn conn) {
+        createMongoDbConn(conn);
+        return this;
+    }
+
+    private void createMongoDbConn(CreateNewMongoDBConn conn) {
         if(!databaseMap.containsKey(conn.getConnName())) {
             MongoDatabase database = MongoDBUtil.getConnect(conn.getConfig());
             databaseMap.put(conn.getConnName(), database);
         }
-        return this;
+    }
+
+
+
+    public static Behavior<BasicCommon> create(ActorRef<BasicCommon> brainActorRef) {
+        return Behaviors.setup(context -> new MongoDBConnActor(context, brainActorRef));
     }
 }
