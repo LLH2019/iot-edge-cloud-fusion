@@ -13,6 +13,7 @@ import akka.http.javadsl.marshallers.jackson.Jackson;
 import jnr.ffi.annotations.In;
 import things.brain.bean.InsertMongoDBDoc;
 import things.client.bean.CreateNewDeviceModel;
+import things.client.bean.Model;
 import things.model.bean.AbstractModel;
 import things.model.bean.BasicCommon;
 
@@ -37,9 +38,19 @@ public class HttpServer extends AllDirectives {
                                 complete("<h1>Say hello to akka-http</h1>"))),
 
                 post(() ->
-                        path("create-order", () ->
+                        path("create-model", () ->
                                 entity(Jackson.unmarshaller(AbstractModel.class), model -> {
                                     CompletionStage<Done> futureSaved = getInsertMongoDBDoc(model);
+                                    return onSuccess(futureSaved, done ->
+                                            complete("order created")
+                                    );
+                                }))),
+
+
+                post(() ->
+                        path("test", () ->
+                                entity(Jackson.unmarshaller(Model.class), model -> {
+                                    CompletionStage<Done> futureSaved = test(model);
                                     return onSuccess(futureSaved, done ->
                                             complete("order created")
                                     );
@@ -66,6 +77,19 @@ public class HttpServer extends AllDirectives {
         doc.setDocMap(map);
         doc.setConnName("test");
         doc.setCollectionName("test");
+        System.out.println("11111");
+        mongoDBActorRef.tell(doc);
+        return CompletableFuture.completedFuture(Done.getInstance());
+    }
+
+    private CompletionStage<Done> test(Model model) {
+        InsertMongoDBDoc doc = new InsertMongoDBDoc();
+        Map<String,String> map = new HashMap<>();
+        map.put("name", "ling");
+        doc.setDocMap(map);
+        doc.setConnName("test");
+        doc.setCollectionName("test");
+        System.out.println("11111");
         mongoDBActorRef.tell(doc);
         return CompletableFuture.completedFuture(Done.getInstance());
     }
