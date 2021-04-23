@@ -26,9 +26,9 @@ public class HttpServer extends AllDirectives {
     private ActorRef<BasicCommon> brainControlActorRef;
     private ActorRef<BasicCommon> mongoDBActorRef;
 
-    public HttpServer(ActorRef<BasicCommon> ref, ActorRef<BasicCommon> mongoDBActorRef) {
-        this.brainControlActorRef = ref;
-        this.mongoDBActorRef = ref;
+    public HttpServer(ActorRef<BasicCommon> brainControlActorRef, ActorRef<BasicCommon> mongoDBActorRef) {
+        this.brainControlActorRef = brainControlActorRef;
+        this.mongoDBActorRef = mongoDBActorRef;
     }
 
     public Route createRoute() {

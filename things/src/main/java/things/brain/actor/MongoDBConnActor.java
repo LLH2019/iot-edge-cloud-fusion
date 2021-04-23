@@ -63,6 +63,7 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
 
 
     private Behavior<BasicCommon> onHandleMongoDbDocAction(InsertMongoDBDoc doc) {
+        System.out.println("2222");
         if(!databaseMap.containsKey(doc.getConnName())) {
             CreateNewMongoDBConn conn = new CreateNewMongoDBConn();
             conn.setConnName(doc.getConnName());
@@ -72,7 +73,7 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
             config.setPassword("admin");
             createMongoDbConn(conn);
         }
-
+//        System.out.println("2222");
         MongoDatabase database = databaseMap.get(doc.getConnName());
         MongoCollection<Document> collection = database.getCollection(doc.getCollectionName());
         //要插入的数据

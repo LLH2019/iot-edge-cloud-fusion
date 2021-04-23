@@ -55,10 +55,10 @@ public class BootstrapMain {
                 "mongoDB-conn", Props.empty());
 
         HttpServer server = new HttpServer(brainControlActorRef, mongoDBActorRef);
-        final CompletionStage<ServerBinding> binding = http.newServerAt("localhost", 8080)
+        final CompletionStage<ServerBinding> binding = http.newServerAt("192.168.123.131", 8080)
                 .bind(server.createRoute());
 
-        System.out.println("Server online at http://localhost:8080/\nPress RETURN to stop...");
+        System.out.println("Server online at http://192.168.123.131:8080/\nPress RETURN to stop...");
         System.in.read(); // let it run until user presses return
 
         binding
