@@ -58,13 +58,13 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
 //        queryMongoDBData.setType(DataType.NEW_MODEl);
 //        queryMongoDBData.setDoc(document);
 
-        DeviceModel deviceModel = doc.getDeviceModel();
-        AbstractModel model = JSON.parseObject(doc.toString(), AbstractModel.class);
-//        deviceModel.set
-
-        deviceModel.setModel(model);
-        System.out.println(deviceModel);
-        brainActorRef.tell(deviceModel);
+//        DeviceModel deviceModel = doc.getDeviceModel();
+//        AbstractModel model = JSON.parseObject(document.toString(), AbstractModel.class);
+////        deviceModel.set
+//
+//        deviceModel.setModel(model);
+        System.out.println("7777" + document.toString());
+//        brainActorRef.tell(deviceModel);
         return this;
     }
 
@@ -77,7 +77,7 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
             MongoDBConnConfig config = new MongoDBConnConfig();
             config.setUrl("192.168.123.131");
             config.setPort(27017);
-            config.setDbName("test");
+            config.setDbName("model");
             config.setUsername("admin");
             config.setPassword("admin");
             conn.setConfig(config);

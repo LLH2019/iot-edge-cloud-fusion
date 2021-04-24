@@ -122,7 +122,8 @@ public class HttpServer extends AllDirectives {
 
         String str = JSON.toJSONString(model);
 
-        map.put("cc3200", str);
+        map.put("name","cc3200");
+        map.put("model", str);
         doc.setDocMap(map);
         doc.setConnName("model");
         doc.setCollectionName("model");
