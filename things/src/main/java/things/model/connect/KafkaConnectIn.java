@@ -10,6 +10,7 @@ import things.model.connect.bean.KafkaMsg;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author ：LLH
@@ -66,7 +67,9 @@ public class KafkaConnectIn {
          */
 
         System.out.println("222" + kafkaConfig.getTopics());
-        consumer.subscribe(kafkaConfig.getTopics());
+        String topic = "llh.*";
+        Pattern pattern = Pattern.compile(topic);
+        consumer.subscribe(pattern);
         //轮询消息
         while (true) {
             //获取ConsumerRecords，一秒钟轮训一次

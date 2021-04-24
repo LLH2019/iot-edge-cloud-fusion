@@ -29,7 +29,7 @@ public class EdgeBootstrap {
         kafkaConfig.setServer("192.168.123.131:9092");
         kafkaConfig.setGroupId("1");
         List<String> topics = new ArrayList<>();
-        topics.add("edge-pod-1");
+        topics.add("llh.edge-pod-1");
 
         List<String> lists = new ArrayList<>();
         lists.add("*");
