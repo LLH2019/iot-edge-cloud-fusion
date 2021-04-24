@@ -68,6 +68,8 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
             CreateNewMongoDBConn conn = new CreateNewMongoDBConn();
             conn.setConnName(doc.getConnName());
             MongoDBConnConfig config = new MongoDBConnConfig();
+            config.setUrl("192.168.123.131");
+            config.setPort(27017);
             config.setDbName("test");
             config.setUsername("admin");
             config.setPassword("admin");
