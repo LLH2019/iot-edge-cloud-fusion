@@ -30,10 +30,12 @@ public class KafkaConnectIn {
     }
 
     public void addTopics(List<String> topics) {
+        System.out.println("addTopics");
         for(String topic : topics) {
             subscribedTopics.add(topic);
         }
         consumer.subscribe(new ArrayList<>(subscribedTopics));
+        System.out.println("addTopics--");
     }
 
     private void init() {

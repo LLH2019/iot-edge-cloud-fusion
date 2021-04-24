@@ -59,7 +59,7 @@ public class KafkaConnectInActor extends AbstractBehavior<BasicCommon> implement
             }
             System.out.println("onHandleSubscribeTopic...");
         }
-
+        System.out.println("onHandleSubscribeTopic " + subscribeTopic.getTopics().size());
         kafkaConnectIn.addTopics(subscribeTopic.getTopics());
         return this;
     }
