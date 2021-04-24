@@ -32,6 +32,7 @@ public class KafkaConnectInActor extends AbstractBehavior<BasicCommon> implement
         super(context);
         this.kafkaConfig = kafkaConfig;
         this.ref = getContext().getSelf();
+        System.out.println("KafkaConnectInActor--");
         new Thread(()->upConnectIn()).start();
     }
 
@@ -60,7 +61,9 @@ public class KafkaConnectInActor extends AbstractBehavior<BasicCommon> implement
             System.out.println("onHandleSubscribeTopic...");
         }
         System.out.println("onHandleSubscribeTopic " + subscribeTopic.getTopics().size());
+        System.out.println("onHandleSubscribeTopic-- " + kafkaConnectIn);
         kafkaConnectIn.addTopics(subscribeTopic.getTopics());
+
         return this;
     }
 
@@ -81,6 +84,8 @@ public class KafkaConnectInActor extends AbstractBehavior<BasicCommon> implement
 
     @Override
     public void upConnectIn() {
+        System.out.println("888--upConnectIn" + kafkaConfig);
         this.kafkaConnectIn = new KafkaConnectIn(kafkaConfig, ref);
+        System.out.println("888--upConnectIn");
     }
 }
