@@ -40,8 +40,8 @@ public class BootstrapMain {
 
         events.add(event);
         DeviceModel model = new DeviceModel();
-        model.setProfile(profile);
-        model.setEvents(events);
+//        model.setProfile(profile);
+//        model.setEvents(events);
 
     }
 

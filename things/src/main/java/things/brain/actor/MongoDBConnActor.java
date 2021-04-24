@@ -6,6 +6,7 @@ import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
+import com.alibaba.fastjson.JSON;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -15,9 +16,9 @@ import org.bson.conversions.Bson;
 import things.base.DataType;
 import things.brain.bean.*;
 import things.brain.util.MongoDBUtil;
-import things.controller.actor.CloudControlActorKafkaInAndOut;
+import things.model.bean.AbstractModel;
 import things.model.bean.BasicCommon;
-import things.model.connect.bean.KafkaConfig;
+import things.model.bean.DeviceModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,11 +42,11 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
         return newReceiveBuilder()
                 .onMessage(CreateNewMongoDBConn.class, this::onHandleMongoDBConnAction)
                 .onMessage(InsertMongoDBDoc.class, this::onHandleMongoDbDocAction)
-                .onMessage(GetFirstMongoDBDoc.class, this::onHandleGetMongoDBDocAction)
+                .onMessage(GetDeviceModelDoc.class, this::onHandleGetDeviceModelDocAction)
                 .build();
     }
 
-    private Behavior<BasicCommon> onHandleGetMongoDBDocAction(GetFirstMongoDBDoc doc) {
+    private Behavior<BasicCommon> onHandleGetDeviceModelDocAction(GetDeviceModelDoc doc) {
         MongoDatabase database = databaseMap.get(doc.getConnName());
         MongoCollection<Document> collection = database.getCollection(doc.getCollectionName());
         Bson filter = Filters.eq(doc.getKey(), doc.getValue());
@@ -53,11 +54,15 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
         //取出查询到的第一个文档
         Document document = (Document) findIterable.first();
 
-        QueryMongoDBData queryMongoDBData = new QueryMongoDBData();
-        queryMongoDBData.setType(DataType.NEW_MODEl);
-        queryMongoDBData.setDoc(document);
+//        QueryMongoDBData queryMongoDBData = new QueryMongoDBData();
+//        queryMongoDBData.setType(DataType.NEW_MODEl);
+//        queryMongoDBData.setDoc(document);
 
-        brainActorRef.tell(queryMongoDBData);
+        DeviceModel deviceModel = doc.getDeviceModel();
+        AbstractModel model = JSON.parseObject(doc.toString(), AbstractModel.class);
+//        deviceModel.set
+
+        brainActorRef.tell(deviceModel);
         return this;
     }
 

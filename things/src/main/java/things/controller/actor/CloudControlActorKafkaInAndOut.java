@@ -135,8 +135,10 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
         KafkaConfig kafkaConfig1 = new KafkaConfig("192.168.123.131:9092", null, list);
 //        kafkaConfig1.setServer("192.168.123.131:9092");
 //        kafkaConfig1.setTopics(list);
-        DeviceModel model = new DeviceModel(null,"cc3200-1", null,
-                null,null, mqttConfig1,kafkaConfig1 );
+        DeviceModel model = new DeviceModel();
+        model.setKafkaConfig(kafkaConfig);
+        model.setMqttConfig(mqttConfig1);
+        model.setRealName("cc3200-1");
         CreateEdgeActorMsg createEdgeActorMsg = new CreateEdgeActorMsg();
         createEdgeActorMsg.setModel(model);
 

@@ -12,7 +12,9 @@ import java.util.List;
  * @description：物模型抽象类
  */
 @Data
-public class DeviceModel extends AbstractModel implements BasicCommon {
+public class DeviceModel implements BasicCommon {
+    private String realName;
+    private AbstractModel model;
     private Status status;
 
     private MqttConfig mqttConfig;
@@ -22,15 +24,11 @@ public class DeviceModel extends AbstractModel implements BasicCommon {
     public DeviceModel() {
     }
 
-    public DeviceModel(Status status, String name, Profile profile, List<Property> properties, List<Event> events, MqttConfig mqttConfig, KafkaConfig kafkaConfig) {
-        this.status = status;
-        this.setName(name);
-        this.setProfile(profile);
-        this.setProperties(properties);
-        this.setEvents(events);
-        this.mqttConfig = mqttConfig;
-        this.kafkaConfig = kafkaConfig;
-    }
+//    public DeviceModel(Status status, MqttConfig mqttConfig, KafkaConfig kafkaConfig) {
+//        this.status = status;
+//        this.mqttConfig = mqttConfig;
+//        this.kafkaConfig = kafkaConfig;
+//    }
 
     public void setStatus(Status.ThingStatus offline) {
     }
@@ -39,10 +37,6 @@ public class DeviceModel extends AbstractModel implements BasicCommon {
     public String toString() {
         return "AbstractModel{" +
                 "status=" + status +
-                ", name='" + this.getName() + '\'' +
-                ", profile=" + this.getProfile() +
-                ", properties=" + this.getProperties() +
-                ", events=" + this.getEvents() +
                 ", mqttConfig=" + mqttConfig +
                 ", kafkaConfig=" + kafkaConfig +
                 '}';
