@@ -5,10 +5,7 @@ import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
-import akka.http.javadsl.Http;
-import things.controller.actor.CC3200ControlActor;
 import things.model.bean.BasicCommon;
-import things.model.connect.bean.KafkaConfig;
 
 /**
  * @author ：LLH

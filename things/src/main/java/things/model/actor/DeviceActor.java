@@ -11,8 +11,6 @@ import things.model.connect.MqttConnectIn;
 import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.MqttConfig;
 import things.model.connect.bean.MqttInMsg;
-import things.msg.bean.Message;
-import things.msg.handler.MessageHandler;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,8 +21,8 @@ import java.util.Date;
  * @description：接受MQTT接入消息，Kafka发布消息的抽象actor类
  */
 
-public class AbstractActorMqttInKafkaOutDownUp extends AbstractBasicActor {
-    public AbstractActorMqttInKafkaOutDownUp(ActorContext<BasicCommon> context, MqttConfig mqttConfig, KafkaConfig kafkaConfig) {
+public class DeviceActor extends AbstractDeviceActor {
+    public DeviceActor(ActorContext<BasicCommon> context, MqttConfig mqttConfig, KafkaConfig kafkaConfig) {
         super(context);
         System.out.println("AbstractActorMqttInKafkaOutDownUp...");
         this.mqttConfig = mqttConfig;
@@ -50,11 +48,11 @@ public class AbstractActorMqttInKafkaOutDownUp extends AbstractBasicActor {
 
     @Override
     public void upConnectOut() {
-        this.kafkaConnectOut = new KafkaConnectOut(kafkaConfig);
+        this.kafkaConnectOut = new KafkaConnectOut();
     }
 
     public static Behavior<BasicCommon> create(MqttConfig mqttConfig, KafkaConfig kafkaConfig) {
-        return Behaviors.setup(context -> new AbstractActorMqttInKafkaOutDownUp(context, mqttConfig, kafkaConfig));
+        return Behaviors.setup(context -> new DeviceActor(context, mqttConfig, kafkaConfig));
     }
 
     @Override

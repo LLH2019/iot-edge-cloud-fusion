@@ -10,7 +10,6 @@ import things.model.connect.bean.KafkaMsg;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author ：LLH

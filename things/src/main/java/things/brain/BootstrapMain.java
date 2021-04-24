@@ -12,6 +12,7 @@ import things.model.bean.DeviceModel;
 import things.model.bean.BasicCommon;
 import things.model.bean.Event;
 import things.model.bean.Profile;
+import things.model.connect.bean.KafkaConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +48,13 @@ public class BootstrapMain {
 
     private static void httpClientConn(ActorSystem<Void> system) throws IOException {
         final Http http = Http.get(system);
-        ActorRef<BasicCommon> brainControlActorRef = system.systemActorOf(BrainControlActor.create(),
+        KafkaConfig kafkaConfig = new KafkaConfig();
+        kafkaConfig.setServer("192.168.123.131:9092");
+        kafkaConfig.setGroupId("1");
+//        List<String> list = new ArrayList<>();
+//        list.add("cc3200-1");
+//        kafkaConfig.setTopics(list);
+        ActorRef<BasicCommon> brainControlActorRef = system.systemActorOf(BrainControlActor.create(kafkaConfig),
                 "brain-control", Props.empty());
 
         ActorRef<BasicCommon> mongoDBActorRef = system.systemActorOf(MongoDBConnActor.create(brainControlActorRef),

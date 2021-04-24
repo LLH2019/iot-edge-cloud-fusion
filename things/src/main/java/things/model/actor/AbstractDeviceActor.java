@@ -15,9 +15,9 @@ import things.model.connect.UpConnectIn;
  * @date ：Created in 2021/4/16 11:00
  * @description：抽象基础类
  */
-public class AbstractBasicActor extends AbstractBehavior<BasicCommon> implements DownConnectIn, UpConnectOut, DownConnectOut, UpConnectIn {
+public class AbstractDeviceActor extends AbstractBehavior<BasicCommon> implements DownConnectIn, UpConnectOut, DownConnectOut, UpConnectIn {
 
-    public AbstractBasicActor(ActorContext<BasicCommon> context) {
+    public AbstractDeviceActor(ActorContext<BasicCommon> context) {
         super(context);
     }
 

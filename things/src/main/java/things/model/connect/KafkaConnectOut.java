@@ -16,14 +16,14 @@ import java.util.Properties;
 public class KafkaConnectOut {
     private KafkaProducer kafkaProducer;
 
-    public KafkaConnectOut(KafkaConfig kafkaConfig) {
-        Properties kafkaPropertie = new Properties();
+    public KafkaConnectOut() {
+        Properties kafkaProperties = new Properties();
         //配置broker地址，配置多个容错
-        kafkaPropertie.put("bootstrap.servers", kafkaConfig.getServer());
+        kafkaProperties.put("bootstrap.servers", "192.168.123.131:9092");
         //配置key-value允许使用参数化类型
-        kafkaPropertie.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        kafkaPropertie.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        kafkaProducer = new KafkaProducer(kafkaPropertie);
+        kafkaProperties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        kafkaProperties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        kafkaProducer = new KafkaProducer(kafkaProperties);
 
     }
 

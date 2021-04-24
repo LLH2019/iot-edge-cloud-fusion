@@ -18,7 +18,7 @@ import java.util.Date;
  * @date ：Created in 2021/4/16 11:00
  * @description：CC3200 actor类，作为测试之用
  */
-public class CC3200Actor extends AbstractActorMqttInKafkaOutDownUp {
+public class CC3200Actor extends DeviceActor {
 
     public CC3200Actor(ActorContext<BasicCommon> context, MqttConfig mqttConfig, KafkaConfig kafkaConfig) {
         super(context, mqttConfig, kafkaConfig);

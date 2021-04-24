@@ -1,5 +1,6 @@
 package things.model.connect.bean;
 
+import akka.actor.typed.ActorRef;
 import lombok.Data;
 import things.model.bean.BasicCommon;
 
@@ -10,6 +11,8 @@ import java.util.List;
  * @date ：Created in 2021/4/21 15:12
  * @description：订阅消息
  */
-@Data public class SubscribeTopic implements BasicCommon {
+@Data
+public class SubscribeTopic implements BasicCommon {
+    private ActorRef<BasicCommon> ref;
     private List<String> topics;
 }

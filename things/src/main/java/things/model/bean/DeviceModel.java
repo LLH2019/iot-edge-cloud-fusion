@@ -16,6 +16,7 @@ public class DeviceModel implements BasicCommon {
     private String realName;
     private AbstractModel model;
     private Status status;
+    private List<String> topics;
 
     private MqttConfig mqttConfig;
 

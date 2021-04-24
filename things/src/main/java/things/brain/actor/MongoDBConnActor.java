@@ -76,7 +76,7 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
 //
         deviceModel.setModel(model);
         System.out.println("7777" + model);
-//        brainActorRef.tell(deviceModel);
+        brainActorRef.tell(deviceModel);
         return this;
     }
 
