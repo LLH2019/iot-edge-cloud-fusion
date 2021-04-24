@@ -47,6 +47,18 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
     }
 
     private Behavior<BasicCommon> onHandleGetDeviceModelDocAction(GetDeviceModelDoc doc) {
+        if(!databaseMap.containsKey(doc.getConnName())) {
+            CreateNewMongoDBConn conn = new CreateNewMongoDBConn();
+            conn.setConnName(doc.getConnName());
+            MongoDBConnConfig config = new MongoDBConnConfig();
+            config.setUrl("192.168.123.131");
+            config.setPort(27017);
+            config.setDbName("model");
+            config.setUsername("admin");
+            config.setPassword("admin");
+            conn.setConfig(config);
+            createMongoDbConn(conn);
+        }
         MongoDatabase database = databaseMap.get(doc.getConnName());
         MongoCollection<Document> collection = database.getCollection(doc.getCollectionName());
         Bson filter = Filters.eq(doc.getKey(), doc.getValue());
@@ -63,7 +75,7 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
 ////        deviceModel.set
 //
 //        deviceModel.setModel(model);
-        System.out.println("7777" + document.toString());
+        System.out.println("7777" + document.get("model").toString());
 //        brainActorRef.tell(deviceModel);
         return this;
     }
