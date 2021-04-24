@@ -67,9 +67,9 @@ public class KafkaConnectIn {
          */
 
         System.out.println("222" + kafkaConfig.getTopics());
-        String topic = "llh.*";
-        Pattern pattern = Pattern.compile(topic);
-        consumer.subscribe(pattern);
+//        String topic = "llh.*";
+//        Pattern pattern = Pattern.compile(topic);
+        consumer.subscribe(kafkaConfig.getTopics());
         //轮询消息
         while (true) {
             //获取ConsumerRecords，一秒钟轮训一次

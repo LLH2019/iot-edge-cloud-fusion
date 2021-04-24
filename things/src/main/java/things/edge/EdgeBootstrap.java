@@ -32,7 +32,7 @@ public class EdgeBootstrap {
         topics.add("llh.edge-pod-1");
 
         List<String> lists = new ArrayList<>();
-        lists.add("*");
+        lists.add("llh.edge-pod-1");
         kafkaConfig.setTopics(lists);
 
 
