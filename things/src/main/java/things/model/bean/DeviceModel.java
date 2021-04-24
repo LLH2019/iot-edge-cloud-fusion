@@ -35,8 +35,10 @@ public class DeviceModel implements BasicCommon {
 
     @Override
     public String toString() {
-        return "AbstractModel{" +
-                "status=" + status +
+        return "DeviceModel{" +
+                "realName='" + realName + '\'' +
+                ", model=" + model +
+                ", status=" + status +
                 ", mqttConfig=" + mqttConfig +
                 ", kafkaConfig=" + kafkaConfig +
                 '}';

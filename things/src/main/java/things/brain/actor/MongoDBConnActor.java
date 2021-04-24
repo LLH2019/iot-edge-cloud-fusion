@@ -62,6 +62,8 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
         AbstractModel model = JSON.parseObject(doc.toString(), AbstractModel.class);
 //        deviceModel.set
 
+        deviceModel.setModel(model);
+        System.out.println(deviceModel);
         brainActorRef.tell(deviceModel);
         return this;
     }
