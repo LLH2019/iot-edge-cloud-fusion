@@ -47,7 +47,7 @@ public class KafkaConnectInActor extends AbstractBehavior<BasicCommon> implement
         List<String> topics = subscribeTopic.getTopics();
         if(topics != null) {
             for (String topic : topics) {
-                if(!subscribesRefMap.containsKey(topic)) {
+                if (!subscribesRefMap.containsKey(topic)) {
                     List<ActorRef<BasicCommon>> list = new ArrayList<>();
                     list.add(subscribeTopic.getRef());
                     subscribesRefMap.put(topic, list);
@@ -57,6 +57,7 @@ public class KafkaConnectInActor extends AbstractBehavior<BasicCommon> implement
                     subscribesRefMap.put(topic, list);
                 }
             }
+            System.out.println("onHandleSubscribeTopic...");
         }
 
         kafkaConnectIn.addTopics(subscribeTopic.getTopics());
