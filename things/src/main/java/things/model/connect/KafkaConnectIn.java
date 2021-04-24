@@ -83,12 +83,12 @@ public class KafkaConnectIn {
 //                LOGGER.error("offset:", r.offset());
                 System.out.println("kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
             }
-            System.out.println("3333 " + topicNum);
-            if (subscribedTopics.size() != topicNum) {
-                topicNum = subscribedTopics.size();
-                System.out.println("3333 " + topicNum);
-                consumer.subscribe(subscribedTopics); // 重新订阅topic
-            }
+//            System.out.println("3333 " + topicNum);
+//            if (subscribedTopics.size() != topicNum) {
+//                topicNum = subscribedTopics.size();
+//                System.out.println("3333 " + topicNum);
+//                consumer.subscribe(subscribedTopics); // 重新订阅topic
+//            }
 //            Thread.sleep(1000);
         }
     }
