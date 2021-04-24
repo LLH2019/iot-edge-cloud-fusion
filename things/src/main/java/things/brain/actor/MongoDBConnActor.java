@@ -73,6 +73,7 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
             config.setDbName("test");
             config.setUsername("admin");
             config.setPassword("admin");
+            conn.setConfig(config);
             createMongoDbConn(conn);
         }
 //        System.out.println("2222");
