@@ -30,7 +30,8 @@ public class KafkaConnectIn {
         this.ref = ref;
         subscribedTopics.addAll(kafkaConfig.getTopics());
         topicNum = subscribedTopics.size();
-        new Thread(()->init());
+        System.out.println("44444");
+        init();
     }
 
     public void addTopics(List<String> topics) {
@@ -42,13 +43,13 @@ public class KafkaConnectIn {
             System.out.print(topic + " ");
         }
         System.out.println();
-        consumer.subscribe(new ArrayList<>(subscribedTopics));
+//        consumer.subscribe(new ArrayList<>(subscribedTopics));
 
         System.out.println("addTopics--");
     }
 
     private void init() {
-        ref = ref;
+        System.out.println("6666");
         Properties kafkaPropertie = new Properties();
         //配置broker地址，配置多个容错
         kafkaPropertie.put("bootstrap.servers", kafkaConfig.getServer());
@@ -64,6 +65,7 @@ public class KafkaConnectIn {
          * consumer.subscribe(pattern);
          */
 
+        System.out.println("222" + kafkaConfig.getTopics());
         consumer.subscribe(kafkaConfig.getTopics());
         //轮询消息
         while (true) {
@@ -81,9 +83,10 @@ public class KafkaConnectIn {
 //                LOGGER.error("offset:", r.offset());
                 System.out.println("kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
             }
-
+            System.out.println("3333 " + topicNum);
             if (subscribedTopics.size() != topicNum) {
                 topicNum = subscribedTopics.size();
+                System.out.println("3333 " + topicNum);
                 consumer.subscribe(subscribedTopics); // 重新订阅topic
             }
 //            Thread.sleep(1000);
