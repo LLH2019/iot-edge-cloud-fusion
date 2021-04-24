@@ -10,11 +10,9 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import akka.http.javadsl.marshallers.jackson.Jackson;
-import jnr.ffi.annotations.In;
 import things.brain.bean.InsertMongoDBDoc;
-import things.client.bean.CreateNewDeviceModel;
 import things.client.bean.Model;
-import things.model.bean.AbstractModel;
+import things.model.bean.DeviceModel;
 import things.model.bean.BasicCommon;
 
 /**
@@ -39,7 +37,7 @@ public class HttpServer extends AllDirectives {
 
                 post(() ->
                         path("create-model", () ->
-                                entity(Jackson.unmarshaller(AbstractModel.class), model -> {
+                                entity(Jackson.unmarshaller(DeviceModel.class), model -> {
                                     CompletionStage<Done> futureSaved = getInsertMongoDBDoc(model);
                                     return onSuccess(futureSaved, done ->
                                             complete("order created")
@@ -70,7 +68,7 @@ public class HttpServer extends AllDirectives {
 //                );
     }
 
-    private CompletionStage<Done> getInsertMongoDBDoc(AbstractModel model) {
+    private CompletionStage<Done> getInsertMongoDBDoc(DeviceModel model) {
         InsertMongoDBDoc doc = new InsertMongoDBDoc();
         Map<String,String> map = new HashMap<>();
         map.put("name", "ling");

@@ -1,7 +1,7 @@
 package things.client.bean;
 
 import lombok.Data;
-import things.model.bean.AbstractModel;
+import things.model.bean.DeviceModel;
 
 /**
  * @author ：LLH
@@ -10,5 +10,5 @@ import things.model.bean.AbstractModel;
  */
 @Data
 public class CreateNewDeviceModel {
-    private AbstractModel model;
+    private DeviceModel model;
 }

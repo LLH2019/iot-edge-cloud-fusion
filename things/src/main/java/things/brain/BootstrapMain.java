@@ -8,8 +8,7 @@ import akka.http.javadsl.Http;
 import akka.http.javadsl.ServerBinding;
 import things.brain.actor.BrainControlActor;
 import things.brain.actor.MongoDBConnActor;
-import things.controller.actor.CloudControlActorKafkaInAndOut;
-import things.model.bean.AbstractModel;
+import things.model.bean.DeviceModel;
 import things.model.bean.BasicCommon;
 import things.model.bean.Event;
 import things.model.bean.Profile;
@@ -40,7 +39,7 @@ public class BootstrapMain {
         event.setName("humidity");
 
         events.add(event);
-        AbstractModel model = new AbstractModel();
+        DeviceModel model = new DeviceModel();
         model.setProfile(profile);
         model.setEvents(events);
 

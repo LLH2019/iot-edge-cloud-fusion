@@ -10,15 +10,13 @@ import com.alibaba.fastjson.JSON;
 import things.base.TopicKey;
 import things.brain.bean.CreateEdgeActorMsg;
 import things.model.actor.AbstractActorMqttInKafkaOutDownUp;
-import things.model.bean.AbstractModel;
+import things.model.bean.DeviceModel;
 import things.model.bean.BasicCommon;
-import things.model.connect.KafkaConnectIn;
 import things.model.connect.UpConnectIn;
 import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.KafkaMsg;
 import things.model.connect.bean.SubscribeTopic;
 
-import java.util.ArrayList;
 import java.util.List;
 /**
  * @author ：LLH
@@ -59,7 +57,7 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
         if(TopicKey.CREATE_EDGE_ACTOR.equals(msg.getKey())) {
             System.out.println("111111");
             CreateEdgeActorMsg createEdgeActorMsg = JSON.parseObject(msg.getValue(), CreateEdgeActorMsg.class);
-            AbstractModel model = createEdgeActorMsg.getModel();
+            DeviceModel model = createEdgeActorMsg.getModel();
             System.out.println("222 " + model);
             getContext().spawn(AbstractActorMqttInKafkaOutDownUp.create(model.getMqttConfig(), model.getKafkaConfig()), model.getName());
         }

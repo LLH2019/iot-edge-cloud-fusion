@@ -1,7 +1,7 @@
 package things.brain.bean;
 
 import lombok.Data;
-import things.model.bean.AbstractModel;
+import things.model.bean.DeviceModel;
 import things.model.bean.BasicCommon;
 
 /**
@@ -11,6 +11,6 @@ import things.model.bean.BasicCommon;
  */
 @Data
 public class CreateEdgeActorMsg implements BasicCommon {
-    private AbstractModel model;
+    private DeviceModel model;
 //    private
 }

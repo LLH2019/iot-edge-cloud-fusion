@@ -11,18 +11,15 @@ import com.alibaba.fastjson.JSON;
 import things.base.TopicKey;
 import things.brain.bean.CreateEdgeActorMsg;
 import things.brain.bean.EdgeDevice;
-import things.model.bean.AbstractModel;
+import things.model.bean.DeviceModel;
 import things.model.bean.BasicCommon;
-import things.model.bean.Status;
 import things.model.connect.KafkaConnectIn;
 import things.model.connect.KafkaConnectOut;
 import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.KafkaMsg;
 import things.model.connect.bean.MqttConfig;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,7 +34,7 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
 
     private KafkaConnectOut kafkaConnectOut;
 
-    private AbstractModel model;
+    private DeviceModel model;
 
 
     private List<EdgeDevice> edgeDevices;
@@ -69,7 +66,7 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
     @Override
     public Receive<BasicCommon> createReceive() {
         return newReceiveBuilder()
-                .onMessage(AbstractModel.class, this::onSetAbstractModelAction)
+                .onMessage(DeviceModel.class, this::onSetAbstractModelAction)
                 .onMessage(KafkaMsg.class, this::onKafkaMsgInAction)
                 .onMessage(CreateEdgeActorMsg.class, this::onCreateEdgeActorAction)
                 .build();
@@ -89,7 +86,7 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
         return this;
     }
 
-    private Behavior<BasicCommon> onSetAbstractModelAction(AbstractModel model) {
+    private Behavior<BasicCommon> onSetAbstractModelAction(DeviceModel model) {
         this.model = model;
         return this;
     }
@@ -138,7 +135,7 @@ public class CloudControlActorKafkaInAndOut extends CloudControlActor {
         KafkaConfig kafkaConfig1 = new KafkaConfig("192.168.123.131:9092", null, list);
 //        kafkaConfig1.setServer("192.168.123.131:9092");
 //        kafkaConfig1.setTopics(list);
-        AbstractModel model = new AbstractModel(null,"cc3200-1", null,
+        DeviceModel model = new DeviceModel(null,"cc3200-1", null,
                 null,null, mqttConfig1,kafkaConfig1 );
         CreateEdgeActorMsg createEdgeActorMsg = new CreateEdgeActorMsg();
         createEdgeActorMsg.setModel(model);
