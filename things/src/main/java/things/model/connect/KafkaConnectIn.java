@@ -26,7 +26,7 @@ public class KafkaConnectIn {
     public KafkaConnectIn(KafkaConfig kafkaConfig, ActorRef<BasicCommon> ref) {
         this.kafkaConfig = kafkaConfig;
         this.ref = ref;
-        init();
+        new Thread(()->init());
     }
 
     public void addTopics(List<String> topics) {
