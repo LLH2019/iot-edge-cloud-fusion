@@ -73,6 +73,7 @@ public class CloudControlActor extends AbstractCloudControlActor {
         kafkaMsg.setKey(TopicKey.CREATE_EDGE_ACTOR);
         String jsonString = JSON.toJSONString(deviceModel);
         kafkaMsg.setValue(jsonString);
+        System.out.println("999" + kafkaMsg);
         kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
         System.out.println(kafkaMsg);
     }

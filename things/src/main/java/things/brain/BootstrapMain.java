@@ -51,9 +51,9 @@ public class BootstrapMain {
         KafkaConfig kafkaConfig = new KafkaConfig();
         kafkaConfig.setServer("192.168.123.131:9092");
         kafkaConfig.setGroupId("1");
-//        List<String> list = new ArrayList<>();
-//        list.add("cc3200-1");
-//        kafkaConfig.setTopics(list);
+        List<String> list = new ArrayList<>();
+        list.add("brain-1");
+        kafkaConfig.setTopics(list);
         ActorRef<BasicCommon> brainControlActorRef = system.systemActorOf(BrainControlActor.create(kafkaConfig),
                 "brain-control", Props.empty());
 
