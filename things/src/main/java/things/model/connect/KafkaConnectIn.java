@@ -26,6 +26,7 @@ public class KafkaConnectIn {
     public KafkaConnectIn(KafkaConfig kafkaConfig, ActorRef<BasicCommon> ref) {
         this.kafkaConfig = kafkaConfig;
         this.ref = ref;
+        subscribedTopics.addAll(kafkaConfig.getTopics());
         new Thread(()->init());
     }
 
@@ -34,11 +35,12 @@ public class KafkaConnectIn {
         for(String topic : topics) {
             subscribedTopics.add(topic);
         }
-        consumer.subscribe(new ArrayList<>(subscribedTopics));
         for (String topic: subscribedTopics) {
             System.out.print(topic + " ");
         }
         System.out.println();
+        consumer.subscribe(new ArrayList<>(subscribedTopics));
+
         System.out.println("addTopics--");
     }
 
