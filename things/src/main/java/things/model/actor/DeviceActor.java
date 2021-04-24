@@ -76,7 +76,7 @@ public class DeviceActor extends AbstractDeviceActor {
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String key = df.format(new Date()) + "-temperature";
-        getKafkaConnectOut().sendMessageForgetResult(kafkaConfig.getTopics().get(0), key, msg.getMsg());
+//        getKafkaConnectOut().sendMessageForgetResult(kafkaConfig.getTopics().get(0), key, msg.getMsg());
 //        sendToKafka(msg);
 //        kafkaConnectOut.s
     }
