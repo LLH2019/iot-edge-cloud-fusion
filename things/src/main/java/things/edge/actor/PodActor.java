@@ -35,7 +35,7 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
         this.subscribeTopics = subscribeTopics;
         this.kafkaConnectInActorRef = getContext().spawn(KafkaConnectInActor.create(kafkaConfig), "up-connect-in");
 
-//        upConnectIn();
+        upConnectIn();
     }
 
     public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig, List<String> topics) {
