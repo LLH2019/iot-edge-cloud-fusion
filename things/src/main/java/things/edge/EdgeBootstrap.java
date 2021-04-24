@@ -30,7 +30,7 @@ public class EdgeBootstrap {
         kafkaConfig.setGroupId("1");
         List<String> topics = new ArrayList<>();
         topics.add("edge-pod-1");
-//        kafkaConfig.setTopics(list);
+        kafkaConfig.setTopics(topics);
 
 
         system.systemActorOf(PodActor.create(kafkaConfig, topics), "edge-pod-1", Props.empty());
