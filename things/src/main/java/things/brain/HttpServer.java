@@ -79,6 +79,7 @@ public class HttpServer extends AllDirectives {
 
     private CompletionStage<Done> linkDevice(Model m) {
         DeviceModel deviceModel = new DeviceModel();
+        deviceModel.setRealName("cc3200-1");
         KafkaConfig kafkaConfig = new KafkaConfig();
         kafkaConfig.setServer("192.168.123.131:9092");
         kafkaConfig.setGroupId("1");

@@ -38,7 +38,7 @@ public class CloudControlActor extends AbstractCloudControlActor {
 
     private List<String> subscribeTopics;
 
-    private List<EdgeDevice> edgeDevices;
+//    private List<EdgeDevice> edgeDevices;
 
     public static Behavior<BasicCommon> create(DeviceModel deviceModel) {
         return Behaviors.setup(context -> new CloudControlActor(context, deviceModel));
@@ -67,7 +67,7 @@ public class CloudControlActor extends AbstractCloudControlActor {
     private void createEdgeActorAction() {
 
         KafkaMsg kafkaMsg = new KafkaMsg();
-        kafkaMsg.setTopic(deviceModel.getTopics().get(0));
+        kafkaMsg.setTopic("edge-pod-1");
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        String key = df.format(new Date());
         kafkaMsg.setKey(TopicKey.CREATE_EDGE_ACTOR);

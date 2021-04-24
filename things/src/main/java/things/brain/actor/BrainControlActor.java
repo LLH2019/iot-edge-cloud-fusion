@@ -36,6 +36,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
     public BrainControlActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
         super(context);
         this.kafkaConnectInActorRef = getContext().spawn(KafkaConnectInActor.create(kafkaConfig), "kafka-connect-in");
+//        cloudControlRefMaps.put()
         upConnectIn();
     }
 
