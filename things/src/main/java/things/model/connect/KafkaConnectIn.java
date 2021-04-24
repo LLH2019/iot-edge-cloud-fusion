@@ -68,7 +68,7 @@ public class KafkaConnectIn {
 //                LOGGER.error("partition:", r.partition());
 //                LOGGER.error("topic:", r.topic());
 //                LOGGER.error("offset:", r.offset());
-//                System.out.println(r.topic() + ":" + r.key() + ":" + r.value());
+                System.out.println("kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
             }
 //            Thread.sleep(1000);
         }
