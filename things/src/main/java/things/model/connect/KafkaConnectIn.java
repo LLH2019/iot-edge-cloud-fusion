@@ -18,7 +18,9 @@ import java.util.*;
  */
 public class KafkaConnectIn {
 
-    final Set<String> subscribedTopics = new HashSet<>();
+    private Set<String> subscribedTopics = new HashSet<>();
+    private int topicNum;
+
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
     KafkaConsumer<String, String> consumer;
@@ -27,6 +29,7 @@ public class KafkaConnectIn {
         this.kafkaConfig = kafkaConfig;
         this.ref = ref;
         subscribedTopics.addAll(kafkaConfig.getTopics());
+        topicNum = subscribedTopics.size();
         new Thread(()->init());
     }
 
@@ -65,7 +68,7 @@ public class KafkaConnectIn {
         //轮询消息
         while (true) {
             //获取ConsumerRecords，一秒钟轮训一次
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(2000));
             //消费消息，遍历records
             for (ConsumerRecord<String, String> r : records) {
                 KafkaMsg data = new KafkaMsg();
@@ -77,6 +80,11 @@ public class KafkaConnectIn {
 //                LOGGER.error("topic:", r.topic());
 //                LOGGER.error("offset:", r.offset());
                 System.out.println("kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
+            }
+
+            if (subscribedTopics.size() != topicNum) {
+                topicNum = subscribedTopics.size();
+                consumer.subscribe(subscribedTopics); // 重新订阅topic
             }
 //            Thread.sleep(1000);
         }
