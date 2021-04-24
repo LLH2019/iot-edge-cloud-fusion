@@ -35,6 +35,10 @@ public class KafkaConnectIn {
             subscribedTopics.add(topic);
         }
         consumer.subscribe(new ArrayList<>(subscribedTopics));
+        for (String topic: subscribedTopics) {
+            System.out.print(topic + " ");
+        }
+        System.out.println();
         System.out.println("addTopics--");
     }
 
