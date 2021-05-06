@@ -26,14 +26,12 @@ public class DeviceActor extends AbstractDeviceActor {
         super(context);
         System.out.println("AbstractActorMqttInKafkaOutDownUp...");
         this.mqttConfig = mqttConfig;
-        this.kafkaConfig = kafkaConfig;
         this.ref = context.getSelf();
         downConnectIn();
         upConnectOut();
     }
 
     private MqttConfig mqttConfig;
-    private KafkaConfig kafkaConfig;
     private ActorRef<BasicCommon> ref;
     private KafkaConnectOut kafkaConnectOut;
 

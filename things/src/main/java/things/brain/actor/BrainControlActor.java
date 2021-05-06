@@ -7,7 +7,6 @@ import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import things.base.DataType;
-import things.brain.bean.EdgeDevice;
 import things.brain.bean.NewDeviceConn;
 import things.brain.bean.QueryMongoDBData;
 import things.controller.actor.CloudControlActor;
@@ -18,7 +17,6 @@ import things.model.connect.UpConnectIn;
 import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.SubscribeTopic;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

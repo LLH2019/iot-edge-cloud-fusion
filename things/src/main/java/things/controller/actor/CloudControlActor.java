@@ -1,25 +1,17 @@
 package things.controller.actor;
 
 import akka.actor.typed.ActorRef;
-import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Behavior;
-import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import com.alibaba.fastjson.JSON;
 import things.base.TopicKey;
-import things.brain.bean.CreateEdgeActorMsg;
-import things.brain.bean.EdgeDevice;
 import things.model.bean.DeviceModel;
 import things.model.bean.BasicCommon;
-import things.model.connect.KafkaConnectIn;
 import things.model.connect.KafkaConnectOut;
-import things.model.connect.bean.KafkaConfig;
 import things.model.connect.bean.KafkaMsg;
-import things.model.connect.bean.MqttConfig;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
