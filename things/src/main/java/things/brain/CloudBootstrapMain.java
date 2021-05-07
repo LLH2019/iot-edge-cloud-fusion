@@ -6,6 +6,8 @@ import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.http.javadsl.Http;
 import akka.http.javadsl.ServerBinding;
+import akka.management.cluster.bootstrap.ClusterBootstrap;
+import akka.management.javadsl.AkkaManagement;
 import things.brain.actor.BrainControlActor;
 import things.brain.actor.MongoDBConnActor;
 import things.model.bean.DeviceModel;
@@ -26,8 +28,12 @@ import java.util.List;
  */
 public class BootstrapMain {
     public static void main(String[] args) throws IOException {
+
+
         ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "bootstrap");
         httpClientConn(system);
+//        AkkaManagement.get(system).start();
+//        ClusterBootstrap.get(system).start();
 //        testCC3200(system);
     }
 

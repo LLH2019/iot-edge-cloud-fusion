@@ -54,7 +54,8 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
             System.out.println("111111");
             DeviceModel model = JSON.parseObject(msg.getValue(), DeviceModel.class);
             System.out.println("222 " + model);
-            getContext().spawn(DeviceActor.create(model.getMqttConfig(), model.getKafkaConfig()), model.getRealName());
+            String realName = model.getModel().getName() + "-" + model.getModel().getNo();
+            getContext().spawn(DeviceActor.create(model.getMqttConfig(), model.getKafkaConfig()), realName);
         }
         System.out.println("kafka-msg: " +msg);
         return this;

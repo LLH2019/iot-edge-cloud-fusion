@@ -13,10 +13,10 @@ import java.util.List;
  */
 @Data
 public class DeviceModel implements BasicCommon {
-    private String realName;
+//    private String realName;
     private AbstractModel model;
-    private Status status;
-    private List<String> topics;
+//    private Status status;
+//    private List<String> topics;
 
     private MqttConfig mqttConfig;
 
@@ -30,16 +30,16 @@ public class DeviceModel implements BasicCommon {
 //        this.mqttConfig = mqttConfig;
 //        this.kafkaConfig = kafkaConfig;
 //    }
-
-    public void setStatus(Status.ThingStatus offline) {
-    }
+//
+//    public void setStatus(Status.ThingStatus offline) {
+//    }
 
     @Override
     public String toString() {
         return "DeviceModel{" +
-                "realName='" + realName + '\'' +
-                ", model=" + model +
-                ", status=" + status +
+//                "realName='" + realName + '\'' +
+//                ", model=" + model +
+//                ", status=" + status +
                 ", mqttConfig=" + mqttConfig +
                 ", kafkaConfig=" + kafkaConfig +
                 '}';

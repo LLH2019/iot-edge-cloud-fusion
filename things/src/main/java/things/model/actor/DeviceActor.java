@@ -58,7 +58,6 @@ public class DeviceActor extends AbstractDeviceActor {
         return newReceiveBuilder()
                 .onMessage(MqttInMsg.class, this::onMqttMsgInAction)
 
-
                 .build();
     }
 

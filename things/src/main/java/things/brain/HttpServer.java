@@ -40,14 +40,21 @@ public class HttpServer extends AllDirectives {
                         get(() ->
                                 complete("<h1>Say hello to akka-http</h1>"))),
 
-                post(() ->
-                        path("create-model", () ->
-                                entity(Jackson.unmarshaller(Model.class), model -> {
-                                    CompletionStage<Done> futureSaved = getInsertMongoDBDoc(model);
-                                    return onSuccess(futureSaved, done ->
-                                            complete("order created")
-                                    );
-                                }))),
+//                post(() ->
+//                        path("create-model", () ->
+//                                entity(Jackson.unmarshaller(Model.class), model -> {
+//                                    CompletionStage<Done> futureSaved = getInsertMongoDBDoc(model);
+//                                    return onSuccess(futureSaved, done ->
+//                                            complete("order created")
+//                                    );
+//                                }))),
+
+                path("create-model", () ->
+                        get(()-> {
+                            createModel();
+                            return complete("create model cc3200-1111 link succeed");
+
+                        })),
 
                 path("link-device", () ->
                                 get(()-> {
@@ -80,27 +87,28 @@ public class HttpServer extends AllDirectives {
     }
 
     private CompletionStage<Done> linkDevice() {
-        System.out.println("2222");
+//        System.out.println("2222");
         DeviceModel deviceModel = new DeviceModel();
-        deviceModel.setRealName("cc3200-1");
-        KafkaConfig kafkaConfig = new KafkaConfig();
-        kafkaConfig.setServer("192.168.123.131:9092");
-        kafkaConfig.setGroupId("1");
-        List<String> topics = new ArrayList<>();
-        topics.add("cc3200-1");
-        kafkaConfig.setTopics(topics);
-        deviceModel.setKafkaConfig(kafkaConfig);
+//        deviceModel.setRealName("cc3200-1");
+//        KafkaConfig kafkaConfig = new KafkaConfig();
+//        kafkaConfig.setServer("192.168.123.131:9092");
+//        kafkaConfig.setGroupId("1");
+//        List<String> topics = new ArrayList<>();
+//        topics.add("cc3200-1");
+//        kafkaConfig.setTopics(topics);
+//        deviceModel.setKafkaConfig(kafkaConfig);
 
-        MqttConfig mqttConfig1 = new MqttConfig();
-        mqttConfig1.setTopic( "cc3200/humidity");
-        mqttConfig1.setBrokerUrl("tcp://192.168.123.247:1883");
-        mqttConfig1.setClientId("123456");
-        deviceModel.setMqttConfig(mqttConfig1);
+//        MqttConfig mqttConfig1 = new MqttConfig();
+//        List<String> topic =
+//        mqttConfig1.setTopic( "cc3200/humidity");
+//        mqttConfig1.setBrokerUrl("tcp://192.168.123.247:1883");
+//        mqttConfig1.setClientId("123456");
+//        deviceModel.setMqttConfig(mqttConfig1);
 
 //        m.setName("cc3200");
         GetDeviceModelDoc doc = new GetDeviceModelDoc();
         doc.setKey("name");
-        doc.setValue("cc3200");
+        doc.setValue("cc3200-1111");
         doc.setConnName("model");
         doc.setCollectionName("model");
         doc.setDeviceModel(deviceModel);
@@ -110,24 +118,62 @@ public class HttpServer extends AllDirectives {
         return CompletableFuture.completedFuture(Done.getInstance());
     }
 
-    private CompletionStage<Done> getInsertMongoDBDoc(Model m) {
+    private CompletionStage<Done> createModel() {
         InsertMongoDBDoc doc = new InsertMongoDBDoc();
         Map<String,String> map = new HashMap<>();
         AbstractModel model = new AbstractModel();
         model.setName("cc3200");
-        Profile profile = new Profile();
+        model.setNo("1111");
+//        Profile profile = new Profile();
 //        profile.setProductName("");
 
         List<Property> properties = new ArrayList<>();
         Property property1 = new Property();
         property1.setName("humidity");
+        property1.setMqttTopic("cc3200/1111/humidity");
         properties.add(property1);
 
+        Property property2 = new Property();
+        property2.setName("temperature");
+        property2.setMqttTopic("cc3200/1111/temperature");
+        properties.add(property2);
         model.setProperties(properties);
 
-        String str = JSON.toJSONString(model);
+        List<Event> events = new ArrayList<>();
+        Event event1 = new Event();
+        event1.setName("light-on");
+        event1.setMqttTopic("cc3200/1111/light-on");
+        events.add(event1);
 
-        map.put("name","cc3200");
+        Event event2 = new Event();
+        event2.setName("light-off");
+        event2.setMqttTopic("cc3200/1111/light-off");
+        events.add(event2);
+
+        model.setEvents(events);
+
+        DeviceModel deviceModel = new DeviceModel();
+        deviceModel.setModel(model);
+        KafkaConfig kafkaConfig = new KafkaConfig();
+        kafkaConfig.setServer("192.168.123.131:9092");
+        kafkaConfig.setGroupId("1");
+        List<String> kafkaTopics = new ArrayList<>();
+        kafkaTopics.add("cc3200/1111");
+        kafkaConfig.setTopics(kafkaTopics);
+        deviceModel.setKafkaConfig(kafkaConfig);
+
+        MqttConfig mqttConfig = new MqttConfig();
+        mqttConfig.setBrokerUrl("tcp://192.168.123.247:1883");
+        List<String> mqttTopics = new ArrayList<>();
+        mqttTopics.add("cc3200/1111/humidity");
+        mqttTopics.add("cc3200/1111/temperature");
+        mqttConfig.setTopics( mqttTopics);
+        deviceModel.setMqttConfig(mqttConfig);
+
+
+        String str = JSON.toJSONString(deviceModel);
+
+        map.put("name","cc3200-1111");
         map.put("model", str);
         doc.setDocMap(map);
         doc.setConnName("model");

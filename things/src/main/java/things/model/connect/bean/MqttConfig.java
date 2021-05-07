@@ -1,6 +1,7 @@
 package things.model.connect.bean;
 
 import lombok.Data;
+import java.util.List;
 
 /**
  * @author ：LLH
@@ -10,33 +11,21 @@ import lombok.Data;
 
 @Data
 public class MqttConfig {
-    private String topic;
+    private List<String> topics;
     private String brokerUrl;
-    private String userName;
-    private String password;
+//    private String userName;
+//    private String password;
 
-    private String clientId;
-
-    public MqttConfig() {
-
-    }
-
-    public MqttConfig(String topic, String brokerUrl, String userName, String password, String clientId) {
-        this.topic = topic;
-        this.brokerUrl = brokerUrl;
-        this.userName = userName;
-        this.password = password;
-        this.clientId = clientId;
-    }
+//    private String clientId;
 
     @Override
     public String toString() {
         return "MqttConfig{" +
-                "topic='" + topic + '\'' +
+                "topic='" + topics + '\'' +
                 ", brokerUrl='" + brokerUrl + '\'' +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", clientId='" + clientId + '\'' +
+//                ", userName='" + userName + '\'' +
+//                ", password='" + password + '\'' +
+//                ", clientId='" + clientId + '\'' +
                 '}';
     }
 }

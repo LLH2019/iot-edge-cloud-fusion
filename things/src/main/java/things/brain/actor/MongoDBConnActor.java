@@ -71,10 +71,10 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
 //        queryMongoDBData.setDoc(document);
 
         DeviceModel deviceModel = doc.getDeviceModel();
-        AbstractModel model = JSON.parseObject(document.get("model").toString(), AbstractModel.class);
+        DeviceModel model = JSON.parseObject(document.get("model").toString(), DeviceModel.class);
 ////        deviceModel.set
 //
-        deviceModel.setModel(model);
+
         System.out.println("7777" + model);
         brainActorRef.tell(deviceModel);
         return this;

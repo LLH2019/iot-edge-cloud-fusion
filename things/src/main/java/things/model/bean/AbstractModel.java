@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class AbstractModel {
     private String name;
+    private String no;
 
     private Profile profile;
 

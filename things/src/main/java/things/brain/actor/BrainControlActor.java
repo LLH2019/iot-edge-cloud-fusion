@@ -29,7 +29,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
 
     private ActorRef<BasicCommon> kafkaConnectInActorRef;
     private Map<String, ActorRef<BasicCommon>> cloudControlRefMaps;
-    private List<String> subscribeTopics;
+//    private List<String> subscribeTopics;
 
     public BrainControlActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
         super(context);
@@ -49,11 +49,12 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
     }
 
     private Behavior<BasicCommon> onHandleDeviceLink(DeviceModel model) {
-        ActorRef<BasicCommon>  ref = getContext().spawn(CloudControlActor.create(model), model.getRealName());
-        cloudControlRefMaps.put(model.getRealName(), ref);
+        String realName = model.getModel().getName() + "-" +  model.getModel().getNo();
+        ActorRef<BasicCommon>  ref = getContext().spawn(CloudControlActor.create(model), realName);
+        cloudControlRefMaps.put(realName, ref);
 
         SubscribeTopic subscribeTopic = new SubscribeTopic();
-        subscribeTopic.setTopics(model.getTopics());
+        subscribeTopic.setTopics(model.getKafkaConfig().getTopics());
         subscribeTopic.setRef(ref);
         kafkaConnectInActorRef.tell(subscribeTopic);
         return this;
