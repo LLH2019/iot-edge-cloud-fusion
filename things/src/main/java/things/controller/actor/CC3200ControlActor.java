@@ -6,9 +6,9 @@
 //import akka.actor.typed.javadsl.ActorContext;
 //import akka.actor.typed.javadsl.Behaviors;
 //import java.util.List;
-//import things.model.bean.BasicCommon;
-//import things.model.connect.bean.KafkaConfig;
-//import things.model.connect.bean.KafkaMsg;
+//import base.model.bean.BasicCommon;
+//import base.model.connect.bean.KafkaConfig;
+//import base.model.connect.bean.KafkaMsg;
 //
 //import java.util.ArrayList;
 //

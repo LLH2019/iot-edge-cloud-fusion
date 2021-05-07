@@ -1,7 +1,7 @@
 package things.client.bean;
 
 import lombok.Data;
-import things.model.bean.DeviceModel;
+import base.model.bean.DeviceModel;
 
 /**
  * @author ：LLH
