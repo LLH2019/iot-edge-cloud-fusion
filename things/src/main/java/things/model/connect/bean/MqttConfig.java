@@ -11,21 +11,21 @@ import java.util.List;
 
 @Data
 public class MqttConfig {
-    private List<String> topics;
+    private String topic;
     private String brokerUrl;
 //    private String userName;
 //    private String password;
 
-//    private String clientId;
+    private String clientId;
 
     @Override
     public String toString() {
         return "MqttConfig{" +
-                "topic='" + topics + '\'' +
+                "topic='" + topic + '\'' +
                 ", brokerUrl='" + brokerUrl + '\'' +
 //                ", userName='" + userName + '\'' +
 //                ", password='" + password + '\'' +
-//                ", clientId='" + clientId + '\'' +
+                ", clientId='" + clientId + '\'' +
                 '}';
     }
 }

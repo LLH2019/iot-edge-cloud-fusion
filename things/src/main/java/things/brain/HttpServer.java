@@ -164,10 +164,11 @@ public class HttpServer extends AllDirectives {
 
         MqttConfig mqttConfig = new MqttConfig();
         mqttConfig.setBrokerUrl("tcp://192.168.123.247:1883");
-        List<String> mqttTopics = new ArrayList<>();
-        mqttTopics.add("cc3200/1111/humidity");
-        mqttTopics.add("cc3200/1111/temperature");
-        mqttConfig.setTopics( mqttTopics);
+        mqttConfig.setClientId("12345");
+//        List<String> mqttTopics = new ArrayList<>();
+        mqttConfig.setTopic("cc3200/1111/#");
+//        mqttTopics.add("cc3200/1111/temperature");
+//        mqttConfig.setTopics( mqttTopics);
         deviceModel.setMqttConfig(mqttConfig);
 
 

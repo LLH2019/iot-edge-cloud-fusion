@@ -26,7 +26,7 @@ import java.util.List;
  * @date ：Created in 2021/4/19 11:15
  * @description：初始启动类
  */
-public class BootstrapMain {
+public class CloudBootstrapMain {
     public static void main(String[] args) throws IOException {
 
 
