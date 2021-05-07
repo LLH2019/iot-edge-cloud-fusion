@@ -10,6 +10,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import akka.http.javadsl.marshallers.jackson.Jackson;
 import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import things.brain.bean.GetDeviceModelDoc;
 import things.brain.bean.InsertMongoDBDoc;
 import things.client.bean.Model;
@@ -25,6 +27,7 @@ import things.model.connect.bean.MqttConfig;
 public class HttpServer extends AllDirectives {
     private ActorRef<BasicCommon> brainControlActorRef;
     private ActorRef<BasicCommon> mongoDBActorRef;
+    final Logger logger = LoggerFactory.getLogger(HttpServer.class);
 
     public HttpServer(ActorRef<BasicCommon> brainControlActorRef, ActorRef<BasicCommon> mongoDBActorRef) {
         this.brainControlActorRef = brainControlActorRef;
@@ -45,14 +48,13 @@ public class HttpServer extends AllDirectives {
                                             complete("order created")
                                     );
                                 }))),
-                post(() ->
-                        path("link-device", () ->
-                                entity(Jackson.unmarshaller(Model.class), model -> {
-                                    CompletionStage<Done> futureSaved = linkDevice(model);
-                                    return onSuccess(futureSaved, done ->
-                                            complete("device link succeed")
-                                    );
-                                }))),
+
+                path("link-device", () ->
+                                get(()-> {
+                                    linkDevice();
+                                    return complete("device link succeed");
+
+                                })),
 
                 post(() ->
                         path("test", () ->
@@ -77,7 +79,8 @@ public class HttpServer extends AllDirectives {
 //                );
     }
 
-    private CompletionStage<Done> linkDevice(Model m) {
+    private CompletionStage<Done> linkDevice() {
+        System.out.println("2222");
         DeviceModel deviceModel = new DeviceModel();
         deviceModel.setRealName("cc3200-1");
         KafkaConfig kafkaConfig = new KafkaConfig();
@@ -94,13 +97,14 @@ public class HttpServer extends AllDirectives {
         mqttConfig1.setClientId("123456");
         deviceModel.setMqttConfig(mqttConfig1);
 
-        m.setName("cc3200");
+//        m.setName("cc3200");
         GetDeviceModelDoc doc = new GetDeviceModelDoc();
         doc.setKey("name");
         doc.setValue("cc3200");
         doc.setConnName("model");
         doc.setCollectionName("model");
         doc.setDeviceModel(deviceModel);
+        logger.debug("linkDevice is up....");
         mongoDBActorRef.tell(doc);
 
         return CompletableFuture.completedFuture(Done.getInstance());
