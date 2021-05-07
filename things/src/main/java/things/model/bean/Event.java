@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class Event {
     private String name;
-    private String value;
-
+//    private String value;
+    private String mqttTopic;
 
 }

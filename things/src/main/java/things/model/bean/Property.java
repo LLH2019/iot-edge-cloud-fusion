@@ -9,11 +9,11 @@ import lombok.Data;
  */
 @Data
 public class Property {
-    private String identifier;
+//    private String identifier;
     private String name;
-    private String accessMode;
-    private String acquired;
+//    private String accessMode;
+//    private String acquired;
+    private String mqttTopic;
 
-
-    private String value;
+//    private String value;
 }
