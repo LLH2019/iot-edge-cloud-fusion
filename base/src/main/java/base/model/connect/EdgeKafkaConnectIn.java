@@ -57,15 +57,15 @@ public class EdgeKafkaConnectIn {
          * consumer.subscribe(pattern);
          */
 
-        System.out.println("222" + kafkaConfig.getTopic());
-//        String topic = "/edge/*";
-//        Pattern pattern = Pattern.compile(topic);
-        List<String> topics = new ArrayList<>();
-        topics.add("/edge/edge-pod-1");
+//        System.out.println("222" + kafkaConfig.getTopic());
+        String topic = "edge.*";
+        Pattern pattern = Pattern.compile(topic);
+//        List<String> topics = new ArrayList<>();
+//        topics.add("edge.edge-pod-1");
 //        topics.add(kafkaConfig.getTopic());
-//        consumer.subscribe(pattern);
-        consumer.subscribe(topics);
-        logger.log(Level.INFO, "EdgeKafkaConnectIn is listening..." + topics);
+        consumer.subscribe(pattern);
+//        consumer.subscribe(topics);
+        logger.log(Level.INFO, "EdgeKafkaConnectIn is listening..." + topic);
         //轮询消息
         while (true) {
             //获取ConsumerRecords，一秒钟轮训一次

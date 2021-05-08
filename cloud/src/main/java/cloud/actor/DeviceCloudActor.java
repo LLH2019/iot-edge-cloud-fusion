@@ -64,7 +64,7 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
     private void createEdgeActorAction() {
 
         KafkaMsg kafkaMsg = new KafkaMsg();
-        kafkaMsg.setTopic("/edge/edge-pod-1");
+        kafkaMsg.setTopic("edge.edge-pod-1");
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        String key = df.format(new Date());
         kafkaMsg.setKey(TopicKey.CREATE_EDGE_ACTOR);
