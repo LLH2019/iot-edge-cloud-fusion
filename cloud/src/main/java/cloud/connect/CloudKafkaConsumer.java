@@ -1,6 +1,7 @@
 package cloud.connect;
 
 import akka.Done;
+import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
 import akka.kafka.CommitterSettings;
 import akka.kafka.ConsumerSettings;
@@ -12,6 +13,8 @@ import akka.protobufv3.internal.CodedInputStream;
 import akka.protobufv3.internal.InvalidProtocolBufferException;
 import akka.stream.RestartSettings;
 import akka.stream.javadsl.RestartSource;
+import base.model.bean.BasicCommon;
+import base.model.connect.bean.KafkaMsg;
 import com.typesafe.config.Config;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -21,6 +24,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Logger;
 
 /**
  * @author ：LLH
@@ -28,7 +32,16 @@ import java.util.concurrent.CompletionStage;
  * @description：云端kafka接收消息
  */
 public class CloudKafkaConsumer {
-    public static void init(ActorSystem<?> system) {
+    private static Logger logger = Logger.getLogger(CloudKafkaConsumer.class.getName());
+
+    private ActorRef<BasicCommon> kafkaConnectInActorRef;
+
+    public CloudKafkaConsumer(ActorSystem<?> system, ActorRef<BasicCommon> kafkaConnectInActorRef) {
+        this.kafkaConnectInActorRef = kafkaConnectInActorRef;
+        init(system);
+    }
+
+    public  void init(ActorSystem<?> system) {
         String topic =
                 "cloud.cc3200.1111";
 
@@ -63,9 +76,14 @@ public class CloudKafkaConsumer {
                 .run(system);
     }
 
-    private static CompletionStage<Done> handleRecord(ConsumerRecord<String, String> record)
-            throws InvalidProtocolBufferException {
+    private  CompletionStage<Done> handleRecord(ConsumerRecord<String, String> record) {
         System.out.println(record);
+        KafkaMsg kafkaMsg = new KafkaMsg();
+        kafkaMsg.setTopic(record.topic());
+        kafkaMsg.setKey(record.key());
+        kafkaMsg.setValue(record.value());
+
+        kafkaConnectInActorRef.tell(kafkaMsg);
         return CompletableFuture.completedFuture(Done.getInstance());
     }
 }

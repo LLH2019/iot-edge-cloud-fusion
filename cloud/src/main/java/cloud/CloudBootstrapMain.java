@@ -31,7 +31,7 @@ public class CloudBootstrapMain {
 
         ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "bootstrap");
         httpClientConn(system);
-        CloudKafkaConsumer.init(system);
+//        CloudKafkaConsumer.init(system);
 //        AkkaManagement.get(system).start();
 //        ClusterBootstrap.get(system).start();
 //        testCC3200(system);
@@ -60,7 +60,7 @@ public class CloudBootstrapMain {
 //        List<String> list = new ArrayList<>();
 //        list.add("llh.brain-1");
 //        kafkaConfig.setTopic("brain");
-        ActorRef<BasicCommon> brainControlActorRef = system.systemActorOf(BrainControlActor.create(kafkaConfig),
+        ActorRef<BasicCommon> brainControlActorRef = system.systemActorOf(BrainControlActor.create(kafkaConfig, system),
                 "brain-control", Props.empty());
 
         ActorRef<BasicCommon> mongoDBActorRef = system.systemActorOf(MongoDBConnActor.create(brainControlActorRef),

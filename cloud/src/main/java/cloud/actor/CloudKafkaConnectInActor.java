@@ -1,6 +1,7 @@
 package cloud.actor;
 
 import akka.actor.typed.ActorRef;
+import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
@@ -12,6 +13,7 @@ import base.model.connect.UpConnectIn;
 import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.KafkaMsg;
 import base.model.connect.bean.SubscribeTopic;
+import cloud.connect.CloudKafkaConsumer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,13 +30,16 @@ import java.util.logging.Logger;
 public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> implements UpConnectIn {
     private static Logger logger = Logger.getLogger(CloudKafkaConnectInActor.class.getName());
 
+    private ActorSystem<?> system;
     private Map<String, ActorRef<BasicCommon>> subscribesRefMap = new HashMap<>();
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
-    private CloudKafkaConnectIn cloudKafkaConnectIn;
-    public CloudKafkaConnectInActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
+//    private CloudKafkaConnectIn cloudKafkaConnectIn;
+    private CloudKafkaConsumer cloudKafkaConsumer;
+    public CloudKafkaConnectInActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig, ActorSystem<?> system) {
         super(context);
         this.kafkaConfig = kafkaConfig;
+        this.system = system;
         this.ref = getContext().getSelf();
 //        System.out.println("KafkaConnectInActor--");
         new Thread(()->upConnectIn()).start();
@@ -79,14 +84,15 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         return this;
     }
 
-    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig) {
-        return Behaviors.setup(context -> new CloudKafkaConnectInActor(context, kafkaConfig));
+    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig, ActorSystem<?> system) {
+        return Behaviors.setup(context -> new CloudKafkaConnectInActor(context, kafkaConfig,system));
     }
 
     @Override
     public void upConnectIn() {
 //        System.out.println("888--upConnectIn" + kafkaConfig);
-        this.cloudKafkaConnectIn = new CloudKafkaConnectIn(kafkaConfig, ref);
+//        this.cloudKafkaConnectIn = new CloudKafkaConnectIn(kafkaConfig, ref);
 //        System.out.println("888--upConnectIn");
+        this.cloudKafkaConsumer = new CloudKafkaConsumer(system, ref);
     }
 }

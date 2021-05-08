@@ -1,6 +1,7 @@
 package cloud.actor;
 
 import akka.actor.typed.ActorRef;
+import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
@@ -29,11 +30,13 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
     private static Logger logger = Logger.getLogger(BrainControlActor.class.getName());
     private ActorRef<BasicCommon> kafkaConnectInActorRef;
     private Map<String, ActorRef<BasicCommon>> cloudControlRefMaps;
+    private ActorSystem<?> system;
 //    private List<String> subscribeTopics;
 
-    public BrainControlActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
+    public BrainControlActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig, ActorSystem<?> system) {
         super(context);
-        this.kafkaConnectInActorRef = getContext().spawn(CloudKafkaConnectInActor.create(kafkaConfig), "cloud-kafka-connect-in-actor");
+        this.system = system;
+        this.kafkaConnectInActorRef = getContext().spawn(CloudKafkaConnectInActor.create(kafkaConfig, system), "cloud-kafka-connect-in-actor");
         logger.log(Level.INFO, "BrainControlActor init...");
 
         //        cloudControlRefMaps.put()
@@ -84,8 +87,8 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
         return this;
     }
 
-    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig) {
-        return Behaviors.setup(context -> new BrainControlActor(context, kafkaConfig));
+    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig, ActorSystem<?> system) {
+        return Behaviors.setup(context -> new BrainControlActor(context, kafkaConfig, system));
     }
 
     @Override
