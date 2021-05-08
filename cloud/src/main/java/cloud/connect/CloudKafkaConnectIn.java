@@ -1,4 +1,4 @@
-package base.model.connect;
+package cloud.connect;
 
 import akka.actor.typed.ActorRef;
 import org.apache.kafka.clients.consumer.ConsumerRecord;

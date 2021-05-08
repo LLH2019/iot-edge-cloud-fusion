@@ -1,4 +1,4 @@
-package base.model.connect;
+package edge.connect;
 
 import akka.actor.typed.ActorRef;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -9,7 +9,6 @@ import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.KafkaMsg;
 
 import java.time.Duration;
-import java.util.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;

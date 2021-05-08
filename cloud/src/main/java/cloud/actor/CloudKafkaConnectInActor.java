@@ -7,12 +7,11 @@ import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import base.model.bean.BasicCommon;
-import base.model.connect.CloudKafkaConnectIn;
+import cloud.connect.CloudKafkaConnectIn;
 import base.model.connect.UpConnectIn;
 import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.KafkaMsg;
 import base.model.connect.bean.SubscribeTopic;
-import scala.collection.immutable.LongVectorStepper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
