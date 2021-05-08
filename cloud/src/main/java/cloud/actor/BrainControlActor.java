@@ -16,6 +16,8 @@ import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.SubscribeTopic;
 
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author ：LLH
@@ -24,6 +26,7 @@ import java.util.Map;
  */
 public class BrainControlActor extends AbstractBehavior<BasicCommon> implements UpConnectIn {
 
+    private static Logger logger = Logger.getLogger(BrainControlActor.class.getName());
     private ActorRef<BasicCommon> kafkaConnectInActorRef;
     private Map<String, ActorRef<BasicCommon>> cloudControlRefMaps;
 //    private List<String> subscribeTopics;
@@ -31,7 +34,9 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
     public BrainControlActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
         super(context);
         this.kafkaConnectInActorRef = getContext().spawn(CloudKafkaConnectInActor.create(kafkaConfig), "cloud-kafka-connect-in");
-//        cloudControlRefMaps.put()
+        logger.log(Level.INFO, "BrainControlActor init...");
+
+        //        cloudControlRefMaps.put()
 //        upConnectIn();
     }
 
@@ -46,6 +51,8 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
     }
 
     private Behavior<BasicCommon> onHandleDeviceLink(DeviceModel model) {
+        logger.log(Level.INFO, "BrainControlActor handle device link...");
+
         String realName = model.getModel().getName() + "-" +  model.getModel().getNo();
         ActorRef<BasicCommon>  ref = getContext().spawn(DeviceCloudActor.create(model), realName);
         cloudControlRefMaps.put(realName, ref);

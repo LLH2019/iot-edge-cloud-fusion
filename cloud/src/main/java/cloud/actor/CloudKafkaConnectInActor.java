@@ -12,11 +12,14 @@ import base.model.connect.UpConnectIn;
 import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.KafkaMsg;
 import base.model.connect.bean.SubscribeTopic;
+import scala.collection.immutable.LongVectorStepper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author ：LLH
@@ -24,6 +27,8 @@ import java.util.Map;
  * @description：接收外部消息Actor
  */
 public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> implements UpConnectIn {
+    private static Logger logger = Logger.getLogger(CloudKafkaConnectInActor.class.getName());
+
     private Map<String, List<ActorRef<BasicCommon>>> subscribesRefMap = new HashMap<>();
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
@@ -32,8 +37,10 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         super(context);
         this.kafkaConfig = kafkaConfig;
         this.ref = getContext().getSelf();
-        System.out.println("KafkaConnectInActor--");
+//        System.out.println("KafkaConnectInActor--");
         new Thread(()->upConnectIn()).start();
+
+        logger.log(Level.INFO, "CloudKafkaConnectInActor init...");
     }
 
     @Override
@@ -58,7 +65,7 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
                     subscribesRefMap.put(topic, list);
                 }
 //            }
-            System.out.println("onHandleSubscribeTopic...");
+            logger.log(Level.INFO, "CloudKafkaConnectInActor handleSubscribeTopic...");
         }
 //        System.out.println("onHandleSubscribeTopic " + subscribeTopic.getTopics().size());
 //        System.out.println("onHandleSubscribeTopic-- " + cloudKafkaConnectIn);
