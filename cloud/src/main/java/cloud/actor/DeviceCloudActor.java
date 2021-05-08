@@ -41,6 +41,7 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
 
     public DeviceCloudActor(ActorContext<BasicCommon> context, DeviceModel deviceModel) {
         super(context);
+        logger.log(Level.INFO, "DeviceCloudActor pre init...");
         this.ref = context.getSelf();
         this.deviceModel = deviceModel;
         upConnectOut();

@@ -20,8 +20,6 @@ public class DeviceModel implements BasicCommon {
 
     private KafkaConfig kafkaConfig;
 
-    public DeviceModel() {
-    }
 
 //    public DeviceModel(Status status, MqttConfig mqttConfig, KafkaConfig kafkaConfig) {
 //        this.status = status;
@@ -32,12 +30,11 @@ public class DeviceModel implements BasicCommon {
 //    public void setStatus(Status.ThingStatus offline) {
 //    }
 
+
     @Override
     public String toString() {
         return "DeviceModel{" +
-//                "realName='" + realName + '\'' +
-                ", model=" + model +
-//                ", status=" + status +
+                "model=" + model +
                 ", mqttConfig=" + mqttConfig +
                 ", kafkaConfig=" + kafkaConfig +
                 '}';
