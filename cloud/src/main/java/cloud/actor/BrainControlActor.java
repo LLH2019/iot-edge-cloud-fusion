@@ -51,9 +51,10 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
     }
 
     private Behavior<BasicCommon> onHandleDeviceLink(DeviceModel model) {
-        logger.log(Level.INFO, "BrainControlActor handle device link...");
+        logger.log(Level.INFO, "BrainControlActor handle device link..." + model);
 
         String realName = model.getModel().getName() + "-" +  model.getModel().getNo();
+        logger.log(Level.INFO, "BrainControlActor spawn device..." + realName + model);
         ActorRef<BasicCommon>  ref = getContext().spawn(DeviceCloudActor.create(model), realName);
         cloudControlRefMaps.put(realName, ref);
 //

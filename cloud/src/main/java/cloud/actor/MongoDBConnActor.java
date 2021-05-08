@@ -72,13 +72,13 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
 //        queryMongoDBData.setType(DataType.NEW_MODEl);
 //        queryMongoDBData.setDoc(document);
 
-        DeviceModel deviceModel = doc.getDeviceModel();
+//        DeviceModel deviceModel = doc.getDeviceModel();
         DeviceModel model = JSON.parseObject(document.get("model").toString(), DeviceModel.class);
 ////        deviceModel.set
 //
 
-        logger.log(Level.INFO, model.toString());
-        brainActorRef.tell(deviceModel);
+        logger.log(Level.INFO, "MongoDBConnActor get model " +  model.toString());
+        brainActorRef.tell(model);
         return this;
     }
 

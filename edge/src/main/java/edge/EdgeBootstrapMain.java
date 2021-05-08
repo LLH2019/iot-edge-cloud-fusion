@@ -37,7 +37,7 @@ public class EdgeBootstrapMain {
         kafkaConfig.setTopic("edge-pod-1");
 //        kafkaConfig.setTopic(list);
 
-        logger.log(Level.INFO, "edge-bootstrap init...");
+        logger.log(Level.WARNING, "edge-bootstrap init...");
         system.systemActorOf(PodActor.create(kafkaConfig), "edge-pod-1", Props.empty());
     }
 
