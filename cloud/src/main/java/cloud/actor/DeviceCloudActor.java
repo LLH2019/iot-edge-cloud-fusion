@@ -5,6 +5,8 @@ import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
+import base.model.connect.bean.KafkaConfig;
+import base.model.connect.bean.SubscribeTopic;
 import base.type.TopicKey;
 import com.alibaba.fastjson.JSON;
 import base.model.bean.DeviceModel;
@@ -29,22 +31,26 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
 
     private KafkaConnectOut kafkaConnectOut;
 
+    private ActorRef<BasicCommon> kafkaConnectInActorRef;
+
     private DeviceModel deviceModel;
 
 //    private List<String> subscribeTopics;
 
 //    private List<EdgeDevice> edgeDevices;
 
-    public static Behavior<BasicCommon> create(DeviceModel deviceModel) {
-        return Behaviors.setup(context -> new DeviceCloudActor(context, deviceModel));
+    public static Behavior<BasicCommon> create(DeviceModel deviceModel, ActorRef<BasicCommon> kafkaConnectInActorRef) {
+        return Behaviors.setup(context -> new DeviceCloudActor(context, deviceModel, kafkaConnectInActorRef));
     }
 
-    public DeviceCloudActor(ActorContext<BasicCommon> context, DeviceModel deviceModel) {
+    public DeviceCloudActor(ActorContext<BasicCommon> context, DeviceModel deviceModel, ActorRef<BasicCommon> kafkaConnectInActorRef) {
         super(context);
         logger.log(Level.INFO, "DeviceCloudActor pre init...");
         this.ref = context.getSelf();
         this.deviceModel = deviceModel;
+        this.kafkaConnectInActorRef = kafkaConnectInActorRef;
         upConnectOut();
+        downConnectIn();
         createEdgeActorAction();
         logger.log(Level.INFO, "DeviceCloudActor init...");
     }
@@ -88,6 +94,12 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
 
     @Override
     public void downConnectIn() {
+        KafkaConfig kafkaConfig = deviceModel.getKafkaConfig();
+        SubscribeTopic subscribeTopic = new SubscribeTopic();
+        String topic = "cloud." + kafkaConfig.getTopic().replace("/", ".");
+        subscribeTopic.setRef(ref);
+        subscribeTopic.setTopic(topic);
+        kafkaConnectInActorRef.tell(subscribeTopic);
     }
 
     @Override

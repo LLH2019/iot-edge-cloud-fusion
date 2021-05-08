@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> implements UpConnectIn {
     private static Logger logger = Logger.getLogger(CloudKafkaConnectInActor.class.getName());
 
-    private Map<String, List<ActorRef<BasicCommon>>> subscribesRefMap = new HashMap<>();
+    private Map<String, ActorRef<BasicCommon>> subscribesRefMap = new HashMap<>();
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
     private CloudKafkaConnectIn cloudKafkaConnectIn;
@@ -52,20 +52,12 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 
     private Behavior<BasicCommon> onHandleSubscribeTopic(SubscribeTopic subscribeTopic) {
         String topic = subscribeTopic.getTopic();
-        if (topic != null && !"".equals(topic)) {
 //            for (String topic : topics) {
-                if (!subscribesRefMap.containsKey(topic)) {
-                    List<ActorRef<BasicCommon>> list = new ArrayList<>();
-                    list.add(subscribeTopic.getRef());
-                    subscribesRefMap.put(topic, list);
-                } else {
-                    List<ActorRef<BasicCommon>> list = subscribesRefMap.get(topic);
-                    list.add(subscribeTopic.getRef());
-                    subscribesRefMap.put(topic, list);
-                }
-//            }
-            logger.log(Level.INFO, "CloudKafkaConnectInActor handleSubscribeTopic...");
-        }
+
+        subscribesRefMap.put(topic, subscribeTopic.getRef());
+
+//
+        logger.log(Level.INFO, "CloudKafkaConnectInActor handleSubscribeTopic...");
 //        System.out.println("onHandleSubscribeTopic " + subscribeTopic.getTopics().size());
 //        System.out.println("onHandleSubscribeTopic-- " + cloudKafkaConnectIn);
 //        new Thread(()->kafkaConnectIn.addTopics(subscribeTopic.getTopics()));
@@ -75,14 +67,15 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 
 
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
+        System.out.println("666666");
+        logger.log(Level.INFO, "CloudKafkaConnectInActor " + msg );
 //        handleMqttMsg(msg);
-        String topic = msg.getTopic();
-        List<ActorRef<BasicCommon>> refs = subscribesRefMap.get(topic);
-        if(refs != null) {
-            for (ActorRef<BasicCommon> ref : refs) {
-                ref.tell(msg);
-            }
-        }
+//        String topic = msg.getTopic();
+//        ActorRef<BasicCommon> ref = subscribesRefMap.get(topic);
+//        System.out.println("555" + ref);
+//        if(ref != null) {
+//            ref.tell(msg);
+//        }
         return this;
     }
 

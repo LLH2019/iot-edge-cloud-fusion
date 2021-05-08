@@ -53,7 +53,7 @@ public class CloudKafkaConnectIn {
 //    }
 
     private void init() {
-//        System.out.println("6666");
+        System.out.println("6666" + kafkaConfig + ref);
         Properties kafkaPropertie = new Properties();
         //配置broker地址，配置多个容错
         kafkaPropertie.put("bootstrap.servers", kafkaConfig.getServer());
@@ -79,20 +79,29 @@ public class CloudKafkaConnectIn {
         //轮询消息
         while (true) {
             //获取ConsumerRecords，一秒钟轮训一次
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(2000));
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
             //消费消息，遍历records
+//            KafkaMsg outData = new KafkaMsg();
+
             for (ConsumerRecord<String, String> r : records) {
+
                 KafkaMsg data = new KafkaMsg();
                 data.setTopic(r.topic());
                 data.setKey(r.key());
                 data.setValue(r.value());
-                logger.log(Level.INFO, "kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
+//                logger.log(Level.INFO, "kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
+                System.out.println(ref  + " 222 " + data);
                 ref.tell(data);
+//                synchronized (this) {
+
+//                }
 //                LOGGER.error("partition:", r.partition());
 //                LOGGER.error("topic:", r.topic());
 //                LOGGER.error("offset:", r.offset());
                 System.out.println("kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
             }
+
+
 //            System.out.println("3333 " + topicNum);
 //            if (subscribedTopics.size() != topicNum) {
 //                topicNum = subscribedTopics.size();

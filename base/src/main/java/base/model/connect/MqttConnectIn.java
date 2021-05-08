@@ -27,7 +27,7 @@ public class MqttConnectIn {
 
     private void init() {
         try {
-            logger.log(Level.INFO, "MqttConnectIn init... " + mqttConfig);
+            logger.log(Level.INFO, "MqttConnectIn init... " + mqttConfig + ref);
             MqttClient client = new MqttClient(mqttConfig.getBrokerUrl(), mqttConfig.getClientId());
 //            System.out.println("777");
             MqttConnectOptions options = new MqttConnectOptions();
@@ -46,14 +46,18 @@ public class MqttConnectIn {
 //            System.out.println("666");
             client.setCallback(new PushCallback(ref));
 //            System.out.println("222");
-            MqttTopic topic = client.getTopic(mqttConfig.getTopic());
+            String str = "cc3200/1111/humidity";
+            MqttTopic topic = client.getTopic(str);
+            System.out.println(str);
+//            MqttTopic topic = client.getTopic(m);
             //setWill方法，如果项目中需要知道客户端是否掉线可以调用该方法。设置最终端口的通知消息
             //遗嘱
             options.setWill(topic, "close".getBytes(), 1, true);
             client.connect(options);
+//            System.out.println("5555");
             //订阅消息
 //            int[] Qos = {1};//0：最多一次 、1：最少一次 、2：只有一次
-//            String[] topic1 = {mqttConfig.topic};
+//            String[] topic1 = {str};
 //            client.subscribe(topic1, Qos);
 
         } catch (MqttException e) {
@@ -84,6 +88,7 @@ public class MqttConnectIn {
 //            System.out.println("接收消息主题 : " + topic);
 //            System.out.println("接收消息Qos : " + message.getQos());
 //            System.out.println("接收消息内容 : " + new String(message.getPayload()));
+//            System.out.println("1111111");
             MqttInMsg msg = new MqttInMsg(new String(message.getPayload()));
             logger.log(Level.INFO, "MQTT msg : " + msg);
 //            CC3200Actor.TemperatureUpload upload = new CC3200Actor.TemperatureUpload(new String(message.getPayload()));

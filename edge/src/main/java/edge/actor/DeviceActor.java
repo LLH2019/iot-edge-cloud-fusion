@@ -9,8 +9,11 @@ import base.model.bean.BasicCommon;
 import base.model.bean.DeviceModel;
 import base.model.connect.KafkaConnectOut;
 import base.model.connect.MqttConnectIn;
+import base.model.connect.bean.KafkaMsg;
 import base.model.connect.bean.MqttConfig;
 import base.model.connect.bean.MqttInMsg;
+import base.type.TopicKey;
+import com.alibaba.fastjson.JSON;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -76,11 +79,20 @@ public class DeviceActor extends AbstractDeviceActor {
     public void handleMqttMsg(MqttInMsg msg) {
 //        MessageHandler handler = new MessageHandler();
 //        Message message = handler.handleMqttUpMsg(msg.getMsg());
-        System.out.println("handleMqttMsg: " + msg.getMsg());
 
+        KafkaMsg kafkaMsg = new KafkaMsg();
+        kafkaMsg.setTopic("cloud.cc3200.1111");
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String key = df.format(new Date()) + "-temperature";
-        getKafkaConnectOut().sendMessageForgetResult(deviceModel.getKafkaConfig().getTopic(), key, msg.getMsg());
+        String key = df.format(new Date());
+        kafkaMsg.setKey(key);
+        kafkaMsg.setValue(msg.getMsg());
+//        System.out.println("999" + kafkaMsg);
+        logger.log(Level.INFO, "DeviceActor " + kafkaMsg);
+//        System.out.println("handleMqttMsg: " + msg.getMsg());
+
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String key = df.format(new Date()) + "-temperature";
+        kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
 //        sendToKafka(msg);
 //        kafkaConnectOut.s
     }

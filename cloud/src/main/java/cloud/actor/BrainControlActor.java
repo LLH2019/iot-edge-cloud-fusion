@@ -33,7 +33,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
 
     public BrainControlActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
         super(context);
-        this.kafkaConnectInActorRef = getContext().spawn(CloudKafkaConnectInActor.create(kafkaConfig), "cloud-kafka-connect-in");
+        this.kafkaConnectInActorRef = getContext().spawn(CloudKafkaConnectInActor.create(kafkaConfig), "cloud-kafka-connect-in-actor");
         logger.log(Level.INFO, "BrainControlActor init...");
 
         //        cloudControlRefMaps.put()
@@ -55,7 +55,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
 
         String realName = model.getModel().getName() + "-" +  model.getModel().getNo();
         logger.log(Level.INFO, "BrainControlActor spawn device..." + realName + model);
-        ActorRef<BasicCommon>  ref = getContext().spawn(DeviceCloudActor.create(model), realName);
+        ActorRef<BasicCommon>  ref = getContext().spawn(DeviceCloudActor.create(model, kafkaConnectInActorRef), realName);
         cloudControlRefMaps.put(realName, ref);
 //
 //        SubscribeTopic subscribeTopic = new SubscribeTopic();
