@@ -66,6 +66,7 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
         SubscribeTopic subscribeTopic = new SubscribeTopic();
         String topic = "/edge/" + kafkaConfig.getTopic();
         subscribeTopic.setRef(ref);
+        subscribeTopic.setTopic(topic);
 //        subscribeTopic.setTopics(subscribeTopics);
         kafkaConnectInActorRef.tell(subscribeTopic);
 //        SubscribeTopic topic = new SubscribeTopic();

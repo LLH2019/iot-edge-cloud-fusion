@@ -13,6 +13,8 @@ import base.model.connect.KafkaConnectOut;
 import base.model.connect.bean.KafkaMsg;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author ：LLH
@@ -21,6 +23,7 @@ import java.util.List;
  */
 public class DeviceCloudActor extends AbstractCloudControlActor {
 
+    private static Logger logger = Logger.getLogger(DeviceCloudActor.class.getName());
 //    private KafkaConfig kafkaConfig;
     private ActorRef<BasicCommon> ref;
 
@@ -42,6 +45,7 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
         this.deviceModel = deviceModel;
         upConnectOut();
         createEdgeActorAction();
+        logger.log(Level.INFO, "DeviceCloudActor init...");
     }
 
     public KafkaConnectOut getKafkaConnectOut() {
@@ -66,6 +70,7 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
         String jsonString = JSON.toJSONString(deviceModel);
         kafkaMsg.setValue(jsonString);
 //        System.out.println("999" + kafkaMsg);
+        logger.log(Level.INFO, "DeviceCloudActor " + kafkaMsg);
         kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
 //        System.out.println(kafkaMsg);
     }

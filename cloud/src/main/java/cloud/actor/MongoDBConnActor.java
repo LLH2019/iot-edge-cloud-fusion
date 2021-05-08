@@ -20,6 +20,8 @@ import base.model.bean.DeviceModel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author ：LLH
@@ -27,6 +29,8 @@ import java.util.Map;
  * @description：MongoDB连接Actor
  */
 public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
+    private static Logger logger = Logger.getLogger(MongoDBConnActor.class.getName());
+
     private Map<String, MongoDatabase> databaseMap = new HashMap<>();
     private ActorRef<BasicCommon> brainActorRef;
 
@@ -73,7 +77,7 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
 ////        deviceModel.set
 //
 
-        System.out.println("7777" + model);
+        logger.log(Level.INFO, model.toString());
         brainActorRef.tell(deviceModel);
         return this;
     }

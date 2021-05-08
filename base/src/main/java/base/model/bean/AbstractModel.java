@@ -20,11 +20,11 @@ public class AbstractModel {
 
     private List<Event> events;
 
-
     @Override
     public String toString() {
         return "AbstractModel{" +
                 "name='" + name + '\'' +
+                ", no='" + no + '\'' +
                 ", profile=" + profile +
                 ", properties=" + properties +
                 ", events=" + events +

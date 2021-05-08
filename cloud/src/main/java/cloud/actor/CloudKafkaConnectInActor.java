@@ -40,7 +40,7 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 //        System.out.println("KafkaConnectInActor--");
         new Thread(()->upConnectIn()).start();
 
-        logger.log(Level.INFO, "CloudKafkaConnectInActor init...");
+        logger.log(Level.WARNING, "CloudKafkaConnectInActor init...");
     }
 
     @Override

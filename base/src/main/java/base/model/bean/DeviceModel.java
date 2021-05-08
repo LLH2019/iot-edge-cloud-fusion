@@ -36,7 +36,7 @@ public class DeviceModel implements BasicCommon {
     public String toString() {
         return "DeviceModel{" +
 //                "realName='" + realName + '\'' +
-//                ", model=" + model +
+                ", model=" + model +
 //                ", status=" + status +
                 ", mqttConfig=" + mqttConfig +
                 ", kafkaConfig=" + kafkaConfig +

@@ -12,6 +12,8 @@ import java.time.Duration;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -24,6 +26,7 @@ public class EdgeKafkaConnectIn {
 //    private Set<String> subscribedTopics = new HashSet<>();
 //    private int topicNum;
 
+    private static Logger logger = Logger.getLogger(EdgeKafkaConnectIn.class.getName());
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
     KafkaConsumer<String, String> consumer;
@@ -61,6 +64,7 @@ public class EdgeKafkaConnectIn {
 //        List<String> topics = new ArrayList<>();
 //        topics.add(kafkaConfig.getTopic());
         consumer.subscribe(pattern);
+        logger.log(Level.INFO, "EdgeKafkaConnectIn is listening...");
         //轮询消息
         while (true) {
             //获取ConsumerRecords，一秒钟轮训一次

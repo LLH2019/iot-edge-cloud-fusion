@@ -8,10 +8,10 @@ import akka.http.javadsl.server.Route;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.alibaba.fastjson.JSON;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import cloud.bean.GetDeviceModelDoc;
 import cloud.bean.InsertMongoDBDoc;
 import base.model.bean.*;
@@ -24,9 +24,9 @@ import base.model.connect.bean.MqttConfig;
  * @description：http server
  */
 public class HttpServer extends AllDirectives {
+    private static java.util.logging.Logger logger = Logger.getLogger(HttpServer.class.getName());
     private ActorRef<BasicCommon> brainControlActorRef;
     private ActorRef<BasicCommon> mongoDBActorRef;
-    final Logger logger = LoggerFactory.getLogger(HttpServer.class);
 
     public HttpServer(ActorRef<BasicCommon> brainControlActorRef, ActorRef<BasicCommon> mongoDBActorRef) {
         this.brainControlActorRef = brainControlActorRef;
@@ -111,7 +111,7 @@ public class HttpServer extends AllDirectives {
         doc.setConnName("model");
         doc.setCollectionName("model");
         doc.setDeviceModel(deviceModel);
-        logger.debug("linkDevice is up....");
+        logger.log(Level.INFO, "linkDevice is up....");
         mongoDBActorRef.tell(doc);
 
         return CompletableFuture.completedFuture(Done.getInstance());

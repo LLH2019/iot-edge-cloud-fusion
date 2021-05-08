@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author ：LLH
@@ -25,6 +27,7 @@ import java.util.List;
  * @description：接收外部消息Actor
  */
 public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> implements UpConnectIn {
+    private static Logger logger = Logger.getLogger(EdgeKafkaConnectInActor.class.getName());
     private Map<String, List<ActorRef<BasicCommon>>> subscribesRefMap = new HashMap<>();
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
@@ -35,6 +38,7 @@ public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> imple
         this.ref = getContext().getSelf();
 //        System.out.println("KafkaConnectInActor--");
         new Thread(()->upConnectIn()).start();
+        logger.log(Level.INFO, "EdgeKafkaConnectInActor init...");
     }
 
     @Override
