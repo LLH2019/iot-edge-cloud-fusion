@@ -10,9 +10,7 @@
 .idea
 123*
 
-edge/target
-cloud/target
-things/target
+*/target
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
