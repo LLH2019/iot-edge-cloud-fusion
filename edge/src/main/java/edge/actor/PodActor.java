@@ -51,9 +51,9 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
 
     private Behavior<BasicCommon> onKafkaMsgInAction(KafkaMsg msg) {
         if(TopicKey.CREATE_EDGE_ACTOR.equals(msg.getKey())) {
-            System.out.println("111111");
+//            System.out.println("111111");
             DeviceModel model = JSON.parseObject(msg.getValue(), DeviceModel.class);
-            System.out.println("222 " + model);
+//            System.out.println("222 " + model);
             String realName = model.getModel().getName() + "-" + model.getModel().getNo();
             getContext().spawn(DeviceActor.create(model), realName);
         }
@@ -64,7 +64,7 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
     @Override
     public void upConnectIn() {
         SubscribeTopic subscribeTopic = new SubscribeTopic();
-        String topic = "/edge/" + kafkaConfig.getTopic();
+        String topic = "edge." + kafkaConfig.getTopic();
         subscribeTopic.setRef(ref);
         subscribeTopic.setTopic(topic);
 //        subscribeTopic.setTopics(subscribeTopics);

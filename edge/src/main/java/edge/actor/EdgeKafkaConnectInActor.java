@@ -71,6 +71,7 @@ public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> imple
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
 //        handleMqttMsg(msg);
         String topic = msg.getTopic();
+        logger.log(Level.INFO, "EdgeKafkaConnectInActor " + msg + " " + topic);
         List<ActorRef<BasicCommon>> refs = subscribesRefMap.get(topic);
         for(ActorRef<BasicCommon> ref : refs) {
             ref.tell(msg);
