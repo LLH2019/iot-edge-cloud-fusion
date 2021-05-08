@@ -5,9 +5,12 @@ import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.Behaviors;
 import edge.actor.PodActor;
 import base.model.connect.bean.KafkaConfig;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author ：LLH
@@ -15,6 +18,7 @@ import java.util.List;
  * @description：边缘端启动入口
  */
 public class EdgeBootstrapMain {
+    private static Logger logger = Logger.getLogger(EdgeBootstrapMain.class.getName());
 
     public static void main(String[] args) {
         ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "edge-bootstrap");
@@ -26,15 +30,15 @@ public class EdgeBootstrapMain {
         KafkaConfig kafkaConfig = new KafkaConfig();
         kafkaConfig.setServer("192.168.123.131:9092");
         kafkaConfig.setGroupId("1");
-        List<String> topics = new ArrayList<>();
-        topics.add("llh.edge-pod-1");
+//        List<String> topics = new ArrayList<>();
+//        topics.add("edge-pod-1");
 
 //        List<String> lists = new ArrayList<>();
-        kafkaConfig.setTopic("llh.edge-pod-1");
+        kafkaConfig.setTopic("edge-pod-1");
 //        kafkaConfig.setTopic(list);
 
-
-        system.systemActorOf(PodActor.create(kafkaConfig, topics), "edge-pod-1", Props.empty());
+        logger.log(Level.INFO, "edge-bootstrap init...");
+        system.systemActorOf(PodActor.create(kafkaConfig), "edge-pod-1", Props.empty());
     }
 
 }

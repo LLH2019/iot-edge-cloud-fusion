@@ -25,19 +25,21 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
 
     private ActorRef<BasicCommon> ref;
     private ActorRef<BasicCommon> kafkaConnectInActorRef;
-    private List<String> subscribeTopics;
+    private KafkaConfig kafkaConfig;
+//    private List<String> subscribeTopics;
 
-    public PodActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig, List<String> subscribeTopics) {
+    public PodActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
         super(context);
         this.ref = getContext().getSelf();
-        this.subscribeTopics = subscribeTopics;
+//        this.subscribeTopics = subscribeTopics;
+        this.kafkaConfig = kafkaConfig;
         this.kafkaConnectInActorRef = getContext().spawn(EdgeKafkaConnectInActor.create(kafkaConfig), "up-connect-in");
 
         upConnectIn();
     }
 
-    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig, List<String> topics) {
-        return Behaviors.setup(context -> new PodActor(context, kafkaConfig, topics));
+    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig) {
+        return Behaviors.setup(context -> new PodActor(context, kafkaConfig));
     }
 
     @Override
@@ -62,6 +64,7 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
     @Override
     public void upConnectIn() {
         SubscribeTopic subscribeTopic = new SubscribeTopic();
+        String topic = "/edge/" + kafkaConfig.getTopic();
         subscribeTopic.setRef(ref);
 //        subscribeTopic.setTopics(subscribeTopics);
         kafkaConnectInActorRef.tell(subscribeTopic);
