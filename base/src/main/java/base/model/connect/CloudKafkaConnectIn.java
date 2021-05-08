@@ -10,6 +10,8 @@ import base.model.connect.bean.KafkaMsg;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -21,6 +23,7 @@ public class CloudKafkaConnectIn {
 
 //    private Set<String> subscribedTopics = new HashSet<>();
 //    private int topicNum;
+    private static Logger logger = Logger.getLogger(CloudKafkaConnectIn.class.getName());
 
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
@@ -67,11 +70,12 @@ public class CloudKafkaConnectIn {
          */
 
 //        System.out.println("222" + kafkaConfig.getTopic());
-        String topic = "/cloud/*";
+        String topic = "cloud.*";
         Pattern pattern = Pattern.compile(topic);
 //        List<String> topics = new ArrayList<>();
 //        topics.add(kafkaConfig.getTopic());
         consumer.subscribe(pattern);
+        logger.log(Level.INFO, "EdgeKafkaConnectIn is listening..." + topic);
         //轮询消息
         while (true) {
             //获取ConsumerRecords，一秒钟轮训一次
@@ -82,6 +86,7 @@ public class CloudKafkaConnectIn {
                 data.setTopic(r.topic());
                 data.setKey(r.key());
                 data.setValue(r.value());
+                logger.log(Level.INFO, "kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
                 ref.tell(data);
 //                LOGGER.error("partition:", r.partition());
 //                LOGGER.error("topic:", r.topic());
