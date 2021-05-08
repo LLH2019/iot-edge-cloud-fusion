@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
  */
 public class CloudKafkaConnectIn {
 
-    private Set<String> subscribedTopics = new HashSet<>();
-    private int topicNum;
+//    private Set<String> subscribedTopics = new HashSet<>();
+//    private int topicNum;
 
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
@@ -29,28 +29,28 @@ public class CloudKafkaConnectIn {
     public CloudKafkaConnectIn(KafkaConfig kafkaConfig, ActorRef<BasicCommon> ref) {
         this.kafkaConfig = kafkaConfig;
         this.ref = ref;
-        subscribedTopics.add(kafkaConfig.getTopic());
-        topicNum = subscribedTopics.size();
-        System.out.println("44444");
+//        subscribedTopics.add(kafkaConfig.getTopic());
+//        topicNum = subscribedTopics.size();
+//        System.out.println("44444");
         init();
     }
 
-    public void addTopics(List<String> topics) {
-        System.out.println("addTopics");
-        for(String topic : topics) {
-            subscribedTopics.add(topic);
-        }
-        for (String topic: subscribedTopics) {
-            System.out.print(topic + " ");
-        }
-        System.out.println();
-//        consumer.subscribe(new ArrayList<>(subscribedTopics));
-
-        System.out.println("addTopics--");
-    }
+//    public void addTopics(List<String> topics) {
+//        System.out.println("addTopics");
+//        for(String topic : topics) {
+//            subscribedTopics.add(topic);
+//        }
+//        for (String topic: subscribedTopics) {
+//            System.out.print(topic + " ");
+//        }
+//        System.out.println();
+////        consumer.subscribe(new ArrayList<>(subscribedTopics));
+//
+//        System.out.println("addTopics--");
+//    }
 
     private void init() {
-        System.out.println("6666");
+//        System.out.println("6666");
         Properties kafkaPropertie = new Properties();
         //配置broker地址，配置多个容错
         kafkaPropertie.put("bootstrap.servers", kafkaConfig.getServer());
@@ -66,7 +66,7 @@ public class CloudKafkaConnectIn {
          * consumer.subscribe(pattern);
          */
 
-        System.out.println("222" + kafkaConfig.getTopic());
+//        System.out.println("222" + kafkaConfig.getTopic());
         String topic = "/cloud/*";
         Pattern pattern = Pattern.compile(topic);
 //        List<String> topics = new ArrayList<>();

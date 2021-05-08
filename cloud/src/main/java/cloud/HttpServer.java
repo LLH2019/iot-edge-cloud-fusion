@@ -1,4 +1,4 @@
-package brain;
+package cloud;
 
 import akka.Done;
 import akka.actor.typed.ActorRef;
@@ -8,12 +8,12 @@ import akka.http.javadsl.server.Route;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import akka.http.javadsl.marshallers.jackson.Jackson;
+
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import brain.bean.GetDeviceModelDoc;
-import brain.bean.InsertMongoDBDoc;
+import cloud.bean.GetDeviceModelDoc;
+import cloud.bean.InsertMongoDBDoc;
 import base.model.bean.*;
 import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.MqttConfig;

@@ -1,4 +1,4 @@
-package brain.actor;
+package cloud.actor;
 
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
@@ -45,9 +45,9 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
     }
 
     private Behavior<BasicCommon> onHandleSubscribeTopic(SubscribeTopic subscribeTopic) {
-        List<String> topics = subscribeTopic.getTopics();
-        if(topics != null) {
-            for (String topic : topics) {
+        String topic = subscribeTopic.getTopic();
+        if (topic != null && !"".equals(topic)) {
+//            for (String topic : topics) {
                 if (!subscribesRefMap.containsKey(topic)) {
                     List<ActorRef<BasicCommon>> list = new ArrayList<>();
                     list.add(subscribeTopic.getRef());
@@ -57,11 +57,11 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
                     list.add(subscribeTopic.getRef());
                     subscribesRefMap.put(topic, list);
                 }
-            }
+//            }
             System.out.println("onHandleSubscribeTopic...");
         }
-        System.out.println("onHandleSubscribeTopic " + subscribeTopic.getTopics().size());
-        System.out.println("onHandleSubscribeTopic-- " + cloudKafkaConnectIn);
+//        System.out.println("onHandleSubscribeTopic " + subscribeTopic.getTopics().size());
+//        System.out.println("onHandleSubscribeTopic-- " + cloudKafkaConnectIn);
 //        new Thread(()->kafkaConnectIn.addTopics(subscribeTopic.getTopics()));
 
         return this;
@@ -72,8 +72,10 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 //        handleMqttMsg(msg);
         String topic = msg.getTopic();
         List<ActorRef<BasicCommon>> refs = subscribesRefMap.get(topic);
-        for(ActorRef<BasicCommon> ref : refs) {
-            ref.tell(msg);
+        if(refs != null) {
+            for (ActorRef<BasicCommon> ref : refs) {
+                ref.tell(msg);
+            }
         }
         return this;
     }
@@ -84,8 +86,8 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 
     @Override
     public void upConnectIn() {
-        System.out.println("888--upConnectIn" + kafkaConfig);
+//        System.out.println("888--upConnectIn" + kafkaConfig);
         this.cloudKafkaConnectIn = new CloudKafkaConnectIn(kafkaConfig, ref);
-        System.out.println("888--upConnectIn");
+//        System.out.println("888--upConnectIn");
     }
 }

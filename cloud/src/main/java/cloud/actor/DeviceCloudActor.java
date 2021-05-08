@@ -1,4 +1,4 @@
-package brain.actor;
+package cloud.actor;
 
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
@@ -19,7 +19,7 @@ import java.util.List;
  * @date ：Created in 2021/4/16 15:33
  * @description：kafka接收消息的控制actor
  */
-public class CloudControlActor extends AbstractCloudControlActor {
+public class DeviceCloudActor extends AbstractCloudControlActor {
 
 //    private KafkaConfig kafkaConfig;
     private ActorRef<BasicCommon> ref;
@@ -28,15 +28,15 @@ public class CloudControlActor extends AbstractCloudControlActor {
 
     private DeviceModel deviceModel;
 
-    private List<String> subscribeTopics;
+//    private List<String> subscribeTopics;
 
 //    private List<EdgeDevice> edgeDevices;
 
     public static Behavior<BasicCommon> create(DeviceModel deviceModel) {
-        return Behaviors.setup(context -> new CloudControlActor(context, deviceModel));
+        return Behaviors.setup(context -> new DeviceCloudActor(context, deviceModel));
     }
 
-    public CloudControlActor(ActorContext<BasicCommon> context, DeviceModel deviceModel) {
+    public DeviceCloudActor(ActorContext<BasicCommon> context, DeviceModel deviceModel) {
         super(context);
         this.ref = context.getSelf();
         this.deviceModel = deviceModel;
@@ -59,15 +59,15 @@ public class CloudControlActor extends AbstractCloudControlActor {
     private void createEdgeActorAction() {
 
         KafkaMsg kafkaMsg = new KafkaMsg();
-        kafkaMsg.setTopic("llh.edge-pod-1");
+        kafkaMsg.setTopic("/edge/edge-pod-1");
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        String key = df.format(new Date());
         kafkaMsg.setKey(TopicKey.CREATE_EDGE_ACTOR);
         String jsonString = JSON.toJSONString(deviceModel);
         kafkaMsg.setValue(jsonString);
-        System.out.println("999" + kafkaMsg);
+//        System.out.println("999" + kafkaMsg);
         kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
-        System.out.println(kafkaMsg);
+//        System.out.println(kafkaMsg);
     }
 
 
@@ -77,7 +77,7 @@ public class CloudControlActor extends AbstractCloudControlActor {
     }
 
     public void handleKafkaMsg(KafkaMsg kafkaMsg) {
-
+        System.out.println("device cloud msg " + kafkaMsg);
     }
 
     @Override

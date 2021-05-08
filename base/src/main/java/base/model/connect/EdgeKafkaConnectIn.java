@@ -21,8 +21,8 @@ import java.util.regex.Pattern;
  */
 public class EdgeKafkaConnectIn {
 
-    private Set<String> subscribedTopics = new HashSet<>();
-    private int topicNum;
+//    private Set<String> subscribedTopics = new HashSet<>();
+//    private int topicNum;
 
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
@@ -31,15 +31,15 @@ public class EdgeKafkaConnectIn {
     public EdgeKafkaConnectIn(KafkaConfig kafkaConfig, ActorRef<BasicCommon> ref) {
         this.kafkaConfig = kafkaConfig;
         this.ref = ref;
-        subscribedTopics.add(kafkaConfig.getTopic());
-        topicNum = subscribedTopics.size();
-        System.out.println("44444");
+//        subscribedTopics.add(kafkaConfig.getTopic());
+//        topicNum = subscribedTopics.size();
+//        System.out.println("44444");
         init();
     }
 
 
     private void init() {
-        System.out.println("6666");
+//        System.out.println("6666");
         Properties kafkaPropertie = new Properties();
         //配置broker地址，配置多个容错
         kafkaPropertie.put("bootstrap.servers", kafkaConfig.getServer());

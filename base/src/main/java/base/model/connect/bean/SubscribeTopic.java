@@ -14,5 +14,5 @@ import java.util.List;
 @Data
 public class SubscribeTopic implements BasicCommon {
     private ActorRef<BasicCommon> ref;
-    private List<String> topics;
+    private String topic;
 }

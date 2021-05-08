@@ -1,10 +1,10 @@
-package brain.util;
+package cloud.util;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
-import brain.bean.MongoDBConnConfig;
+import cloud.bean.MongoDBConnConfig;
 
 import java.util.*;
 

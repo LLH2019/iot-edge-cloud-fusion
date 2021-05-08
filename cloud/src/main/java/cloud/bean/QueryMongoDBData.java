@@ -1,4 +1,4 @@
-package brain.bean;
+package cloud.bean;
 
 import base.type.DataType;
 import lombok.Data;

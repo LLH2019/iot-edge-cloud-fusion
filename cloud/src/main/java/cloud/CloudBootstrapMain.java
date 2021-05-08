@@ -1,4 +1,4 @@
-package brain;
+package cloud;
 
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
@@ -6,8 +6,8 @@ import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.http.javadsl.Http;
 import akka.http.javadsl.ServerBinding;
-import brain.actor.BrainControlActor;
-import brain.actor.MongoDBConnActor;
+import cloud.actor.BrainControlActor;
+import cloud.actor.MongoDBConnActor;
 import base.model.bean.DeviceModel;
 import base.model.bean.BasicCommon;
 import base.model.bean.Event;
@@ -57,7 +57,7 @@ public class CloudBootstrapMain {
         kafkaConfig.setGroupId("1");
 //        List<String> list = new ArrayList<>();
 //        list.add("llh.brain-1");
-        kafkaConfig.setTopic("llh.brain-1");
+//        kafkaConfig.setTopic("brain");
         ActorRef<BasicCommon> brainControlActorRef = system.systemActorOf(BrainControlActor.create(kafkaConfig),
                 "brain-control", Props.empty());
 

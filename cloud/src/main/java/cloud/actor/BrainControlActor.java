@@ -1,4 +1,4 @@
-package brain.actor;
+package cloud.actor;
 
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
@@ -7,8 +7,8 @@ import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import base.type.DataType;
-import brain.bean.NewDeviceConn;
-import brain.bean.QueryMongoDBData;
+import cloud.bean.NewDeviceConn;
+import cloud.bean.QueryMongoDBData;
 import base.model.bean.BasicCommon;
 import base.model.bean.DeviceModel;
 import base.model.connect.UpConnectIn;
@@ -30,9 +30,9 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
 
     public BrainControlActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
         super(context);
-        this.kafkaConnectInActorRef = getContext().spawn(CloudKafkaConnectInActor.create(kafkaConfig), "kafka-connect-in");
+        this.kafkaConnectInActorRef = getContext().spawn(CloudKafkaConnectInActor.create(kafkaConfig), "cloud-kafka-connect-in");
 //        cloudControlRefMaps.put()
-        upConnectIn();
+//        upConnectIn();
     }
 
 
@@ -47,11 +47,13 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
 
     private Behavior<BasicCommon> onHandleDeviceLink(DeviceModel model) {
         String realName = model.getModel().getName() + "-" +  model.getModel().getNo();
-        ActorRef<BasicCommon>  ref = getContext().spawn(CloudControlActor.create(model), realName);
+        ActorRef<BasicCommon>  ref = getContext().spawn(DeviceCloudActor.create(model), realName);
         cloudControlRefMaps.put(realName, ref);
 
         SubscribeTopic subscribeTopic = new SubscribeTopic();
 //        subscribeTopic.setTopics(model.getKafkaConfig().getTopic());
+        String topic = "/cloud/" + model.getModel().getName() + "/" + model.getModel().getNo();
+        subscribeTopic.setTopic(topic);
         subscribeTopic.setRef(ref);
         kafkaConnectInActorRef.tell(subscribeTopic);
         return this;

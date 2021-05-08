@@ -33,7 +33,7 @@ public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> imple
         super(context);
         this.kafkaConfig = kafkaConfig;
         this.ref = getContext().getSelf();
-        System.out.println("KafkaConnectInActor--");
+//        System.out.println("KafkaConnectInActor--");
         new Thread(()->upConnectIn()).start();
     }
 
@@ -46,25 +46,21 @@ public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> imple
     }
 
     private Behavior<BasicCommon> onHandleSubscribeTopic(SubscribeTopic subscribeTopic) {
-        List<String> topics = subscribeTopic.getTopics();
-        if(topics != null) {
-            for (String topic : topics) {
-                if (!subscribesRefMap.containsKey(topic)) {
-                    List<ActorRef<BasicCommon>> list = new ArrayList<>();
-                    list.add(subscribeTopic.getRef());
-                    subscribesRefMap.put(topic, list);
-                } else {
-                    List<ActorRef<BasicCommon>> list = subscribesRefMap.get(topic);
-                    list.add(subscribeTopic.getRef());
-                    subscribesRefMap.put(topic, list);
-                }
+        String topic = subscribeTopic.getTopic();
+        if (topic != null && !"".equals(topic)) {
+//            for (String topic : topics) {
+            if (!subscribesRefMap.containsKey(topic)) {
+                List<ActorRef<BasicCommon>> list = new ArrayList<>();
+                list.add(subscribeTopic.getRef());
+                subscribesRefMap.put(topic, list);
+            } else {
+                List<ActorRef<BasicCommon>> list = subscribesRefMap.get(topic);
+                list.add(subscribeTopic.getRef());
+                subscribesRefMap.put(topic, list);
             }
+//            }
             System.out.println("onHandleSubscribeTopic...");
         }
-        System.out.println("onHandleSubscribeTopic " + subscribeTopic.getTopics().size());
-        System.out.println("onHandleSubscribeTopic-- " + edgeKafkaConnectIn);
-//        new Thread(()->kafkaConnectIn.addTopics(subscribeTopic.getTopics()));
-
         return this;
     }
 
@@ -85,8 +81,8 @@ public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> imple
 
     @Override
     public void upConnectIn() {
-        System.out.println("888--upConnectIn" + kafkaConfig);
+//        System.out.println("888--upConnectIn" + kafkaConfig);
         this.edgeKafkaConnectIn = new EdgeKafkaConnectIn(kafkaConfig, ref);
-        System.out.println("888--upConnectIn");
+//        System.out.println("888--upConnectIn");
     }
 }
