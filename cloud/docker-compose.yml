@@ -5,7 +5,7 @@ services:
     image: mysql:5.7.22
     container_name: mysql
     ports:
-      - 3306:3306
+      - "3306:3306"
     environment:
       TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: 123456
@@ -21,11 +21,13 @@ services:
 
   zookeeper:
     image: wurstmeister/zookeeper:3.4.6
+    restart: always
     ports:
       - "2181:2181"
 
   kafka:
     image: wurstmeister/kafka:2.13-2.6.0
+    restart: always
     ports:
       - "9092:9092"
     environment:
@@ -41,7 +43,7 @@ services:
       - /data/mongo/db:/data/db
       - /data/mongo/log:/var/log/mongodb
     ports:
-      - 27017:27017
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
