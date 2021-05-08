@@ -13,6 +13,7 @@ import akka.protobufv3.internal.InvalidProtocolBufferException;
 import akka.stream.RestartSettings;
 import akka.stream.javadsl.RestartSource;
 import com.typesafe.config.Config;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -30,9 +31,17 @@ public class CloudKafkaConsumer {
     public static void init(ActorSystem<?> system) {
         String topic =
                 "cloud.cc3200.1111";
-        ConsumerSettings<String, String> consumerSettings =
-                ConsumerSettings.create(system, new StringDeserializer(), new StringDeserializer())
-                        .withGroupId("1");
+
+        final Config config = system.settings().config().getConfig("akka.kafka.consumer");
+        final ConsumerSettings<String, String> consumerSettings =
+                ConsumerSettings.create(config, new StringDeserializer(), new StringDeserializer())
+                        .withBootstrapServers("192.168.123.131:9092")
+                        .withGroupId("group1")
+                        .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+//
+//        ConsumerSettings<String, String> consumerSettings =
+//                ConsumerSettings.create(system, new StringDeserializer(), new StringDeserializer())
+//                        .withGroupId("1");
 
         CommitterSettings committerSettings = CommitterSettings.create(system);
 
