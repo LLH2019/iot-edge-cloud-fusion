@@ -13,6 +13,7 @@ import base.model.bean.BasicCommon;
 import base.model.bean.Event;
 import base.model.bean.Profile;
 import base.model.connect.bean.KafkaConfig;
+import cloud.connect.CloudKafkaConsumer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class CloudBootstrapMain {
 
         ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "bootstrap");
         httpClientConn(system);
+        CloudKafkaConsumer.init(system);
 //        AkkaManagement.get(system).start();
 //        ClusterBootstrap.get(system).start();
 //        testCC3200(system);

@@ -35,7 +35,7 @@ public class CloudKafkaConnectIn {
 //        subscribedTopics.add(kafkaConfig.getTopic());
 //        topicNum = subscribedTopics.size();
 //        System.out.println("44444");
-        init();
+//        init();
     }
 
 //    public void addTopics(List<String> topics) {
