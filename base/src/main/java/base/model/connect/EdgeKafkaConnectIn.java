@@ -64,7 +64,7 @@ public class EdgeKafkaConnectIn {
 //        List<String> topics = new ArrayList<>();
 //        topics.add(kafkaConfig.getTopic());
         consumer.subscribe(pattern);
-        logger.log(Level.INFO, "EdgeKafkaConnectIn is listening...");
+        logger.log(Level.INFO, "EdgeKafkaConnectIn is listening..." + topic);
         //轮询消息
         while (true) {
             //获取ConsumerRecords，一秒钟轮训一次
