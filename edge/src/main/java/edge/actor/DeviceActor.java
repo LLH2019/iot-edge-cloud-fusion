@@ -14,6 +14,8 @@ import base.model.connect.bean.MqttInMsg;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author ：LLH
@@ -22,14 +24,16 @@ import java.util.Date;
  */
 
 public class DeviceActor extends AbstractDeviceActor {
+    private static Logger logger = Logger.getLogger(DeviceActor.class.getName());
     public DeviceActor(ActorContext<BasicCommon> context, DeviceModel deviceModel) {
         super(context);
-        System.out.println("AbstractActorMqttInKafkaOutDownUp...");
+        logger.log(Level.INFO,"DeviceActor pre init...");
         this.mqttConfig = deviceModel.getMqttConfig();
         this.deviceModel = deviceModel;
         this.ref = context.getSelf();
         downConnectIn();
         upConnectOut();
+        logger.log(Level.INFO,"DeviceActor init...");
     }
 
     private MqttConfig mqttConfig;

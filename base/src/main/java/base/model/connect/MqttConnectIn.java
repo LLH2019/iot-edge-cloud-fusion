@@ -6,12 +6,16 @@ import base.model.bean.BasicCommon;
 import base.model.connect.bean.MqttConfig;
 import base.model.connect.bean.MqttInMsg;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * @author ：LLH
  * @date ：Created in 2021/4/16 11:00
  * @description：MQTT接收外部消息
  */
 public class MqttConnectIn {
+    private static Logger logger = Logger.getLogger(MqttConnectIn.class.getName());
     private MqttConfig mqttConfig;
     private ActorRef<BasicCommon> ref;
 
@@ -23,7 +27,7 @@ public class MqttConnectIn {
 
     private void init() {
         try {
-            System.out.println("MqttConnectIn init...");
+            logger.log(Level.INFO, "MqttConnectIn init... " + mqttConfig);
             MqttClient client = new MqttClient(mqttConfig.getBrokerUrl(), mqttConfig.getClientId());
 //            System.out.println("777");
             MqttConnectOptions options = new MqttConnectOptions();
@@ -81,6 +85,7 @@ public class MqttConnectIn {
 //            System.out.println("接收消息Qos : " + message.getQos());
 //            System.out.println("接收消息内容 : " + new String(message.getPayload()));
             MqttInMsg msg = new MqttInMsg(new String(message.getPayload()));
+            logger.log(Level.INFO, "MQTT msg : " + msg);
 //            CC3200Actor.TemperatureUpload upload = new CC3200Actor.TemperatureUpload(new String(message.getPayload()));
             ref.tell(msg);
         }
