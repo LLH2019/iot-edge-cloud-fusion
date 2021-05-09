@@ -67,7 +67,7 @@ public class CloudBootstrapMain {
         ActorRef<BasicCommon> mongoDBActorRef = system.systemActorOf(MongoDBConnActor.create(brainControlActorRef),
                 "mongoDB-conn", Props.empty());
 
-        HttpServer server = new HttpServer(brainControlActorRef, mongoDBActorRef);
+        HttpServer server = new HttpServer(brainControlActorRef, mongoDBActorRef, system);
         final CompletionStage<ServerBinding> binding = http.newServerAt("192.168.123.131", 8080)
                 .bind(server.createRoute());
 

@@ -38,6 +38,7 @@ public class CloudKafkaConsumer {
 
     public CloudKafkaConsumer(ActorSystem<?> system, ActorRef<BasicCommon> kafkaConnectInActorRef) {
         this.kafkaConnectInActorRef = kafkaConnectInActorRef;
+        System.out.println("CloudKafkaConsumer init... " + kafkaConnectInActorRef);
         init(system);
     }
 

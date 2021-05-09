@@ -2,6 +2,13 @@ package cloud;
 
 import akka.Done;
 import akka.actor.typed.ActorRef;
+import akka.actor.typed.ActorSystem;
+import akka.actor.typed.Behavior;
+import akka.actor.typed.Props;
+import akka.actor.typed.javadsl.AbstractBehavior;
+import akka.actor.typed.javadsl.ActorContext;
+import akka.actor.typed.javadsl.Behaviors;
+import akka.actor.typed.javadsl.Receive;
 import akka.http.javadsl.server.AllDirectives;
 import akka.http.javadsl.server.Route;
 
@@ -11,6 +18,10 @@ import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import base.model.connect.bean.KafkaMsg;
+import cloud.actor.BrainControlActor;
+import cloud.actor.CloudKafkaConnectInActor;
+import cloud.bean.GetKafkaMsg;
 import com.alibaba.fastjson.JSON;
 import cloud.bean.GetDeviceModelDoc;
 import cloud.bean.InsertMongoDBDoc;
@@ -27,10 +38,12 @@ public class HttpServer extends AllDirectives {
     private static java.util.logging.Logger logger = Logger.getLogger(HttpServer.class.getName());
     private ActorRef<BasicCommon> brainControlActorRef;
     private ActorRef<BasicCommon> mongoDBActorRef;
+    private ActorSystem<?> system;
 
-    public HttpServer(ActorRef<BasicCommon> brainControlActorRef, ActorRef<BasicCommon> mongoDBActorRef) {
+    public HttpServer(ActorRef<BasicCommon> brainControlActorRef, ActorRef<BasicCommon> mongoDBActorRef, ActorSystem<?> system) {
         this.brainControlActorRef = brainControlActorRef;
         this.mongoDBActorRef = mongoDBActorRef;
+        this.system = system;
     }
 
     public Route createRoute() {
@@ -60,7 +73,19 @@ public class HttpServer extends AllDirectives {
                                     linkDevice();
                                     return complete("device link succeed");
 
-                                }))
+                                })),
+
+                path("get-kafka-msg", () ->
+                        get(()-> {
+//                            String result = "";
+//                            for()
+                            return complete("return kafka msg: " + GetKafkaMsg.kafkaMsg);
+//                            CompletionStage<Done> futureSaved = getKafkaMsg();
+//                            return onSuccess(futureSaved, done ->
+//                                            complete("order created" + futureSaved.toString())
+//                                    );
+
+                        }))
 
 //                post(() ->
 //                        path("test", () ->
@@ -84,6 +109,39 @@ public class HttpServer extends AllDirectives {
 //                                } ))
 //                );
     }
+
+//    private CompletionStage<Done> getKafkaMsg() {
+////        ActorRef<BasicCommon> httpRequestRef = system.systemActorOf(HttpRequestActor.create(brainControlActorRef),
+////                "http-request-ref", Props.empty());
+////
+////
+////        brainControlActorRef.tell(new GetKafkaMsg(httpRequestRef));
+//
+//    }
+
+//    public static class HttpRequestActor extends AbstractBehavior<BasicCommon> {
+//
+//        public HttpRequestActor(ActorContext<BasicCommon> context, ActorRef<BasicCommon> brainControlActorRef) {
+//            super(context);
+//        }
+//
+//        @Override
+//        public Receive<BasicCommon> createReceive() {
+//            return newReceiveBuilder()
+//                    .onMessage(KafkaMsg.class, this::onHandleKafkaMsg)
+//                    .build();
+//        }
+//
+//        private Behavior<BasicCommon> onHandleKafkaMsg(KafkaMsg msg) {
+//
+//            return this;
+//        }
+//
+//        public static Behavior<BasicCommon> create(ActorRef<BasicCommon> brainControlActorRef) {
+//            return Behaviors.setup(context -> new HttpRequestActor(context, brainControlActorRef));
+//        }
+//    }
+
 
     private CompletionStage<Done> linkDevice() {
 //        System.out.println("2222");

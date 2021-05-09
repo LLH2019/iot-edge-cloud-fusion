@@ -1,2 +1,4 @@
-package cloud.front;public class TotalInfo {
+package cloud.front;
+
+public class TotalInfo {
 }

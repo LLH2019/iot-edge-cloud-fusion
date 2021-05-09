@@ -9,6 +9,7 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import base.model.connect.bean.KafkaMsg;
 import base.type.DataType;
+import cloud.bean.GetKafkaMsg;
 import cloud.bean.NewDeviceConn;
 import cloud.bean.QueryMongoDBData;
 import base.model.bean.BasicCommon;
@@ -33,6 +34,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
     private ActorRef<BasicCommon> kafkaConnectInActorRef;
     private Map<String, ActorRef<BasicCommon>> cloudControlRefMaps;
     private ActorSystem<?> system;
+    private KafkaMsg kafkaMsg;
 //    private List<String> subscribeTopics;
 
     public BrainControlActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig, ActorSystem<?> system) {
@@ -42,6 +44,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
         logger.log(Level.INFO, "BrainControlActor init...");
 
         //        cloudControlRefMaps.put()
+        new Thread(()->upConnectIn()).start();
 //        upConnectIn();
     }
 
@@ -57,6 +60,8 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
     }
 
     private Behavior<BasicCommon> onHandleKafkaMsg(KafkaMsg msg) {
+        this.kafkaMsg = msg;
+        GetKafkaMsg.kafkaMsg = msg;
         System.out.println("5555 " + msg);
         return this;
     }
@@ -101,7 +106,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
 
     @Override
     public void upConnectIn() {
-
+        System.out.println("00000000");
         new CloudKafkaConsumer(system, getContext().getSelf());
 //        SubscribeTopic topic = new SubscribeTopic();
 ////        topic.setTopics(this.topics);
