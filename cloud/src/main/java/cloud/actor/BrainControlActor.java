@@ -66,7 +66,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
 
         String realName = model.getModel().getName() + "-" +  model.getModel().getNo();
         logger.log(Level.INFO, "BrainControlActor spawn device..." + realName + model);
-        ActorRef<BasicCommon>  ref = getContext().spawn(DeviceCloudActor.create(model, kafkaConnectInActorRef), realName);
+        ActorRef<BasicCommon>  ref = getContext().spawn(DeviceCloudActor.create(model), realName);
         cloudControlRefMaps.put(realName, ref);
 //
 //        SubscribeTopic subscribeTopic = new SubscribeTopic();
