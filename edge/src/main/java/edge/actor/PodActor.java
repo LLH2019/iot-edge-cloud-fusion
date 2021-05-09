@@ -32,6 +32,7 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
         super(context);
         this.ref = getContext().getSelf();
         this.kafkaConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR);
+        System.out.println("kafkaConnectInActorRef " + kafkaConnectInActorRef);
         upConnectIn();
     }
 
@@ -62,6 +63,7 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
         String topic = "edge.edge-pod-1";
         subscribeTopic.setRef(ref);
         subscribeTopic.setTopic(topic);
+        System.out.println("send connect in..." + kafkaConnectInActorRef + topic);
         kafkaConnectInActorRef.tell(subscribeTopic);
     }
 }

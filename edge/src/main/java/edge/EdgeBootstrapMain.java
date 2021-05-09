@@ -30,13 +30,13 @@ public class EdgeBootstrapMain {
 
     private static void init(ActorSystem<Void> system) {
 
+        ActorRef<BasicCommon> edgeKafkaConnectInActorRef = system.systemActorOf(EdgeKafkaConnectInActor.create(), GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR, Props.empty());
+        GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR, edgeKafkaConnectInActorRef);
+        logger.log(Level.INFO, "init EdgeKafkaConnectInActor..." );
+
         ActorRef<BasicCommon> podActorRef = system.systemActorOf(PodActor.create(), GlobalActorRefName.POD_ACTOR, Props.empty());
         GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.POD_ACTOR, podActorRef);
         logger.log(Level.INFO, "init PodActor...");
-
-        ActorRef<BasicCommon> edgeKafkaConnectInActorRef = system.systemActorOf(EdgeKafkaConnectInActor.create(), GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR, Props.empty());
-        GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR, edgeKafkaConnectInActorRef);
-        logger.log(Level.INFO, "init EdgeKafkaConnectInActor...");
     }
 
 }

@@ -67,7 +67,7 @@ public class EdgeKafkaConnectIn {
                 data.setTopic(r.topic());
                 data.setKey(r.key());
                 data.setValue(r.value());
-                logger.log(Level.INFO, "kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
+                logger.log(Level.INFO, ref + r.topic() + ":" + r.key() + ":" + r.value());
                 ref.tell(data);
 //                LOGGER.error("partition:", r.partition());
 //                LOGGER.error("topic:", r.topic());
