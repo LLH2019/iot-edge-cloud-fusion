@@ -15,6 +15,9 @@ import akka.stream.RestartSettings;
 import akka.stream.javadsl.RestartSource;
 import base.model.bean.BasicCommon;
 import base.model.connect.bean.KafkaMsg;
+import cloud.front.DeviceInfo;
+import cloud.front.GetKafkaMsg;
+import cloud.front.TotalInfo;
 import com.typesafe.config.Config;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -22,6 +25,10 @@ import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Logger;
@@ -35,6 +42,7 @@ public class CloudKafkaConsumer {
     private static Logger logger = Logger.getLogger(CloudKafkaConsumer.class.getName());
 
     private ActorRef<BasicCommon> kafkaConnectInActorRef;
+    private Set<String> topics = new HashSet<>();
 
     public CloudKafkaConsumer(ActorSystem<?> system, ActorRef<BasicCommon> kafkaConnectInActorRef) {
         this.kafkaConnectInActorRef = kafkaConnectInActorRef;
@@ -79,12 +87,35 @@ public class CloudKafkaConsumer {
 
     private CompletionStage<Done> handleRecord(ConsumerRecord<String, String> record) {
 //        System.out.println(record);
-        KafkaMsg kafkaMsg = new KafkaMsg();
-        kafkaMsg.setTopic(record.topic());
-        kafkaMsg.setKey(record.key());
-        kafkaMsg.setValue(record.value());
-        System.out.println(kafkaConnectInActorRef + " " + kafkaMsg);
-        kafkaConnectInActorRef.tell(kafkaMsg);
+        KafkaMsg msg = new KafkaMsg();
+        msg.setTopic(record.topic());
+        msg.setKey(record.key());
+        msg.setValue(record.value());
+        System.out.println(kafkaConnectInActorRef + " " + msg);
+//        kafkaConnectInActorRef.tell(msg);
+
+        GetKafkaMsg.kafkaMsg = msg;
+//        TotalInfo.deviceNums =
+        if(!topics.contains(msg.getTopic())) {
+            topics.add(msg.getTopic());
+            TotalInfo.deviceNums = topics.size();
+            TotalInfo.deviceSets.add(msg.getTopic());
+            DeviceInfo deviceInfo = new DeviceInfo();
+            deviceInfo.setName(msg.getTopic());
+            Map<String, String> valueMap = new HashMap<>();
+            String[] strs = msg.getValue().split(":");
+            valueMap.put(strs[0], strs[1]);
+            deviceInfo.setValues(valueMap);
+            TotalInfo.deviceInfoMap.put(msg.getTopic(), deviceInfo);
+            System.out.println("111111111");
+        } else {
+            DeviceInfo deviceInfo = TotalInfo.deviceInfoMap.get(msg.getKey());
+            Map<String, String> valueMap = deviceInfo.getValues();
+            String[] strs = msg.getValue().split(":");
+            valueMap.put(strs[0], strs[1]);
+            deviceInfo.setValues(valueMap);
+            System.out.println("222222");
+        }
         return CompletableFuture.completedFuture(Done.getInstance());
     }
 }

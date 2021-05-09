@@ -82,26 +82,26 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
 //        System.out.println("666666");
-        logger.log(Level.INFO, "CloudKafkaConnectInActor " + msg );
-        GetKafkaMsg.kafkaMsg = msg;
-//        TotalInfo.deviceNums =
-        if(!topics.contains(msg.getTopic())) {
-            TotalInfo.deviceNums = topics.size();
-            TotalInfo.deviceSets.add(msg.getTopic());
-            DeviceInfo deviceInfo = new DeviceInfo();
-            deviceInfo.setName(msg.getTopic());
-            Map<String, String> valueMap = new HashMap<>();
-            String[] strs = msg.getValue().split(":");
-            valueMap.put(strs[0], strs[1]);
-            deviceInfo.setValues(valueMap);
-            TotalInfo.deviceInfoMap.put(msg.getTopic(), deviceInfo);
-        } else {
-            DeviceInfo deviceInfo = TotalInfo.deviceInfoMap.get(msg.getKey());
-            Map<String, String> valueMap = deviceInfo.getValues();
-            String[] strs = msg.getValue().split(":");
-            valueMap.put(strs[0], strs[1]);
-            deviceInfo.setValues(valueMap);
-        }
+        logger.log(Level.INFO, "6666CloudKafkaConnectInActor " + msg );
+//        GetKafkaMsg.kafkaMsg = msg;
+////        TotalInfo.deviceNums =
+//        if(!topics.contains(msg.getTopic())) {
+//            TotalInfo.deviceNums = topics.size();
+//            TotalInfo.deviceSets.add(msg.getTopic());
+//            DeviceInfo deviceInfo = new DeviceInfo();
+//            deviceInfo.setName(msg.getTopic());
+//            Map<String, String> valueMap = new HashMap<>();
+//            String[] strs = msg.getValue().split(":");
+//            valueMap.put(strs[0], strs[1]);
+//            deviceInfo.setValues(valueMap);
+//            TotalInfo.deviceInfoMap.put(msg.getTopic(), deviceInfo);
+//        } else {
+//            DeviceInfo deviceInfo = TotalInfo.deviceInfoMap.get(msg.getKey());
+//            Map<String, String> valueMap = deviceInfo.getValues();
+//            String[] strs = msg.getValue().split(":");
+//            valueMap.put(strs[0], strs[1]);
+//            deviceInfo.setValues(valueMap);
+//        }
 
 
 //        handleMqttMsg(msg);
