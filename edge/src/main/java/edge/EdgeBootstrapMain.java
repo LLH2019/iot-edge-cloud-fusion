@@ -1,10 +1,15 @@
 package edge;
 
+import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.Behaviors;
+import base.model.bean.BasicCommon;
+import edge.actor.EdgeKafkaConnectInActor;
 import edge.actor.PodActor;
 import base.model.connect.bean.KafkaConfig;
+import edge.global.GlobalActorRefName;
+import edge.global.GlobalAkkaPara;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,24 +23,20 @@ public class EdgeBootstrapMain {
     private static Logger logger = Logger.getLogger(EdgeBootstrapMain.class.getName());
 
     public static void main(String[] args) {
-        ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "edge-bootstrap");
+        ActorSystem<Void> system = GlobalAkkaPara.system;
         init(system);
+        logger.log(Level.INFO, "EdgeBootstrapMain init...");
     }
 
     private static void init(ActorSystem<Void> system) {
 
-        KafkaConfig kafkaConfig = new KafkaConfig();
-        kafkaConfig.setServer("192.168.123.131:9092");
-        kafkaConfig.setGroupId("1");
-//        List<String> topics = new ArrayList<>();
-//        topics.add("edge-pod-1");
+        ActorRef<BasicCommon> podActorRef = system.systemActorOf(PodActor.create(), GlobalActorRefName.POD_ACTOR, Props.empty());
+        GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.POD_ACTOR, podActorRef);
+        logger.log(Level.INFO, "init PodActor...");
 
-//        List<String> lists = new ArrayList<>();
-        kafkaConfig.setTopic("edge-pod-1");
-//        kafkaConfig.setTopic(list);
-
-        logger.log(Level.WARNING, "edge-bootstrap init...");
-        system.systemActorOf(PodActor.create(kafkaConfig), "edge-pod-1", Props.empty());
+        ActorRef<BasicCommon> edgeKafkaConnectInActorRef = system.systemActorOf(EdgeKafkaConnectInActor.create(), GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR, Props.empty());
+        GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR, edgeKafkaConnectInActorRef);
+        logger.log(Level.INFO, "init EdgeKafkaConnectInActor...");
     }
 
 }

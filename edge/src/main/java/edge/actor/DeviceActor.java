@@ -28,6 +28,12 @@ import java.util.logging.Logger;
 
 public class DeviceActor extends AbstractDeviceActor {
     private static Logger logger = Logger.getLogger(DeviceActor.class.getName());
+
+    private final MqttConfig mqttConfig;
+    private final ActorRef<BasicCommon> ref;
+    private KafkaConnectOut kafkaConnectOut;
+    private final DeviceModel deviceModel;
+
     public DeviceActor(ActorContext<BasicCommon> context, DeviceModel deviceModel) {
         super(context);
         logger.log(Level.INFO,"DeviceActor pre init...");
@@ -37,16 +43,6 @@ public class DeviceActor extends AbstractDeviceActor {
         downConnectIn();
         upConnectOut();
         logger.log(Level.INFO,"DeviceActor init...");
-    }
-
-    private MqttConfig mqttConfig;
-//    private KafkaConfig kafkaConfig;
-    private ActorRef<BasicCommon> ref;
-    private KafkaConnectOut kafkaConnectOut;
-    private DeviceModel deviceModel;
-
-    public KafkaConnectOut getKafkaConnectOut() {
-        return kafkaConnectOut;
     }
 
     @Override
@@ -67,7 +63,6 @@ public class DeviceActor extends AbstractDeviceActor {
     public Receive<BasicCommon> createReceive() {
         return newReceiveBuilder()
                 .onMessage(MqttInMsg.class, this::onMqttMsgInAction)
-
                 .build();
     }
 
@@ -77,8 +72,6 @@ public class DeviceActor extends AbstractDeviceActor {
     }
 
     public void handleMqttMsg(MqttInMsg msg) {
-//        MessageHandler handler = new MessageHandler();
-//        Message message = handler.handleMqttUpMsg(msg.getMsg());
 
         KafkaMsg kafkaMsg = new KafkaMsg();
         kafkaMsg.setTopic("cloud.cc3200.1111");
@@ -86,14 +79,7 @@ public class DeviceActor extends AbstractDeviceActor {
         String key = df.format(new Date());
         kafkaMsg.setKey(key);
         kafkaMsg.setValue(msg.getMsg());
-//        System.out.println("999" + kafkaMsg);
         logger.log(Level.INFO, "DeviceActor " + kafkaMsg);
-//        System.out.println("handleMqttMsg: " + msg.getMsg());
-
-//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        String key = df.format(new Date()) + "-temperature";
         kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
-//        sendToKafka(msg);
-//        kafkaConnectOut.s
     }
 }

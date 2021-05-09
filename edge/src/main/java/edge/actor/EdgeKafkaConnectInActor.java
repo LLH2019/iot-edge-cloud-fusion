@@ -27,13 +27,13 @@ import java.util.logging.Logger;
  */
 public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> implements UpConnectIn {
     private static Logger logger = Logger.getLogger(EdgeKafkaConnectInActor.class.getName());
-    private Map<String, List<ActorRef<BasicCommon>>> subscribesRefMap = new HashMap<>();
-    private ActorRef<BasicCommon> ref;
-    private KafkaConfig kafkaConfig;
-    private EdgeKafkaConnectIn edgeKafkaConnectIn;
-    public EdgeKafkaConnectInActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
+    private final Map<String, List<ActorRef<BasicCommon>>> subscribesRefMap = new HashMap<>();
+    private final ActorRef<BasicCommon> ref;
+//    private final KafkaConfig kafkaConfig;
+//    private EdgeKafkaConnectIn edgeKafkaConnectIn;
+    public EdgeKafkaConnectInActor(ActorContext<BasicCommon> context) {
         super(context);
-        this.kafkaConfig = kafkaConfig;
+//        this.kafkaConfig = kafkaConfig;
         this.ref = getContext().getSelf();
 //        System.out.println("KafkaConnectInActor--");
         new Thread(()->upConnectIn()).start();
@@ -79,14 +79,14 @@ public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> imple
         return this;
     }
 
-    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig) {
-        return Behaviors.setup(context -> new EdgeKafkaConnectInActor(context, kafkaConfig));
+    public static Behavior<BasicCommon> create() {
+        return Behaviors.setup(context -> new EdgeKafkaConnectInActor(context));
     }
 
     @Override
     public void upConnectIn() {
 //        System.out.println("888--upConnectIn" + kafkaConfig);
-        this.edgeKafkaConnectIn = new EdgeKafkaConnectIn(kafkaConfig, ref);
+        new EdgeKafkaConnectIn(ref);
 //        System.out.println("888--upConnectIn");
     }
 }

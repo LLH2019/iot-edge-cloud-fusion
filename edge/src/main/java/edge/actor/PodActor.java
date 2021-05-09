@@ -14,6 +14,8 @@ import base.model.connect.UpConnectIn;
 import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.KafkaMsg;
 import base.model.connect.bean.SubscribeTopic;
+import edge.global.GlobalActorRefName;
+import edge.global.GlobalAkkaPara;
 
 import java.util.List;
 /**
@@ -23,23 +25,18 @@ import java.util.List;
  */
 public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnectIn {
 
-    private ActorRef<BasicCommon> ref;
-    private ActorRef<BasicCommon> kafkaConnectInActorRef;
-    private KafkaConfig kafkaConfig;
-//    private List<String> subscribeTopics;
+    private final ActorRef<BasicCommon> ref;
+    private final ActorRef<BasicCommon> kafkaConnectInActorRef;
 
-    public PodActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig) {
+    public PodActor(ActorContext<BasicCommon> context) {
         super(context);
         this.ref = getContext().getSelf();
-//        this.subscribeTopics = subscribeTopics;
-        this.kafkaConfig = kafkaConfig;
-        this.kafkaConnectInActorRef = getContext().spawn(EdgeKafkaConnectInActor.create(kafkaConfig), "up-connect-in");
-
+        this.kafkaConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR);
         upConnectIn();
     }
 
-    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig) {
-        return Behaviors.setup(context -> new PodActor(context, kafkaConfig));
+    public static Behavior<BasicCommon> create() {
+        return Behaviors.setup(context -> new PodActor(context));
     }
 
     @Override
@@ -51,9 +48,7 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
 
     private Behavior<BasicCommon> onKafkaMsgInAction(KafkaMsg msg) {
         if(TopicKey.CREATE_EDGE_ACTOR.equals(msg.getKey())) {
-//            System.out.println("111111");
             DeviceModel model = JSON.parseObject(msg.getValue(), DeviceModel.class);
-//            System.out.println("222 " + model);
             String realName = model.getModel().getName() + "-" + model.getModel().getNo();
             getContext().spawn(DeviceActor.create(model), realName);
         }
@@ -64,14 +59,9 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
     @Override
     public void upConnectIn() {
         SubscribeTopic subscribeTopic = new SubscribeTopic();
-        String topic = "edge." + kafkaConfig.getTopic();
+        String topic = "edge.edge-pod-1";
         subscribeTopic.setRef(ref);
         subscribeTopic.setTopic(topic);
-//        subscribeTopic.setTopics(subscribeTopics);
         kafkaConnectInActorRef.tell(subscribeTopic);
-//        SubscribeTopic topic = new SubscribeTopic();
-//        topic.setTopics(this.subscribeTopics);
-////        topics.add()
-//        kafkaConnectInActorRef.tell(topic);
     }
 }
