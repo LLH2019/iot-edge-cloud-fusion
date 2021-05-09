@@ -6,20 +6,23 @@ import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.http.javadsl.Http;
 import akka.http.javadsl.ServerBinding;
-import cloud.HttpServer;
 import cloud.actor.BrainControlActor;
+import cloud.actor.CloudKafkaConnectInActor;
 import cloud.actor.MongoDBConnActor;
 import base.model.bean.DeviceModel;
 import base.model.bean.BasicCommon;
 import base.model.bean.Event;
 import base.model.bean.Profile;
 import base.model.connect.bean.KafkaConfig;
-import cloud.connect.CloudKafkaConsumer;
+import cloud.global.GlobalActorRefName;
+import cloud.global.GlobalAkkaPara;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CompletionStage;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author ：LLH
@@ -27,10 +30,26 @@ import java.util.List;
  * @description：初始启动类
  */
 public class CloudBootstrapMain {
+    private static Logger logger = Logger.getLogger(CloudBootstrapMain.class.getName());
     public static void main(String[] args) throws IOException {
 
+        logger.log(Level.INFO, "CloudBootstrapMain start...");
+        ActorSystem<Void> system = GlobalAkkaPara.system;
+        ActorRef<BasicCommon> brainControlActorRef = system.systemActorOf(BrainControlActor.create(),
+                GlobalActorRefName.BRAIN_ACTOR, Props.empty());
+        logger.log(Level.INFO, "init BrainControlActor...");
+        GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.BRAIN_ACTOR, brainControlActorRef);
 
-        ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "bootstrap");
+        ActorRef<BasicCommon> mongoDBActorRef = system.systemActorOf(MongoDBConnActor.create(),
+                GlobalActorRefName.MONGODB_CONN_ACTOR, Props.empty());
+        logger.log(Level.INFO, "init MongoDBConnActor...");
+        GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.MONGODB_CONN_ACTOR, mongoDBActorRef);
+
+        ActorRef<BasicCommon> cloudKafkaConnectInActorRef = system.systemActorOf(CloudKafkaConnectInActor.create(),
+                GlobalActorRefName.CLOUD_KAFKA_CONNECT_IN_ACTOR, Props.empty());
+        logger.log(Level.INFO, "init CloudKafkaConnectInActor...");
+        GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.CLOUD_KAFKA_CONNECT_IN_ACTOR, cloudKafkaConnectInActorRef);
+
         httpClientConn(system);
 //        CloudKafkaConsumer.init(system);
 //        AkkaManagement.get(system).start();
@@ -38,36 +57,11 @@ public class CloudBootstrapMain {
 //        testCC3200(system);
     }
 
-    private static void testCC3200(ActorSystem<Void> system) {
-        Profile profile = new Profile();
-        profile.setProductName("cc3200-1");
-
-        List<Event> events = new ArrayList<>();
-        Event event = new Event();
-        event.setName("humidity");
-
-        events.add(event);
-        DeviceModel model = new DeviceModel();
-//        model.setProfile(profile);
-//        model.setEvents(events);
-
-    }
 
     private static void httpClientConn(ActorSystem<Void> system) throws IOException {
         final Http http = Http.get(system);
-        KafkaConfig kafkaConfig = new KafkaConfig();
-        kafkaConfig.setServer("192.168.123.131:9092");
-        kafkaConfig.setGroupId("1");
-//        List<String> list = new ArrayList<>();
-//        list.add("llh.brain-1");
-//        kafkaConfig.setTopic("brain");
-        ActorRef<BasicCommon> brainControlActorRef = system.systemActorOf(BrainControlActor.create(kafkaConfig, system),
-                "brain-control", Props.empty());
 
-        ActorRef<BasicCommon> mongoDBActorRef = system.systemActorOf(MongoDBConnActor.create(brainControlActorRef),
-                "mongoDB-conn", Props.empty());
-
-        HttpServer server = new HttpServer(brainControlActorRef, mongoDBActorRef, system);
+        HttpServer server = new HttpServer();
         final CompletionStage<ServerBinding> binding = http.newServerAt("192.168.123.131", 8080)
                 .bind(server.createRoute());
 

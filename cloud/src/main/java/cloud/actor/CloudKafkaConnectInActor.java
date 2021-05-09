@@ -18,6 +18,7 @@ import cloud.connect.CloudKafkaConsumer;
 import cloud.front.DeviceInfo;
 import cloud.front.GetKafkaMsg;
 import cloud.front.TotalInfo;
+import cloud.global.GlobalAkkaPara;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -31,19 +32,13 @@ import java.util.logging.Logger;
 public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> implements UpConnectIn {
     private static Logger logger = Logger.getLogger(CloudKafkaConnectInActor.class.getName());
 
-    private ActorSystem<?> system;
-    private Map<String, ActorRef<BasicCommon>> subscribesRefMap = new HashMap<>();
-    private ActorRef<BasicCommon> ref;
-    private KafkaConfig kafkaConfig;
-    private Set<String> topics = new HashSet<>();
-//    private CloudKafkaConnectIn cloudKafkaConnectIn;
-//    private CloudKafkaConsumer cloudKafkaConsumer;
-    public CloudKafkaConnectInActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig, ActorSystem<?> system) {
+    private final ActorSystem<?> system;
+    private final Map<String, ActorRef<BasicCommon>> subscribesRefMap = new HashMap<>();
+    private final ActorRef<BasicCommon> ref;
+    public CloudKafkaConnectInActor(ActorContext<BasicCommon> context) {
         super(context);
-        this.kafkaConfig = kafkaConfig;
-        this.system = system;
+        this.system = GlobalAkkaPara.system;
         this.ref = getContext().getSelf();
-//        System.out.println("KafkaConnectInActor--");
         new Thread(()->upConnectIn()).start();
 
         logger.log(Level.WARNING, "CloudKafkaConnectInActor init...");
@@ -66,16 +61,9 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 
     private Behavior<BasicCommon> onHandleSubscribeTopic(SubscribeTopic subscribeTopic) {
         String topic = subscribeTopic.getTopic();
-//            for (String topic : topics) {
-
         subscribesRefMap.put(topic, subscribeTopic.getRef());
 
-//
         logger.log(Level.INFO, "CloudKafkaConnectInActor handleSubscribeTopic...");
-//        System.out.println("onHandleSubscribeTopic " + subscribeTopic.getTopics().size());
-//        System.out.println("onHandleSubscribeTopic-- " + cloudKafkaConnectIn);
-//        new Thread(()->kafkaConnectIn.addTopics(subscribeTopic.getTopics()));
-
         return this;
     }
 
@@ -118,8 +106,8 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 //        logger.log(Level.INFO, "CloudKafkaConnectInActor " + msg );
 //    }
 
-    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig, ActorSystem<?> system) {
-        return Behaviors.setup(context -> new CloudKafkaConnectInActor(context, kafkaConfig,system));
+    public static Behavior<BasicCommon> create() {
+        return Behaviors.setup(context -> new CloudKafkaConnectInActor(context));
     }
 
     @Override

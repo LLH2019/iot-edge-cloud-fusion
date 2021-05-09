@@ -17,7 +17,10 @@ import base.model.bean.DeviceModel;
 import base.model.connect.UpConnectIn;
 import base.model.connect.bean.KafkaConfig;
 import cloud.connect.CloudKafkaConsumer;
+import cloud.global.GlobalActorRefName;
+import cloud.global.GlobalAkkaPara;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,36 +33,29 @@ import java.util.logging.Logger;
 public class BrainControlActor extends AbstractBehavior<BasicCommon> implements UpConnectIn {
 
     private static Logger logger = Logger.getLogger(BrainControlActor.class.getName());
-    private ActorRef<BasicCommon> kafkaConnectInActorRef;
-    private Map<String, ActorRef<BasicCommon>> cloudControlRefMaps;
-    private ActorSystem<?> system;
-    private KafkaMsg kafkaMsg;
-//    private List<String> subscribeTopics;
+    private final ActorRef<BasicCommon> kafkaConnectInActorRef;
+    private final Map<String, ActorRef<BasicCommon>> cloudControlRefMaps = new HashMap<>();
+    private final ActorSystem<?> system;
 
-    public BrainControlActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig, ActorSystem<?> system) {
+    public BrainControlActor(ActorContext<BasicCommon> context) {
         super(context);
-        this.system = system;
-        this.kafkaConnectInActorRef = getContext().spawn(CloudKafkaConnectInActor.create(kafkaConfig, system), "cloud-kafka-connect-in-actor");
+        this.system = GlobalAkkaPara.system;
+        this.kafkaConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.CLOUD_KAFKA_CONNECT_IN_ACTOR);
         logger.log(Level.INFO, "BrainControlActor init...");
 
-        //        cloudControlRefMaps.put()
 //        new Thread(()->upConnectIn()).start();
-//        upConnectIn();
     }
 
 
     @Override
     public Receive<BasicCommon> createReceive() {
         return newReceiveBuilder()
-//                .onMessage(NewDeviceConn.class, this::onNewDeviceConnAction)
-//                .onMessage(QueryMongoDBData.class, this::onHandleMongoDBAction)
                 .onMessage(KafkaMsg.class, this::onHandleKafkaMsg)
                 .onMessage(DeviceModel.class, this::onHandleDeviceLink)
                 .build();
     }
 
     private Behavior<BasicCommon> onHandleKafkaMsg(KafkaMsg msg) {
-        this.kafkaMsg = msg;
         GetKafkaMsg.kafkaMsg = msg;
         System.out.println("5555 " + msg);
         return this;
@@ -82,34 +78,13 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
         return this;
     }
 
-    private Behavior<BasicCommon> onHandleMongoDBAction(QueryMongoDBData data) {
-
-        if(DataType.NEW_MODEl.equals(data.getType())) {
-            System.out.println(data.getDoc());
-        }
-
-        return this;
-    }
-
-    private Behavior<BasicCommon> onNewDeviceConnAction(NewDeviceConn conn) {
-//        ActorRef<BasicCommon>  ref = getContext().spawn(CloudControlActor.create(conn.getKafkaConfig()), conn.getName());
-////        ref.tell()
-//        refMaps.put(conn.getName(), ref);
-
-        return this;
-    }
-
-    public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig, ActorSystem<?> system) {
-        return Behaviors.setup(context -> new BrainControlActor(context, kafkaConfig, system));
+    public static Behavior<BasicCommon> create() {
+        return Behaviors.setup(context -> new BrainControlActor(context));
     }
 
     @Override
     public void upConnectIn() {
         System.out.println("00000000");
         new CloudKafkaConsumer(system, getContext().getSelf());
-//        SubscribeTopic topic = new SubscribeTopic();
-////        topic.setTopics(this.topics);
-////        topics.add()
-//        kafkaConnectInActorRef.tell(topic);
     }
 }

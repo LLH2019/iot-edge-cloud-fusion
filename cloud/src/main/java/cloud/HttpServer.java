@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 
 import cloud.front.GetKafkaMsg;
 import cloud.front.TotalInfo;
+import cloud.global.GlobalActorRefName;
+import cloud.global.GlobalAkkaPara;
 import com.alibaba.fastjson.JSON;
 import cloud.bean.GetDeviceModelDoc;
 import cloud.bean.InsertMongoDBDoc;
@@ -28,14 +30,15 @@ import base.model.connect.bean.MqttConfig;
  */
 public class HttpServer extends AllDirectives {
     private static java.util.logging.Logger logger = Logger.getLogger(HttpServer.class.getName());
-    private ActorRef<BasicCommon> brainControlActorRef;
-    private ActorRef<BasicCommon> mongoDBActorRef;
-    private ActorSystem<?> system;
+    private final ActorRef<BasicCommon> brainControlActorRef;
+    private final ActorRef<BasicCommon> mongoDBActorRef;
+    private final ActorSystem<?> system;
 
-    public HttpServer(ActorRef<BasicCommon> brainControlActorRef, ActorRef<BasicCommon> mongoDBActorRef, ActorSystem<?> system) {
-        this.brainControlActorRef = brainControlActorRef;
-        this.mongoDBActorRef = mongoDBActorRef;
-        this.system = system;
+    public HttpServer() {
+        this.brainControlActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.BRAIN_ACTOR);
+        this.mongoDBActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.MONGODB_CONN_ACTOR);
+        this.system = GlobalAkkaPara.system;
+        logger.log(Level.INFO, "HttpServer init...");
     }
 
     public Route createRoute() {
@@ -149,25 +152,8 @@ public class HttpServer extends AllDirectives {
 
 
     private CompletionStage<Done> linkDevice() {
-//        System.out.println("2222");
         DeviceModel deviceModel = new DeviceModel();
-//        deviceModel.setRealName("cc3200-1");
-//        KafkaConfig kafkaConfig = new KafkaConfig();
-//        kafkaConfig.setServer("192.168.123.131:9092");
-//        kafkaConfig.setGroupId("1");
-//        List<String> topics = new ArrayList<>();
-//        topics.add("cc3200-1");
-//        kafkaConfig.setTopics(topics);
-//        deviceModel.setKafkaConfig(kafkaConfig);
 
-//        MqttConfig mqttConfig1 = new MqttConfig();
-//        List<String> topic =
-//        mqttConfig1.setTopic( "cc3200/humidity");
-//        mqttConfig1.setBrokerUrl("tcp://192.168.123.247:1883");
-//        mqttConfig1.setClientId("123456");
-//        deviceModel.setMqttConfig(mqttConfig1);
-
-//        m.setName("cc3200");
         GetDeviceModelDoc doc = new GetDeviceModelDoc();
         doc.setKey("name");
         doc.setValue("cc3200-1111");

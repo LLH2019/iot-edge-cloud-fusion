@@ -6,6 +6,8 @@ import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
+import cloud.global.GlobalActorRefName;
+import cloud.global.GlobalAkkaPara;
 import com.alibaba.fastjson.JSON;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -31,12 +33,13 @@ import java.util.logging.Logger;
 public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
     private static Logger logger = Logger.getLogger(MongoDBConnActor.class.getName());
 
-    private Map<String, MongoDatabase> databaseMap = new HashMap<>();
-    private ActorRef<BasicCommon> brainActorRef;
+    private final Map<String, MongoDatabase> databaseMap = new HashMap<>();
+    private final ActorRef<BasicCommon> brainActorRef;
 
-    public MongoDBConnActor(ActorContext<BasicCommon> context, ActorRef<BasicCommon> brainActorRef) {
+    public MongoDBConnActor(ActorContext<BasicCommon> context) {
         super(context);
-        this.brainActorRef = brainActorRef;
+        this.brainActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.BRAIN_ACTOR);
+        logger.log(Level.INFO, "MongoDBConnActor init...");
     }
 
     @Override
@@ -68,14 +71,8 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
         //取出查询到的第一个文档
         Document document = (Document) findIterable.first();
 
-//        QueryMongoDBData queryMongoDBData = new QueryMongoDBData();
-//        queryMongoDBData.setType(DataType.NEW_MODEl);
-//        queryMongoDBData.setDoc(document);
 
-//        DeviceModel deviceModel = doc.getDeviceModel();
         DeviceModel model = JSON.parseObject(document.get("model").toString(), DeviceModel.class);
-////        deviceModel.set
-//
 
         logger.log(Level.INFO, "MongoDBConnActor get model " +  model.toString());
         brainActorRef.tell(model);
@@ -124,7 +121,7 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
 
 
 
-    public static Behavior<BasicCommon> create(ActorRef<BasicCommon> brainActorRef) {
-        return Behaviors.setup(context -> new MongoDBConnActor(context, brainActorRef));
+    public static Behavior<BasicCommon> create() {
+        return Behaviors.setup(context -> new MongoDBConnActor(context));
     }
 }
