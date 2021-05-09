@@ -8,6 +8,7 @@ import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import base.model.bean.BasicCommon;
+import cloud.bean.KafkaMsgList;
 import cloud.connect.CloudKafkaConnectIn;
 import base.model.connect.UpConnectIn;
 import base.model.connect.bean.KafkaConfig;
@@ -34,8 +35,8 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
     private Map<String, ActorRef<BasicCommon>> subscribesRefMap = new HashMap<>();
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
-//    private CloudKafkaConnectIn cloudKafkaConnectIn;
-    private CloudKafkaConsumer cloudKafkaConsumer;
+    private CloudKafkaConnectIn cloudKafkaConnectIn;
+//    private CloudKafkaConsumer cloudKafkaConsumer;
     public CloudKafkaConnectInActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig, ActorSystem<?> system) {
         super(context);
         this.kafkaConfig = kafkaConfig;
@@ -52,7 +53,14 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         return newReceiveBuilder()
                 .onMessage(KafkaMsg.class, this::onHandleKafkaMsgAction)
                 .onMessage(SubscribeTopic.class, this::onHandleSubscribeTopic)
+                .onMessage(KafkaMsgList.class, this::onHandleKafkaMsgListAction)
                 .build();
+    }
+
+    private Behavior<BasicCommon> onHandleKafkaMsgListAction(KafkaMsgList kafkaMsgList) {
+        System.out.println(kafkaMsgList);
+
+        return this;
     }
 
     private Behavior<BasicCommon> onHandleSubscribeTopic(SubscribeTopic subscribeTopic) {
@@ -74,7 +82,7 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
         System.out.println("666666");
         logger.log(Level.INFO, "CloudKafkaConnectInActor " + msg );
-//        handleMqttMsg(msg);
+        handleMqttMsg(msg);
 //        String topic = msg.getTopic();
 //        ActorRef<BasicCommon> ref = subscribesRefMap.get(topic);
 //        System.out.println("555" + ref);
@@ -84,6 +92,10 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         return this;
     }
 
+    private void handleMqttMsg(KafkaMsg msg) {
+        logger.log(Level.INFO, "CloudKafkaConnectInActor " + msg );
+    }
+
     public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig, ActorSystem<?> system) {
         return Behaviors.setup(context -> new CloudKafkaConnectInActor(context, kafkaConfig,system));
     }
@@ -91,8 +103,8 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
     @Override
     public void upConnectIn() {
 //        System.out.println("888--upConnectIn" + kafkaConfig);
-//        this.cloudKafkaConnectIn = new CloudKafkaConnectIn(kafkaConfig, ref);
+        this.cloudKafkaConnectIn = new CloudKafkaConnectIn(kafkaConfig, ref);
 //        System.out.println("888--upConnectIn");
-        this.cloudKafkaConsumer = new CloudKafkaConsumer(system, ref);
+//        this.cloudKafkaConsumer = new CloudKafkaConsumer(system, ref);
     }
 }

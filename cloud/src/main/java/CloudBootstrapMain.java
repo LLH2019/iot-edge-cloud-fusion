@@ -1,11 +1,10 @@
-package cloud;
-
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.http.javadsl.Http;
 import akka.http.javadsl.ServerBinding;
+import cloud.HttpServer;
 import cloud.actor.BrainControlActor;
 import cloud.actor.MongoDBConnActor;
 import base.model.bean.DeviceModel;

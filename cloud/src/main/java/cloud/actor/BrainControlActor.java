@@ -7,6 +7,7 @@ import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
+import base.model.connect.bean.KafkaMsg;
 import base.type.DataType;
 import cloud.bean.NewDeviceConn;
 import cloud.bean.QueryMongoDBData;
@@ -15,6 +16,7 @@ import base.model.bean.DeviceModel;
 import base.model.connect.UpConnectIn;
 import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.SubscribeTopic;
+import cloud.connect.CloudKafkaConsumer;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -49,8 +51,14 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
         return newReceiveBuilder()
 //                .onMessage(NewDeviceConn.class, this::onNewDeviceConnAction)
 //                .onMessage(QueryMongoDBData.class, this::onHandleMongoDBAction)
+                .onMessage(KafkaMsg.class, this::onHandleKafkaMsg)
                 .onMessage(DeviceModel.class, this::onHandleDeviceLink)
                 .build();
+    }
+
+    private Behavior<BasicCommon> onHandleKafkaMsg(KafkaMsg msg) {
+        System.out.println("5555 " + msg);
+        return this;
     }
 
     private Behavior<BasicCommon> onHandleDeviceLink(DeviceModel model) {
@@ -93,6 +101,8 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
 
     @Override
     public void upConnectIn() {
+
+        new CloudKafkaConsumer(system, getContext().getSelf());
 //        SubscribeTopic topic = new SubscribeTopic();
 ////        topic.setTopics(this.topics);
 ////        topics.add()

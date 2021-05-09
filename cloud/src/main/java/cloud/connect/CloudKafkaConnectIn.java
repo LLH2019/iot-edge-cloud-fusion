@@ -1,6 +1,7 @@
 package cloud.connect;
 
 import akka.actor.typed.ActorRef;
+import cloud.bean.KafkaMsgList;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -35,7 +36,7 @@ public class CloudKafkaConnectIn {
 //        subscribedTopics.add(kafkaConfig.getTopic());
 //        topicNum = subscribedTopics.size();
 //        System.out.println("44444");
-//        init();
+        init();
     }
 
 //    public void addTopics(List<String> topics) {
@@ -82,16 +83,18 @@ public class CloudKafkaConnectIn {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
             //消费消息，遍历records
 //            KafkaMsg outData = new KafkaMsg();
-
+            List<KafkaMsg> msgs = new ArrayList<>();
             for (ConsumerRecord<String, String> r : records) {
 
                 KafkaMsg data = new KafkaMsg();
                 data.setTopic(r.topic());
                 data.setKey(r.key());
                 data.setValue(r.value());
+                msgs.add(data);
 //                logger.log(Level.INFO, "kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
-                System.out.println(ref  + " 222 " + data);
-                ref.tell(data);
+//                System.out.println(ref  + " 222 " + data);
+
+//                ref.tell(data);
 //                synchronized (this) {
 
 //                }
@@ -100,6 +103,10 @@ public class CloudKafkaConnectIn {
 //                LOGGER.error("offset:", r.offset());
                 System.out.println("kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
             }
+
+            KafkaMsgList kafkaMsgList = new KafkaMsgList();
+            kafkaMsgList.setKafkaMsgs(msgs);
+            ref.tell(kafkaMsgList);
 
 
 //            System.out.println("3333 " + topicNum);

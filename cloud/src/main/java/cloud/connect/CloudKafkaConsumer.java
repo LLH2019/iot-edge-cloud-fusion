@@ -76,13 +76,13 @@ public class CloudKafkaConsumer {
                 .run(system);
     }
 
-    private  CompletionStage<Done> handleRecord(ConsumerRecord<String, String> record) {
-        System.out.println(record);
+    private CompletionStage<Done> handleRecord(ConsumerRecord<String, String> record) {
+//        System.out.println(record);
         KafkaMsg kafkaMsg = new KafkaMsg();
         kafkaMsg.setTopic(record.topic());
         kafkaMsg.setKey(record.key());
         kafkaMsg.setValue(record.value());
-
+        System.out.println(kafkaConnectInActorRef + " " + kafkaMsg);
         kafkaConnectInActorRef.tell(kafkaMsg);
         return CompletableFuture.completedFuture(Done.getInstance());
     }
