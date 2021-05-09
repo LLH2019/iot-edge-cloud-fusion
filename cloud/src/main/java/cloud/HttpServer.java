@@ -3,12 +3,6 @@ package cloud;
 import akka.Done;
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
-import akka.actor.typed.Behavior;
-import akka.actor.typed.Props;
-import akka.actor.typed.javadsl.AbstractBehavior;
-import akka.actor.typed.javadsl.ActorContext;
-import akka.actor.typed.javadsl.Behaviors;
-import akka.actor.typed.javadsl.Receive;
 import akka.http.javadsl.server.AllDirectives;
 import akka.http.javadsl.server.Route;
 
@@ -18,10 +12,8 @@ import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import base.model.connect.bean.KafkaMsg;
-import cloud.actor.BrainControlActor;
-import cloud.actor.CloudKafkaConnectInActor;
-import cloud.bean.GetKafkaMsg;
+import cloud.front.GetKafkaMsg;
+import cloud.front.TotalInfo;
 import com.alibaba.fastjson.JSON;
 import cloud.bean.GetDeviceModelDoc;
 import cloud.bean.InsertMongoDBDoc;
@@ -80,6 +72,19 @@ public class HttpServer extends AllDirectives {
 //                            String result = "";
 //                            for()
                             return complete("return kafka msg: " + GetKafkaMsg.kafkaMsg);
+//                            CompletionStage<Done> futureSaved = getKafkaMsg();
+//                            return onSuccess(futureSaved, done ->
+//                                            complete("order created" + futureSaved.toString())
+//                                    );
+
+                        })),
+
+                path("get-device-info", () ->
+                        get(()-> {
+//                            String result = "";
+//                            for()
+                            return complete("return kafka msg: " + TotalInfo.deviceNums + " "
+                                    + TotalInfo.deviceSets + " " +TotalInfo.deviceInfoMap);
 //                            CompletionStage<Done> futureSaved = getKafkaMsg();
 //                            return onSuccess(futureSaved, done ->
 //                                            complete("order created" + futureSaved.toString())

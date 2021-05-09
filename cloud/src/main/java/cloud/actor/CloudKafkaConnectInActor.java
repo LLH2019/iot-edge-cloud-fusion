@@ -15,11 +15,11 @@ import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.KafkaMsg;
 import base.model.connect.bean.SubscribeTopic;
 import cloud.connect.CloudKafkaConsumer;
+import cloud.front.DeviceInfo;
+import cloud.front.GetKafkaMsg;
+import cloud.front.TotalInfo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +35,8 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
     private Map<String, ActorRef<BasicCommon>> subscribesRefMap = new HashMap<>();
     private ActorRef<BasicCommon> ref;
     private KafkaConfig kafkaConfig;
-    private CloudKafkaConnectIn cloudKafkaConnectIn;
+    private Set<String> topics = new HashSet<>();
+//    private CloudKafkaConnectIn cloudKafkaConnectIn;
 //    private CloudKafkaConsumer cloudKafkaConsumer;
     public CloudKafkaConnectInActor(ActorContext<BasicCommon> context, KafkaConfig kafkaConfig, ActorSystem<?> system) {
         super(context);
@@ -43,7 +44,7 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         this.system = system;
         this.ref = getContext().getSelf();
 //        System.out.println("KafkaConnectInActor--");
-//        new Thread(()->upConnectIn()).start();
+        new Thread(()->upConnectIn()).start();
 
         logger.log(Level.WARNING, "CloudKafkaConnectInActor init...");
     }
@@ -80,9 +81,30 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 
 
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
-        System.out.println("666666");
+//        System.out.println("666666");
         logger.log(Level.INFO, "CloudKafkaConnectInActor " + msg );
-        handleMqttMsg(msg);
+        GetKafkaMsg.kafkaMsg = msg;
+//        TotalInfo.deviceNums =
+        if(!topics.contains(msg.getTopic())) {
+            TotalInfo.deviceNums = topics.size();
+            TotalInfo.deviceSets.add(msg.getTopic());
+            DeviceInfo deviceInfo = new DeviceInfo();
+            deviceInfo.setName(msg.getTopic());
+            Map<String, String> valueMap = new HashMap<>();
+            String[] strs = msg.getValue().split(":");
+            valueMap.put(strs[0], strs[1]);
+            deviceInfo.setValues(valueMap);
+            TotalInfo.deviceInfoMap.put(msg.getTopic(), deviceInfo);
+        } else {
+            DeviceInfo deviceInfo = TotalInfo.deviceInfoMap.get(msg.getKey());
+            Map<String, String> valueMap = deviceInfo.getValues();
+            String[] strs = msg.getValue().split(":");
+            valueMap.put(strs[0], strs[1]);
+            deviceInfo.setValues(valueMap);
+        }
+
+
+//        handleMqttMsg(msg);
 //        String topic = msg.getTopic();
 //        ActorRef<BasicCommon> ref = subscribesRefMap.get(topic);
 //        System.out.println("555" + ref);
@@ -92,9 +114,9 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         return this;
     }
 
-    private void handleMqttMsg(KafkaMsg msg) {
-        logger.log(Level.INFO, "CloudKafkaConnectInActor " + msg );
-    }
+//    private void handleMqttMsg(KafkaMsg msg) {
+//        logger.log(Level.INFO, "CloudKafkaConnectInActor " + msg );
+//    }
 
     public static Behavior<BasicCommon> create(KafkaConfig kafkaConfig, ActorSystem<?> system) {
         return Behaviors.setup(context -> new CloudKafkaConnectInActor(context, kafkaConfig,system));
@@ -103,8 +125,8 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
     @Override
     public void upConnectIn() {
 //        System.out.println("888--upConnectIn" + kafkaConfig);
-        this.cloudKafkaConnectIn = new CloudKafkaConnectIn(kafkaConfig, ref);
+//        this.cloudKafkaConnectIn = new CloudKafkaConnectIn(kafkaConfig, ref);
 //        System.out.println("888--upConnectIn");
-//        this.cloudKafkaConsumer = new CloudKafkaConsumer(system, ref);
+        new CloudKafkaConsumer(system, ref);
     }
 }

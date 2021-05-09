@@ -5,10 +5,7 @@ import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.Behaviors;
 import edge.actor.PodActor;
 import base.model.connect.bean.KafkaConfig;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

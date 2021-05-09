@@ -9,14 +9,13 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import base.model.connect.bean.KafkaMsg;
 import base.type.DataType;
-import cloud.bean.GetKafkaMsg;
+import cloud.front.GetKafkaMsg;
 import cloud.bean.NewDeviceConn;
 import cloud.bean.QueryMongoDBData;
 import base.model.bean.BasicCommon;
 import base.model.bean.DeviceModel;
 import base.model.connect.UpConnectIn;
 import base.model.connect.bean.KafkaConfig;
-import base.model.connect.bean.SubscribeTopic;
 import cloud.connect.CloudKafkaConsumer;
 
 import java.util.Map;
@@ -44,7 +43,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
         logger.log(Level.INFO, "BrainControlActor init...");
 
         //        cloudControlRefMaps.put()
-        new Thread(()->upConnectIn()).start();
+//        new Thread(()->upConnectIn()).start();
 //        upConnectIn();
     }
 
