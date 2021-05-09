@@ -92,11 +92,13 @@ public class CloudKafkaConsumer {
         msg.setKey(record.key());
         msg.setValue(record.value());
         System.out.println(kafkaConnectInActorRef + " " + msg);
-//        kafkaConnectInActorRef.tell(msg);
+        kafkaConnectInActorRef.tell(msg);
 
         GetKafkaMsg.kafkaMsg = msg;
 //        TotalInfo.deviceNums =
-        if(!topics.contains(msg.getTopic())) {
+        if("close".equals(msg.getValue())) {
+            System.out.println("333333");
+        } else if(!topics.contains(msg.getTopic())) {
             topics.add(msg.getTopic());
             TotalInfo.deviceNums = topics.size();
             TotalInfo.deviceSets.add(msg.getTopic());
@@ -109,11 +111,13 @@ public class CloudKafkaConsumer {
             TotalInfo.deviceInfoMap.put(msg.getTopic(), deviceInfo);
             System.out.println("111111111");
         } else {
-            DeviceInfo deviceInfo = TotalInfo.deviceInfoMap.get(msg.getKey());
+            DeviceInfo deviceInfo = TotalInfo.deviceInfoMap.get(msg.getTopic());
             Map<String, String> valueMap = deviceInfo.getValues();
             String[] strs = msg.getValue().split(":");
-            valueMap.put(strs[0], strs[1]);
-            deviceInfo.setValues(valueMap);
+            if(strs.length == 2) {
+                valueMap.put(strs[0], strs[1]);
+                deviceInfo.setValues(valueMap);
+            }
             System.out.println("222222");
         }
         return CompletableFuture.completedFuture(Done.getInstance());
