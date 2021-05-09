@@ -187,18 +187,6 @@
             <version>1.0.9</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>base</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.scala-lang/scala-library -->
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>2.13.5</version>
-        </dependency>
 
     </dependencies>
 <!--    <build>-->
@@ -215,7 +203,7 @@
 <!--                    <configuration>-->
 <!--                        <archive>-->
 <!--                            <manifest>-->
-<!--                                <mainClass>CloudBootstrapMain</mainClass>-->
+<!--                                <mainClass>cloud.CloudBootstrapMain</mainClass>-->
 <!--                            </manifest>-->
 <!--                        </archive>-->
 <!--                    </configuration>-->
@@ -225,17 +213,63 @@
 <!--    </build>-->
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-    <!--                <version></version>-->
-                    <configuration>
-                        <mainClass>CloudBootstrapMain</mainClass>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <classpath />
+                        <argument>cloud.CloudBootstrapMain</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
+
+<!--    <build>-->
+<!--        <pluginManagement>-->
+<!--            <plugins>-->
+<!--                <plugin>-->
+
+<!--                    <groupId>org.scala-tools</groupId>-->
+<!--                    <artifactId>maven-scala-plugin</artifactId>-->
+<!--                    <version>2.15.2</version>-->
+<!--                    <executions>-->
+<!--                        <execution>-->
+<!--                            <goals>-->
+<!--                                <goal>compile</goal>-->
+<!--                            </goals>-->
+<!--                        </execution>-->
+<!--                    </executions>-->
+<!--                    <configuration>-->
+<!--                        <sourceDir>src/main/java</sourceDir>-->
+<!--                        <mainClass>cloud.CloudBootstrapMain</mainClass>-->
+<!--                        <jvmArgs>-->
+<!--                            <jvmArg>-Xms64m</jvmArg>-->
+<!--                            <jvmArg>-Xmx1024m</jvmArg>-->
+<!--                        </jvmArgs>-->
+<!--                    </configuration>-->
+<!--&lt;!&ndash;                    <groupId>org.springframework.boot</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <artifactId>spring-boot-maven-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;    &lt;!&ndash;                <version></version>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                    <configuration>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <mainClass>cloud.CloudBootstrapMain</mainClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </configuration>&ndash;&gt;-->
+<!--                </plugin>-->
+<!--            </plugins>-->
+<!--        </pluginManagement>-->
+<!--    </build>-->
 </project>
