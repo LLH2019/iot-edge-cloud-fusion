@@ -8,6 +8,7 @@ import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import base.model.connect.bean.KafkaMsg;
+import base.model.connect.bean.SubscribeTopic;
 import base.type.DataType;
 import cloud.front.GetKafkaMsg;
 import cloud.bean.NewDeviceConn;
@@ -69,12 +70,11 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
         ActorRef<BasicCommon>  ref = getContext().spawn(DeviceCloudActor.create(model), realName);
         cloudControlRefMaps.put(realName, ref);
 //
-//        SubscribeTopic subscribeTopic = new SubscribeTopic();
-////        subscribeTopic.setTopics(model.getKafkaConfig().getTopic());
-//        String topic = "/cloud/" + model.getModel().getName() + "/" + model.getModel().getNo();
-//        subscribeTopic.setTopic(topic);
-//        subscribeTopic.setRef(ref);
-//        kafkaConnectInActorRef.tell(subscribeTopic);
+        SubscribeTopic subscribeTopic = new SubscribeTopic();
+        String topic = "cloud." + model.getModel().getName() + "." + model.getModel().getNo();
+        subscribeTopic.setTopic(topic);
+        subscribeTopic.setRef(ref);
+        kafkaConnectInActorRef.tell(subscribeTopic);
         return this;
     }
 

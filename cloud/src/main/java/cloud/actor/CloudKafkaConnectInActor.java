@@ -93,12 +93,12 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 
 
 //        handleMqttMsg(msg);
-//        String topic = msg.getTopic();
-//        ActorRef<BasicCommon> ref = subscribesRefMap.get(topic);
-//        System.out.println("555" + ref);
-//        if(ref != null) {
-//            ref.tell(msg);
-//        }
+        String topic = msg.getTopic();
+        ActorRef<BasicCommon> ref = subscribesRefMap.get(topic);
+        System.out.println("555" + ref);
+        if(ref != null) {
+            ref.tell(msg);
+        }
         return this;
     }
 
