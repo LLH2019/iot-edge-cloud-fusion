@@ -83,7 +83,7 @@ public class DeviceActor extends AbstractDeviceActor {
     public void handleMqttMsg(MqttInMsg msg) {
 //        logger.log(Level.INFO, "mqtt ");
         KafkaMsg kafkaMsg = new KafkaMsg();
-        kafkaMsg.setTopic("cloud.cc3200.1111");
+        kafkaMsg.setTopic("cloud." + deviceModel.getModel().getName() + "."+ deviceModel.getModel().getNo());
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String key = df.format(new Date());
         kafkaMsg.setKey(key);

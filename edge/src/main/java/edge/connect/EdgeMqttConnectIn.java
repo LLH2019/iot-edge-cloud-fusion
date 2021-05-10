@@ -46,7 +46,7 @@ public class EdgeMqttConnectIn {
 //            System.out.println("666");
             client.setCallback(new PushCallback(edgeMqttConnectInActorRef));
 //            System.out.println("222");
-            String str = "cc3200/1111/#";
+//            String str = "cc3200/1111/#";
 //            MqttTopic topic = client.getTopic(str);
 //            System.out.println(str);
 //            MqttTopic topic = client.getTopic(m);
@@ -58,7 +58,7 @@ public class EdgeMqttConnectIn {
             //订阅消息
             int Qos = 1;//0：最多一次 、1：最少一次 、2：只有一次
 //            String[] topic1 = {str};
-            client.subscribe(str, Qos);
+            client.subscribe(GlobalMqttConfig.topic, Qos);
 
         } catch (MqttException e) {
             e.printStackTrace();

@@ -49,7 +49,7 @@ public class EdgeMqttConnectInActor extends AbstractBehavior<BasicCommon> implem
     private Behavior<BasicCommon> onHandleMqttInMsg(MqttInMsg msg) {
 
         String [] strs = msg.getTopic().split("/");
-        String topic =  strs[0] + "-" + strs[1];
+        String topic =  strs[2] + "-" + strs[3];
 //        System.out.println(subscribesRefMap + " --- " + msg);
 
         ActorRef<BasicCommon> deviceActorRef = subscribesRefMap.get(topic);

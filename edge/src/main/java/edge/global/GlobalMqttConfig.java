@@ -8,5 +8,5 @@ package edge.global;
 public class GlobalMqttConfig {
     public static final String brokenUrl = "tcp://192.168.123.247:1883";
     public static final String clientId = "12345";
-    public static final String topic = "/device/#";
+    public static final String topic = "device/up/#";
 }
