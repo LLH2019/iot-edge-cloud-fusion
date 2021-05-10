@@ -138,8 +138,13 @@ mvn compile exec:exec
     - 将展示有多少个设备连入
     - 显示每一个设备的基本信息，暂时只包括名称
     - 每一个设备连入情况 （活跃、待机）  待完成
+![image](https://user-images.githubusercontent.com/46324430/117676546-3979b400-b1e0-11eb-80a4-1dfd4732d1d5.png)
+
 - /device-info/{name.no}
     - 将显示相应设备的状态信息，包括名称，最近上传属性值，能够向下发布的指令
+![image](https://user-images.githubusercontent.com/46324430/117676636-4eeede00-b1e0-11eb-8d9f-1b5ee87d7483.png)
+![image](https://user-images.githubusercontent.com/46324430/117676703-5c0bcd00-b1e0-11eb-8ea5-29477e300829.png)
+
 - /device-control/{name.no.event}
     - 向相应设备发布相应的指令 
 
