@@ -6,19 +6,23 @@
 
 - 此项目是一个利用基于JVM的akka框架编写的跨云、边对设备进行控制的一体化框架项目
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d92411e6-3834-4152-9beb-1d127cbdc4dc/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d92411e6-3834-4152-9beb-1d127cbdc4dc/Untitled.png)
+![image](https://user-images.githubusercontent.com/46324430/117656288-c154c380-b1ca-11eb-8563-182c5c0415e4.png)
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e1808eb6-27fb-4506-b327-9ed7e30547ed/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e1808eb6-27fb-4506-b327-9ed7e30547ed/Untitled.png)
+![image](https://user-images.githubusercontent.com/46324430/117656927-8737f180-b1cb-11eb-990f-5f651978b3f7.png)
+
+
 
 主要涉及组件：
 
-HTTP 客户端： 客户可通过HTTP客户端获取相应设备信息状况
+- HTTP 客户端： 客户可通过HTTP客户端获取相应设备信息状况
 
-MongoDB 数据库，作为文档型数据库，MongoDB能够很好的保存json数据，在此将主要用于保存物模型数据
+- MongoDB 数据库，作为文档型数据库，MongoDB能够很好的保存json数据，在此将主要用于保存物模型数据
 
-MySQL 数据库，主要保存常规数据
+- MySQL 数据库，主要保存常规数据
 
-Kafka 中间件，在此作为云端和边缘端通信媒介
+- Kafka 中间件，在此作为云端和边缘端通信媒介
+
+- MQTT 中间件，在此作为边缘端和设备通信媒介
 
 ## 项目配置运行
 
