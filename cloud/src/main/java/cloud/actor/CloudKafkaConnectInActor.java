@@ -71,27 +71,18 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
 //        System.out.println("666666");
 //        logger.log(Level.INFO, "6666CloudKafkaConnectInActor " + msg + subscribesRefMap);
-//        GetKafkaMsg.kafkaMsg = msg;
-////        TotalInfo.deviceNums =
-//        if(!topics.contains(msg.getTopic())) {
-//            TotalInfo.deviceNums = topics.size();
-//            TotalInfo.deviceSets.add(msg.getTopic());
-//            DeviceInfo deviceInfo = new DeviceInfo();
-//            deviceInfo.setName(msg.getTopic());
-//            Map<String, String> valueMap = new HashMap<>();
-//            String[] strs = msg.getValue().split(":");
-//            valueMap.put(strs[0], strs[1]);
-//            deviceInfo.setValues(valueMap);
-//            TotalInfo.deviceInfoMap.put(msg.getTopic(), deviceInfo);
-//        } else {
-//            DeviceInfo deviceInfo = TotalInfo.deviceInfoMap.get(msg.getKey());
-//            Map<String, String> valueMap = deviceInfo.getValues();
-//            String[] strs = msg.getValue().split(":");
-//            valueMap.put(strs[0], strs[1]);
-//            deviceInfo.setValues(valueMap);
-//        }
+        GetKafkaMsg.kafkaMsg = msg;
 
-
+        if("close".equals(msg.getValue())) {
+            logger.log(Level.INFO, "DeviceCloudActor : kafka msg content is close...");
+        } else {
+            Map<String, String> propertyMap = TotalInfo.deviceInfoMap.get(msg.getTopic()).getPropertyMap();
+            String[] strs = msg.getValue().split(":");
+            if(strs.length == 2) {
+                propertyMap.put(strs[0], strs[1]);
+            }
+            System.out.println("DeviceCloudActor : " + strs);
+        }
 //        handleMqttMsg(msg);
         String topic = msg.getTopic();
         ActorRef<BasicCommon> ref = subscribesRefMap.get(topic);
