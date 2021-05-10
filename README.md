@@ -61,7 +61,6 @@ mvn compile exec:exec
     - 根据中间件消息对应topic，然后转发给其他的actor
 - MqttConnectIn，在此处并未声明为Actor，后面进行完善，此处为监听Mqtt发布消息，然后转发给其他的actor
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6366e7e7-aedb-41f7-b58f-e427c8134f31/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6366e7e7-aedb-41f7-b58f-e427c8134f31/Untitled.png)
 
 云端
 
@@ -75,43 +74,30 @@ mvn compile exec:exec
 - DeviceControlActor，作为端设备在云端的控制节点，将通过KafkaConnctInActor得到对应Device Actor发来的消息，然后做进一步处理
 - KafkaConnctInActor， 类似于边缘端
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2681c71c-02c7-45e0-9ce1-9182eb3508d8/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2681c71c-02c7-45e0-9ce1-9182eb3508d8/Untitled.png)
 
-由于云、边、端之间主要靠消息进行通信，因此基于此，设计了以下一些规则用于规范
+由于云、边、端之间主要靠消息进行通信，因此基于此，设计了以下一些规则用于规范,边以及端通过Mqtt进行通信，基于此
+- 若云向端发送消息
+    - topic 规则为 device/down/[name]/[no]
+    - value 规则为 key:value 形式， key为属性，value为相应值
 
-边以及端通过Mqtt进行通信，基于此
-
-若云向端发送消息，
-topic 规则为 device/down/[name]/[no]
-value 规则为 key:value 形式， key为属性，value为相应值
-
-若端向云发送消息
-topic 规则为 device/up/[name]/[no]
-value 规则为 key:value 形式， key为属性，value为相应值
+- 若端向云发送消息
+    - topic 规则为 device/up/[name]/[no]
+    - value 规则为 key:value 形式， key为属性，value为相应值
 
 云和边之间采用kafka进行通信
-
-云端监听 消息 cloud.*
-
-边缘监听 消息 edge.*
+- 云端监听 消息 cloud.*
+- 边缘监听 消息 edge.*
 
 云发布消息到边，规则如下
-
-若该消息发给Pod Actor
-
-topic 为 edge.edge_pod.[no]
-
-若该消息发给Device Actor
-
-topic 为 edge.[name].[no]
-
-value为 属性:值
+- 若该消息发给Pod Actor
+    - topic 为 edge.edge_pod.[no]
+- 若该消息发给Device Actor
+    - topic 为 edge.[name].[no]
+    - value 为 属性:值
 
 边发布消息到云，规则如下
-
-topic 为 cloud.[name].[no]
-
-value 为 属性:值
+- topic 为 cloud.[name].[no]
+- value 为 属性:值
 
 物模型实现介绍
 
