@@ -47,18 +47,13 @@ public class EdgeMqttConnectInActor extends AbstractBehavior<BasicCommon> implem
     }
 
     private Behavior<BasicCommon> onHandleMqttInMsg(MqttInMsg msg) {
-
         String [] strs = msg.getTopic().split("/");
         String topic =  strs[2] + "-" + strs[3];
-//        System.out.println(subscribesRefMap + " --- " + msg);
-
         ActorRef<BasicCommon> deviceActorRef = subscribesRefMap.get(topic);
-//        System.out.println(deviceActorRef + " ---2222 " + msg);
         if(null != deviceActorRef) {
             deviceActorRef.tell(msg);
         }
 
-//        System.out.println("edge mqtt connect in " + msg);
         return this;
     }
 

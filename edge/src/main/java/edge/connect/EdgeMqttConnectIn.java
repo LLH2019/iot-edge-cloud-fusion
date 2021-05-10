@@ -43,21 +43,10 @@ public class EdgeMqttConnectIn {
             //设置断开后重新连接
             options.setAutomaticReconnect(true);
             // 设置回调
-//            System.out.println("666");
             client.setCallback(new PushCallback(edgeMqttConnectInActorRef));
-//            System.out.println("222");
-//            String str = "cc3200/1111/#";
-//            MqttTopic topic = client.getTopic(str);
-//            System.out.println(str);
-//            MqttTopic topic = client.getTopic(m);
-            //setWill方法，如果项目中需要知道客户端是否掉线可以调用该方法。设置最终端口的通知消息
-            //遗嘱
-//            options.setWill(topic, "close".getBytes(), 1, true);
             client.connect(options);
-//            System.out.println("5555");
             //订阅消息
             int Qos = 1;//0：最多一次 、1：最少一次 、2：只有一次
-//            String[] topic1 = {str};
             client.subscribe(GlobalMqttConfig.topic, Qos);
 
         } catch (MqttException e) {
@@ -84,17 +73,10 @@ public class EdgeMqttConnectIn {
         }
 
         public void messageArrived(String topic, MqttMessage message) throws Exception {
-            // subscribe后得到的消息会执行到这里面
-//            System.out.println("接收消息主题 : " + topic);
-//            System.out.println("接收消息Qos : " + message.getQos());
-//            System.out.println("接收消息内容 : " + new String(message.getPayload()));
-//            System.out.println("1111111");
-
             MqttInMsg msg = new MqttInMsg();
             msg.setMsg(new String(message.getPayload()));
             msg.setTopic(topic);
             logger.log(Level.INFO, "MQTT msg : " + msg);
-//            CC3200Actor.TemperatureUpload upload = new CC3200Actor.TemperatureUpload(new String(message.getPayload()));
             ref.tell(msg);
         }
 
