@@ -12,6 +12,9 @@ import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import base.model.connect.KafkaConnectOut;
+import base.model.connect.bean.KafkaMsg;
+import base.type.TopicKey;
 import cloud.front.GetKafkaMsg;
 import cloud.front.TotalInfo;
 import cloud.global.GlobalActorRefName;
@@ -29,14 +32,12 @@ import static akka.http.javadsl.server.PathMatchers.segment;
  */
 public class HttpServer extends AllDirectives {
     private static java.util.logging.Logger logger = Logger.getLogger(HttpServer.class.getName());
-    private final ActorRef<BasicCommon> brainControlActorRef;
     private final ActorRef<BasicCommon> mongoDBActorRef;
-    private final ActorSystem<?> system;
+    private KafkaConnectOut kafkaConnectOut;
 
     public HttpServer() {
-        this.brainControlActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.BRAIN_ACTOR);
         this.mongoDBActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.MONGODB_CONN_ACTOR);
-        this.system = GlobalAkkaPara.system;
+        this.kafkaConnectOut = new KafkaConnectOut();
         logger.log(Level.INFO, "HttpServer init...");
     }
 
@@ -68,13 +69,6 @@ public class HttpServer extends AllDirectives {
                                     return onSuccess(futureStage, done -> complete("success link device... " + no));
                                 }))),
 
-                get(()->
-                        pathPrefix("publish-event", ()->
-                                path(segment(), (String event)-> {
-                                    final CompletionStage<Done> futureStage = publishEventToDevice(event);
-                                    return onSuccess(futureStage, done -> complete("success link device... "));
-                                }))),
-
 //                path("create-model", () ->
 //                        get(()-> {
 //                            createModel();
@@ -86,13 +80,10 @@ public class HttpServer extends AllDirectives {
                                 get(()-> {
                                     linkDevice();
                                     return complete("device link succeed");
-
                                 })),
 
                 path("get-kafka-msg", () ->
                         get(()-> {
-//                            String result = "";
-//                            for()
                             return complete("return kafka msg: " + GetKafkaMsg.kafkaMsg);
 //                            CompletionStage<Done> futureSaved = getKafkaMsg();
 //                            return onSuccess(futureSaved, done ->
@@ -101,19 +92,26 @@ public class HttpServer extends AllDirectives {
 
                         })),
 
-                path("get-device-info", () ->
+                path("device-list", () ->
                         get(()-> {
-//                            String result = "";
-//                            for()
-                            return complete("return kafka msg: " + TotalInfo.deviceNums + " "
-                                    + TotalInfo.deviceSets + " " +TotalInfo.deviceInfoMap);
-//                            CompletionStage<Done> futureSaved = getKafkaMsg();
-//                            return onSuccess(futureSaved, done ->
-//                                            complete("order created" + futureSaved.toString())
-//                                    );
+                            return complete("devices infos : \n device nums: " + TotalInfo.deviceNums + " \n"
+                                    + TotalInfo.deviceSets);
+                        })),
+                get(()->
+                        pathPrefix("device-info", ()->
+                                path(segment(), (String deviceInfo)-> {
+                                    return complete("device : " + deviceInfo +"\n properties : "
+                                            + TotalInfo.deviceInfoMap.get(deviceInfo).getPropertyMap()
+                                            + " \n events : "
+                                            + TotalInfo.deviceInfoMap.get(deviceInfo).getEventList());
+                                }))),
 
-                        }))
-
+                get(()->
+                        pathPrefix("device-control", ()->
+                                path(segment(), (String event)-> {
+                                    final CompletionStage<Done> futureStage = publishEventToDevice(event);
+                                    return onSuccess(futureStage, done -> complete("success publish event... "));
+                                })))
 //                post(() ->
 //                        path("test", () ->
 //                                entity(Jackson.unmarshaller(Model.class), model -> {
@@ -138,7 +136,15 @@ public class HttpServer extends AllDirectives {
     }
 
     private CompletionStage<Done> publishEventToDevice(String event) {
+        String strs[] = event.split(".");
 
+        KafkaMsg kafkaMsg = new KafkaMsg();
+        kafkaMsg.setTopic("edge." + strs[0] + "." + strs[1]);
+        kafkaMsg.setKey(TopicKey.CONTROL_DEVICE);
+//        String jsonString = JSON.toJSONString(deviceModel);
+        kafkaMsg.setValue(strs[2]);
+        logger.log(Level.INFO, "publishEventToDevice " + kafkaMsg);
+        kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
 
         return CompletableFuture.completedFuture(Done.getInstance());
     }

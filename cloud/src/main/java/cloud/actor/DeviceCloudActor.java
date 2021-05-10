@@ -82,6 +82,8 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
         deviceInfo.setName(deviceModel.getModel().getName() + "-" + deviceModel.getModel().getNo());
         deviceInfo.setPropertyMap(propertyMap);
         deviceInfo.setEventList(eventList);
+        TotalInfo.deviceNums++;
+        TotalInfo.deviceSets.add(realName);
         TotalInfo.deviceInfoMap.put(realName, deviceInfo);
         logger.log(Level.INFO, "DeviceCloudActor initDeviceInfo...");
     }

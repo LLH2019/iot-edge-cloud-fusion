@@ -7,4 +7,5 @@ package base.type;
  */
 public class TopicKey {
     public final static String CREATE_EDGE_ACTOR = "create-edge-actor";
+    public final static String CONTROL_DEVICE = "control_device";
 }

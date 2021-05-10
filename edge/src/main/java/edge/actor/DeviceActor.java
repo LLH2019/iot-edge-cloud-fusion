@@ -16,6 +16,7 @@ import base.model.connect.bean.MqttConfig;
 import base.model.connect.bean.MqttInMsg;
 import edge.global.GlobalActorRefName;
 import edge.global.GlobalAkkaPara;
+import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,7 +53,7 @@ public class DeviceActor extends AbstractDeviceActor {
     @Override
     public void downConnectIn() {
         SubscribeTopic sub = new SubscribeTopic();
-        sub.setTopic(realName);
+        sub.setTopic("edge." + deviceModel.getModel().getName() + "." + deviceModel.getModel().getNo());
         sub.setRef(ref);
         edgeMqttConnectInActorRef.tell(sub);
 
@@ -72,7 +73,13 @@ public class DeviceActor extends AbstractDeviceActor {
     public Receive<BasicCommon> createReceive() {
         return newReceiveBuilder()
                 .onMessage(MqttInMsg.class, this::onMqttMsgInAction)
+                .onMessage(KafkaMsg.class, this::onHandleKafkaMsgAction)
                 .build();
+    }
+
+    private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
+        logger.log(Level.INFO, "DeviceActor onHandleKafkaMsgAction " + msg);
+        return this;
     }
 
     private Behavior<BasicCommon> onMqttMsgInAction(MqttInMsg msg) {
