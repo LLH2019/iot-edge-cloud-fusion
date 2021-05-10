@@ -60,17 +60,17 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
         this.deviceModel = deviceModel;
         this.realName = "cloud." + deviceModel.getModel().getName() + "." + deviceModel.getModel().getNo();
         this.kafkaConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.CLOUD_KAFKA_CONNECT_IN_ACTOR);
-        List<Property> properties = deviceModel.getModel().getProperties();
-        for (Property p : properties) {
-            propertyMap.put(p.getName(), "0");
-        }
-
-        List<Event> events = deviceModel.getModel().getEvents();
-        for (Event e : events) {
-            eventList.add(e.getName());
-        }
-
-        initDeviceInfo();
+//        List<Property> properties = deviceModel.getModel().getProperties();
+//        for (Property p : properties) {
+//            propertyMap.put(p.getName(), "0");
+//        }
+//
+//        List<Event> events = deviceModel.getModel().getEvents();
+//        for (Event e : events) {
+//            eventList.add(e.getName());
+//        }
+//
+//        initDeviceInfo();
         upConnectOut();
         downConnectIn();
         createEdgeActorAction();
@@ -80,7 +80,7 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
     private void initDeviceInfo() {
         DeviceInfo deviceInfo = new DeviceInfo();
         deviceInfo.setName(deviceModel.getModel().getName() + "-" + deviceModel.getModel().getNo());
-        deviceInfo.setPropertyMap(this.propertyMap);
+        deviceInfo.setPropertyMap(propertyMap);
         deviceInfo.setEventList(eventList);
         TotalInfo.deviceInfoMap.put(realName, deviceInfo);
         logger.log(Level.INFO, "DeviceCloudActor initDeviceInfo...");
@@ -107,19 +107,21 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
 
 
     private Behavior<BasicCommon> onKafkaMsgInAction(KafkaMsg kafkaMsg) {
+        System.out.println("device cloud actor ....");
         handleKafkaMsg(kafkaMsg);
         return this;
     }
 
     public void handleKafkaMsg(KafkaMsg msg) {
-        if("close".equals(msg.getValue())) {
-            logger.log(Level.INFO, "DeviceCloudActor : kafka msg content is close...");
-        } else {
-            String[] strs = msg.getValue().split(":");
-            if(strs.length == 2) {
-                propertyMap.put(strs[0], strs[1]);
-            }
-        }
+//        if("close".equals(msg.getValue())) {
+//            logger.log(Level.INFO, "DeviceCloudActor : kafka msg content is close...");
+//        } else {
+//            String[] strs = msg.getValue().split(":");
+//            if(strs.length == 2) {
+//                propertyMap.put(strs[0], strs[1]);
+//            }
+//            System.out.println("DeviceCloudActor : " + strs);
+//        }
         System.out.println("device cloud msg " + msg);
     }
 

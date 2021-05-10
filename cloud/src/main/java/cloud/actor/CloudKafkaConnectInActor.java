@@ -41,7 +41,7 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         this.ref = getContext().getSelf();
         new Thread(()->upConnectIn()).start();
 
-        logger.log(Level.WARNING, "CloudKafkaConnectInActor init...");
+        logger.log(Level.INFO, "CloudKafkaConnectInActor init...");
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
 //        System.out.println("666666");
-        logger.log(Level.INFO, "6666CloudKafkaConnectInActor " + msg );
+//        logger.log(Level.INFO, "6666CloudKafkaConnectInActor " + msg + subscribesRefMap);
 //        GetKafkaMsg.kafkaMsg = msg;
 ////        TotalInfo.deviceNums =
 //        if(!topics.contains(msg.getTopic())) {
