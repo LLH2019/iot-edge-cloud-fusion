@@ -82,7 +82,7 @@ public class HttpServer extends AllDirectives {
 //
 //                        })),
 
-                path("link-device", () ->
+                path("link-device-all", () ->
                                 get(()-> {
                                     linkDevice();
                                     return complete("device link succeed");
@@ -198,7 +198,7 @@ public class HttpServer extends AllDirectives {
         doc.setConnName("model");
         doc.setCollectionName("model");
 //        System.out.println("11111");
-//        mongoDBActorRef.tell(doc);
+        mongoDBActorRef.tell(doc);
         return CompletableFuture.completedFuture(Done.getInstance());
     }
 
@@ -217,6 +217,16 @@ public class HttpServer extends AllDirectives {
         doc.setDeviceModel(deviceModel);
         logger.log(Level.INFO, "linkDevice is up....");
         mongoDBActorRef.tell(doc);
+
+        DeviceModel deviceModel2 = new DeviceModel();
+        GetDeviceModelDoc doc2 = new GetDeviceModelDoc();
+        doc2.setKey("name");
+        doc2.setValue("cc3200-3333");
+        doc2.setConnName("model");
+        doc2.setCollectionName("model");
+        doc2.setDeviceModel(deviceModel2);
+        logger.log(Level.INFO, "linkDevice is up....");
+        mongoDBActorRef.tell(doc2);
 
         return CompletableFuture.completedFuture(Done.getInstance());
     }
