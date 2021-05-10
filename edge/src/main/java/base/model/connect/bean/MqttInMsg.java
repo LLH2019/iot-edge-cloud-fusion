@@ -10,5 +10,6 @@ import lombok.Data;
  */
 @Data
 public class MqttInMsg implements BasicCommon {
-    private final String msg;
+    private String topic;
+    private String msg;
 }

@@ -6,6 +6,7 @@ import akka.actor.typed.Props;
 import akka.actor.typed.javadsl.Behaviors;
 import base.model.bean.BasicCommon;
 import edge.actor.EdgeKafkaConnectInActor;
+import edge.actor.EdgeMqttConnectInActor;
 import edge.actor.PodActor;
 import base.model.connect.bean.KafkaConfig;
 import edge.global.GlobalActorRefName;
@@ -33,6 +34,11 @@ public class EdgeBootstrapMain {
         ActorRef<BasicCommon> edgeKafkaConnectInActorRef = system.systemActorOf(EdgeKafkaConnectInActor.create(), GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR, Props.empty());
         GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR, edgeKafkaConnectInActorRef);
         logger.log(Level.INFO, "init EdgeKafkaConnectInActor..." );
+
+        ActorRef<BasicCommon> edgeMqttConnectInActorRef = system.systemActorOf(EdgeMqttConnectInActor.create(), GlobalActorRefName.EDGE_MQTT_CONNECT_IN_ACTOR, Props.empty());
+        GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.EDGE_MQTT_CONNECT_IN_ACTOR, edgeMqttConnectInActorRef);
+        logger.log(Level.INFO, "init EdgeMqttConnectInActor..." );
+
 
         ActorRef<BasicCommon> podActorRef = system.systemActorOf(PodActor.create(), GlobalActorRefName.POD_ACTOR, Props.empty());
         GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.POD_ACTOR, podActorRef);

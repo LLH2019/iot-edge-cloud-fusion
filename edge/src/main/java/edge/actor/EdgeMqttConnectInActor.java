@@ -35,6 +35,7 @@ public class EdgeMqttConnectInActor extends AbstractBehavior<BasicCommon> implem
     public EdgeMqttConnectInActor(ActorContext<BasicCommon> context) {
         super(context);
         this.ref = context.getSelf();
+        downConnectIn();
     }
 
     @Override
@@ -46,7 +47,18 @@ public class EdgeMqttConnectInActor extends AbstractBehavior<BasicCommon> implem
     }
 
     private Behavior<BasicCommon> onHandleMqttInMsg(MqttInMsg msg) {
-        System.out.println("edge mqtt connect in " + msg);
+
+        String [] strs = msg.getTopic().split("/");
+        String topic =  strs[0] + "-" + strs[1];
+//        System.out.println(subscribesRefMap + " --- " + msg);
+
+        ActorRef<BasicCommon> deviceActorRef = subscribesRefMap.get(topic);
+//        System.out.println(deviceActorRef + " ---2222 " + msg);
+        if(null != deviceActorRef) {
+            deviceActorRef.tell(msg);
+        }
+
+//        System.out.println("edge mqtt connect in " + msg);
         return this;
     }
 
