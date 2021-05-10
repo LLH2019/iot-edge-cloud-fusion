@@ -154,11 +154,11 @@ public class HttpServer extends AllDirectives {
 
         GetDeviceModelDoc doc = new GetDeviceModelDoc();
         doc.setKey("name");
-        doc.setValue("cc3200-" + no);
+        doc.setValue("cc3200-" + no.trim());
         doc.setConnName("model");
         doc.setCollectionName("model");
         doc.setDeviceModel(deviceModel);
-        logger.log(Level.INFO, "device cc3200-" + no + " is up....");
+        logger.log(Level.INFO, "device cc3200-" + no + "is up....");
         mongoDBActorRef.tell(doc);
         return CompletableFuture.completedFuture(Done.getInstance());
     }
@@ -224,15 +224,15 @@ public class HttpServer extends AllDirectives {
         logger.log(Level.INFO, "linkDevice is up....");
         mongoDBActorRef.tell(doc);
 
-        DeviceModel deviceModel2 = new DeviceModel();
-        GetDeviceModelDoc doc2 = new GetDeviceModelDoc();
-        doc2.setKey("name");
-        doc2.setValue("cc3200-3333");
-        doc2.setConnName("model");
-        doc2.setCollectionName("model");
-        doc2.setDeviceModel(deviceModel2);
-        logger.log(Level.INFO, "linkDevice is up....");
-        mongoDBActorRef.tell(doc2);
+//        DeviceModel deviceModel2 = new DeviceModel();
+//        GetDeviceModelDoc doc2 = new GetDeviceModelDoc();
+//        doc2.setKey("name");
+//        doc2.setValue("cc3200-3333");
+//        doc2.setConnName("model");
+//        doc2.setCollectionName("model");
+//        doc2.setDeviceModel(deviceModel2);
+//        logger.log(Level.INFO, "linkDevice is up....");
+//        mongoDBActorRef.tell(doc2);
 
         return CompletableFuture.completedFuture(Done.getInstance());
     }

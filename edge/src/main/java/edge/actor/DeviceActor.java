@@ -53,11 +53,10 @@ public class DeviceActor extends AbstractDeviceActor {
     @Override
     public void downConnectIn() {
         SubscribeTopic sub = new SubscribeTopic();
-        sub.setTopic("edge." + deviceModel.getModel().getName() + "." + deviceModel.getModel().getNo());
+        sub.setTopic(realName);
         sub.setRef(ref);
         edgeMqttConnectInActorRef.tell(sub);
 
-//        new EdgeMqttConnectIn();
     }
 
     @Override

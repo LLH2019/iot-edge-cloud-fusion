@@ -129,11 +129,10 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
 
     @Override
     public void downConnectIn() {
-        KafkaConfig kafkaConfig = deviceModel.getKafkaConfig();
+//        KafkaConfig kafkaConfig = deviceModel.getKafkaConfig();
         SubscribeTopic subscribeTopic = new SubscribeTopic();
-        String topic = "cloud." + kafkaConfig.getTopic().replace("/", ".");
         subscribeTopic.setRef(ref);
-        subscribeTopic.setTopic(topic);
+        subscribeTopic.setTopic(realName);
         kafkaConnectInActorRef.tell(subscribeTopic);
     }
 

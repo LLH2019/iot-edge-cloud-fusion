@@ -69,7 +69,7 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 
 
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
-//        System.out.println("666666");
+        System.out.println("666666");
 //        logger.log(Level.INFO, "6666CloudKafkaConnectInActor " + msg + subscribesRefMap);
         GetKafkaMsg.kafkaMsg = msg;
 
@@ -109,6 +109,7 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 //        System.out.println("888--upConnectIn" + kafkaConfig);
 //        this.cloudKafkaConnectIn = new CloudKafkaConnectIn(kafkaConfig, ref);
 //        System.out.println("888--upConnectIn");
-        new CloudKafkaConsumer(system, ref);
+//        new CloudKafkaConsumer(system, ref);
+        new CloudKafkaConnectIn(ref);
     }
 }

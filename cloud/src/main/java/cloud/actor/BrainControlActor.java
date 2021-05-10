@@ -51,7 +51,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
     @Override
     public Receive<BasicCommon> createReceive() {
         return newReceiveBuilder()
-                .onMessage(KafkaMsg.class, this::onHandleKafkaMsg)
+//                .onMessage(KafkaMsg.class, this::onHandleKafkaMsg)
                 .onMessage(DeviceModel.class, this::onHandleDeviceLink)
                 .build();
     }
@@ -75,7 +75,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
         subscribeTopic.setTopic(topic);
         subscribeTopic.setRef(ref);
         kafkaConnectInActorRef.tell(subscribeTopic);
-        return this;
+        return Behaviors.same();
     }
 
     public static Behavior<BasicCommon> create() {
@@ -84,7 +84,7 @@ public class BrainControlActor extends AbstractBehavior<BasicCommon> implements 
 
     @Override
     public void upConnectIn() {
-        System.out.println("00000000");
-        new CloudKafkaConsumer(system, getContext().getSelf());
+//        System.out.println("00000000");
+//        new CloudKafkaConsumer(system, getContext().getSelf());
     }
 }

@@ -54,6 +54,8 @@ public class CloudKafkaConsumer {
         String topic =
                 "cloud.cc3200.1111";
 
+        String topic2 =
+                "cloud.cc3200.3333";
         final Config config = system.settings().config().getConfig("akka.kafka.consumer");
         final ConsumerSettings<String, String> consumerSettings =
                 ConsumerSettings.create(config, new StringDeserializer(), new StringDeserializer())
@@ -76,7 +78,7 @@ public class CloudKafkaConsumer {
                         RestartSettings.create(minBackoff, maxBackoff, randomFactor),
                         () -> {
                             return Consumer.committableSource(
-                                    consumerSettings, Subscriptions.topics(topic))
+                                    consumerSettings, Subscriptions.topics(topic, topic2))
                                     .mapAsync(
                                             1,
                                             msg -> handleRecord(msg.record()).thenApply(done -> msg.committableOffset()))

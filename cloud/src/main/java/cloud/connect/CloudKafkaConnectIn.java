@@ -27,11 +27,9 @@ public class CloudKafkaConnectIn {
     private static Logger logger = Logger.getLogger(CloudKafkaConnectIn.class.getName());
 
     private ActorRef<BasicCommon> ref;
-    private KafkaConfig kafkaConfig;
     KafkaConsumer<String, String> consumer;
 
-    public CloudKafkaConnectIn(KafkaConfig kafkaConfig, ActorRef<BasicCommon> ref) {
-        this.kafkaConfig = kafkaConfig;
+    public CloudKafkaConnectIn(ActorRef<BasicCommon> ref) {
         this.ref = ref;
 //        subscribedTopics.add(kafkaConfig.getTopic());
 //        topicNum = subscribedTopics.size();
@@ -54,15 +52,14 @@ public class CloudKafkaConnectIn {
 //    }
 
     private void init() {
-        System.out.println("6666" + kafkaConfig + ref);
         Properties kafkaPropertie = new Properties();
         //配置broker地址，配置多个容错
-        kafkaPropertie.put("bootstrap.servers", kafkaConfig.getServer());
+        kafkaPropertie.put("bootstrap.servers", "192.168.123.131:9092");
         //配置key-value允许使用参数化类型，反序列化
         kafkaPropertie.put("key.deserializer","org.apache.kafka.common.serialization.StringDeserializer");
         kafkaPropertie.put("value.deserializer","org.apache.kafka.common.serialization.StringDeserializer");
         //指定消费者所属的群组
-        kafkaPropertie.put("group.id",kafkaConfig.getGroupId());
+        kafkaPropertie.put("group.id","1");
         //创建KafkaConsumer，将kafkaPropertie传入。
         consumer = new KafkaConsumer<String, String>(kafkaPropertie);
         /*订阅主题，这里使用的是最简单的订阅testTopic主题，这里也可以出入正则表达式，来区分想要订阅的多个指定的主题，如：
@@ -94,7 +91,7 @@ public class CloudKafkaConnectIn {
 //                logger.log(Level.INFO, "kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
 //                System.out.println(ref  + " 222 " + data);
 
-//                ref.tell(data);
+                ref.tell(data);
 //                synchronized (this) {
 
 //                }
@@ -104,9 +101,6 @@ public class CloudKafkaConnectIn {
                 System.out.println("kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
             }
 
-            KafkaMsgList kafkaMsgList = new KafkaMsgList();
-            kafkaMsgList.setKafkaMsgs(msgs);
-            ref.tell(kafkaMsgList);
 
 
 //            System.out.println("3333 " + topicNum);
