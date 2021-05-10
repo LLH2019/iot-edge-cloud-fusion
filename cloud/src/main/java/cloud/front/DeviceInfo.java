@@ -2,7 +2,7 @@ package cloud.front;
 
 import lombok.Data;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author ：LLH
@@ -12,6 +12,6 @@ import java.util.Map;
 @Data
 public class DeviceInfo {
     public String name;
-    public Map<String, String> instructs;
-    public Map<String, String> values;
+    public List<String> eventList;
+    public Map<String, String> propertyMap;
 }
