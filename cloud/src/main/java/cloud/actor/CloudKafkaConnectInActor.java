@@ -76,12 +76,15 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         if("close".equals(msg.getValue())) {
             logger.log(Level.INFO, "DeviceCloudActor : kafka msg content is close...");
         } else {
+//            System.out.println("77777777" + msg.getTopic());
+//            System.out.println("77777777" + TotalInfo.deviceInfoMap);
             Map<String, String> propertyMap = TotalInfo.deviceInfoMap.get(msg.getTopic()).getPropertyMap();
+//            System.out.println("6666666" + propertyMap);
             String[] strs = msg.getValue().split(":");
             if(strs.length == 2) {
                 propertyMap.put(strs[0], strs[1]);
             }
-            System.out.println("DeviceCloudActor : " + strs);
+//            System.out.println("DeviceCloudActor : " + strs);
         }
 //        handleMqttMsg(msg);
         String topic = msg.getTopic();
