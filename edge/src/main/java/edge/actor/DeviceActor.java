@@ -8,12 +8,14 @@ import akka.actor.typed.javadsl.Receive;
 import base.model.bean.BasicCommon;
 import base.model.bean.DeviceModel;
 import base.model.connect.KafkaConnectOut;
-import base.model.connect.MqttConnectIn;
+import base.model.connect.bean.SubscribeTopic;
+import com.sandinh.paho.akka.MqttPubSub;
+import edge.connect.EdgeMqttConnectIn;
 import base.model.connect.bean.KafkaMsg;
 import base.model.connect.bean.MqttConfig;
 import base.model.connect.bean.MqttInMsg;
-import base.type.TopicKey;
-import com.alibaba.fastjson.JSON;
+import edge.global.GlobalActorRefName;
+import edge.global.GlobalAkkaPara;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,17 +31,19 @@ import java.util.logging.Logger;
 public class DeviceActor extends AbstractDeviceActor {
     private static Logger logger = Logger.getLogger(DeviceActor.class.getName());
 
-    private final MqttConfig mqttConfig;
     private final ActorRef<BasicCommon> ref;
     private KafkaConnectOut kafkaConnectOut;
+    private final ActorRef<BasicCommon> edgeMqttConnectInActorRef;
     private final DeviceModel deviceModel;
+    private final String realName;
 
     public DeviceActor(ActorContext<BasicCommon> context, DeviceModel deviceModel) {
         super(context);
         logger.log(Level.INFO,"DeviceActor pre init...");
-        this.mqttConfig = deviceModel.getMqttConfig();
         this.deviceModel = deviceModel;
+        this.realName = deviceModel.getModel().getName() + "-" + deviceModel.getModel().getNo();
         this.ref = context.getSelf();
+        this.edgeMqttConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.EDGE_MQTT_CONNECT_IN_ACTOR);
         downConnectIn();
         upConnectOut();
         logger.log(Level.INFO,"DeviceActor init...");
@@ -47,7 +51,12 @@ public class DeviceActor extends AbstractDeviceActor {
 
     @Override
     public void downConnectIn() {
-        new MqttConnectIn(mqttConfig, ref);
+        SubscribeTopic sub = new SubscribeTopic();
+        sub.setTopic(realName);
+        sub.setRef(ref);
+        edgeMqttConnectInActorRef.tell(sub);
+
+//        new EdgeMqttConnectIn();
     }
 
     @Override
@@ -72,7 +81,7 @@ public class DeviceActor extends AbstractDeviceActor {
     }
 
     public void handleMqttMsg(MqttInMsg msg) {
-
+//        logger.log(Level.INFO, "mqtt ");
         KafkaMsg kafkaMsg = new KafkaMsg();
         kafkaMsg.setTopic("cloud.cc3200.1111");
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

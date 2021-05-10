@@ -1,9 +1,12 @@
-package base.model.connect;
+package edge.connect;
 
 import akka.actor.typed.ActorRef;
 import base.model.bean.BasicCommon;
 import base.model.connect.bean.MqttConfig;
 import base.model.connect.bean.MqttInMsg;
+import edge.global.GlobalActorRefName;
+import edge.global.GlobalAkkaPara;
+import edge.global.GlobalMqttConfig;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.util.logging.Level;
@@ -14,22 +17,19 @@ import java.util.logging.Logger;
  * @date ：Created in 2021/4/16 11:00
  * @description：MQTT接收外部消息
  */
-public class MqttConnectIn {
-    private static Logger logger = Logger.getLogger(MqttConnectIn.class.getName());
-    private MqttConfig mqttConfig;
-    private ActorRef<BasicCommon> ref;
+public class EdgeMqttConnectIn {
+    private static Logger logger = Logger.getLogger(EdgeMqttConnectIn.class.getName());
+    private ActorRef<BasicCommon> edgeMqttConnectInActorRef;
 
-    public MqttConnectIn(MqttConfig mqttConfig, ActorRef<BasicCommon> ref) {
-        this.mqttConfig = mqttConfig;
-        this.ref = ref;
+    public EdgeMqttConnectIn() {
+        this.edgeMqttConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.EDGE_MQTT_CONNECT_IN_ACTOR);
         init();
     }
 
     private void init() {
         try {
-            logger.log(Level.INFO, "MqttConnectIn init... " + mqttConfig + ref);
-            MqttClient client = new MqttClient(mqttConfig.getBrokerUrl(), mqttConfig.getClientId());
-//            System.out.println("777");
+            logger.log(Level.INFO, "MqttConnectIn init... ");
+            MqttClient client = new MqttClient(GlobalMqttConfig.brokenUrl, GlobalMqttConfig.clientId);
             MqttConnectOptions options = new MqttConnectOptions();
             options.setCleanSession(false);
             // 设置连接的用户名
@@ -44,7 +44,7 @@ public class MqttConnectIn {
             options.setAutomaticReconnect(true);
             // 设置回调
 //            System.out.println("666");
-            client.setCallback(new PushCallback(ref));
+            client.setCallback(new PushCallback(edgeMqttConnectInActorRef));
 //            System.out.println("222");
             String str = "cc3200/1111/humidity";
             MqttTopic topic = client.getTopic(str);

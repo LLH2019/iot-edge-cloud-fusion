@@ -8,5 +8,6 @@ package edge.global;
 public class GlobalActorRefName {
     public final static String POD_ACTOR = "pod_actor";
     public final static String EDGE_KAFKA_CONNECT_IN_ACTOR = "edge_kafka_connect_in_actor";
+    public final static String EDGE_MQTT_CONNECT_IN_ACTOR = "edge_mqtt_connect_in_actor";
 //    public final static String MONGODB_CONN_ACTOR = "mongodb_conn_actor";
 }
