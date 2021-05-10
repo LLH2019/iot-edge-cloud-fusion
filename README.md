@@ -81,8 +81,12 @@ mvn compile exec:exec
 
 边以及端通过Mqtt进行通信，基于此
 
-topic 规则为 设备名称/设备编号/属性
+若云向端发送消息，
+topic 规则为 device/down/[name]/[no]
+value 规则为 key:value 形式， key为属性，value为相应值
 
+若端向云发送消息
+topic 规则为 device/up/[name]/[no]
 value 规则为 key:value 形式， key为属性，value为相应值
 
 云和边之间采用kafka进行通信
