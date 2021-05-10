@@ -54,32 +54,52 @@ mvn compile exec:exec
 
 如下图所示，主要存在以下几类Actor
 
-- Pod Actor， 对应于每一个运行时环境存在一个，主要功能如下：
-    - 创建Device Actor
-    - 监控运行时环境消耗资源情况 （待完成）
-- Device Actor，对应于监控设备的Actor，主要功能如下：
-    - 接收相应设备发布的Mqtt消息，并根据对应物模型做相应的处理
-    - 接受来自于上层的指令消息，通过发Mqtt消息给相应设备下发指令 （待完成）
-- KafkaConnectInActor，每一个运行时环境存在一个，主要功能如下：
-    - 接收来自于kafka中间件消息
-    - 根据中间件消息对应topic，然后转发给其他的actor
-- MqttConnectIn，在此处并未声明为Actor，后面进行完善，此处为监听Mqtt发布消息，然后转发给其他的actor
+![image](https://user-images.githubusercontent.com/46324430/117657194-daaa3f80-b1cb-11eb-8134-e2e7e7be12e0.png)
 
+- Pod Actor， 对应于每一个运行时环境存在一个，初始化时创建
+    - 主要功能如下
+        - 创建 DeviceActor,实现方式为根据接收到的kafka消息创建相应的DeviceActor
+        - 监控运行时环境消耗资源情况 （待完成）
+    - 交互情况
+        - 接受来自于 EdgeKafkaConnectInActor 接收的消息，topic 为 edge.edge-pod-[no]
+- Device Actor，对应于监控设备的Actor
+    - 主要功能如下：
+        - 接收相应设备发布的Mqtt消息，并根据对应物模型做相应的处理
+        - 接受来自于上层的指令消息，通过发Mqtt消息给相应设备下发指令 （待完成）
+    - 交互情况
+        - 接收来自于 EdgeKafkaConnectInActor 接收的消息，topic 为 edge.[name].[no]
+        - 发布消息到kafka中， topic为 cloud.[name].[no]
+        - 接收来自于 Mqtt Broker 中的消息， topic 为 device/up/[name]/[no]
+        - 发布消息到 Mqtt Broker 中， topic 为 device/down/[name]/[no]
+- EdgeKafkaConnectInActor，每一个运行时环境存在一个，初始化时新建
+    - 主要功能如下：
+        - 接收来自于 kafka 中间件消息，根据中间件消息对应 topic，然后转发给其他的 Actor
+- EdgeMqttConnectInActor，每一个运行时环境存在一个，初始化时新建
+    - 主要功能如下：
+        - 接收来自于 Mqtt Broker 消息，然后根据 topic 转发给不同的 Device Actor 做相应处理
 
 云端
 
 如下图所示，主要存在以下几类actor
 
-- Brain Actor， 云端的主要控制actor，主要作用如下：
-    - 接收MongoDB查询物模型数据，然后创建DeviceControlActor，以及发布消息到Kafka，边缘端接收到消息将创建对应的Device Actor
+![image](https://user-images.githubusercontent.com/46324430/117658962-ef87d280-b1cd-11eb-87ae-40dcfa73fb54.png)
+
+- Brain Actor， 云端的主要控制actor，运行时环境中只存在一个
+    - 主要作用如下：
+        - 接受MongoDB查询物模型数据，然后创建DeviceCloudControlActor，以及发布消息到Kafka，边缘端接收到消息将创建对应的Device Actor
+        - 监控云端运行时环境 （待完成）
 - MongoDBConnActor ，用于对MongoDB 进行相应的操作
     - 插入数据
     - 查询数据
-- DeviceControlActor，作为端设备在云端的控制节点，将通过KafkaConnctInActor得到对应Device Actor发来的消息，然后做进一步处理
-- KafkaConnctInActor， 类似于边缘端
+- DeviceCloudControlActor，作为端设备在云端的控制节点
+    - 主要功能如下：
+        - 将通过KafkaConnctInActor得到对应Device Actor发来的消息，然后做进一步处理
+- CloudKafkaConnctInActor， 类似于边缘端
+- 全局保存环境，由于如果每次查询需要到数据库中进行，对于频繁更新的前端查询将会造成数据库很大的负载，因此设置一个全局保存变量，主要保存相关需要向前端展示的数据内容，该环境中数据直接根据kafka中传来的数据实时更新
 
 
 由于云、边、端之间主要靠消息进行通信，因此基于此，设计了以下一些规则用于规范,边以及端通过Mqtt进行通信，基于此
+
 - 若云向端发送消息
     - topic 规则为 device/down/[name]/[no]
     - value 规则为 key:value 形式， key为属性，value为相应值
@@ -103,7 +123,9 @@ mvn compile exec:exec
 - topic 为 cloud.[name].[no]
 - value 为 属性:值
 
+
 物模型实现介绍
+
 
 ## 遇到问题
 
