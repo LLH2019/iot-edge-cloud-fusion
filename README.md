@@ -149,6 +149,11 @@ mvn compile exec:exec
 - /device-control/{name.no.event}
     - 向相应设备发布相应的指令 
 
+![image](https://user-images.githubusercontent.com/46324430/117765261-4342fc00-b260-11eb-8cbb-bbdf7811dcac.png)
+
+![image](https://user-images.githubusercontent.com/46324430/117765134-1bec2f00-b260-11eb-8c46-33f3f3a5b7a5.png)
+
+
 ## 工具操作
 
 #### mongodb 操作
