@@ -149,6 +149,24 @@ mvn compile exec:exec
 - /device-control/{name.no.event}
     - 向相应设备发布相应的指令 
 
+## 工具操作
+
+#### mongodb 操作
+
+
+#### kafka 操作
+
+kafka采用docker 进行安装
+- docker ps 
+    - 查看 kafka 对应docker id
+- docker exec -it [id] /bin/bash
+    - 进入相应 docker 容器内 
+- 一些常见kafka脚本命令
+    - 模拟消费者消费
+        - kafka-console-consumer --bootstrap-server [host]:[port] --topic [topic] --from-beginning
+    - 模拟生产者生产
+        - kafka-console-producer --broker-list [host]:[port] --topic [topic]
+
 
 ## 遇到问题
 * 边缘端无法将消息发送到云端的 kafka 中
