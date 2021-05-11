@@ -142,8 +142,9 @@ mvn compile exec:exec
 
 - /device-info/{name.no}
     - 将显示相应设备的状态信息，包括名称，最近上传属性值，能够向下发布的指令
-![image](https://user-images.githubusercontent.com/46324430/117676636-4eeede00-b1e0-11eb-8d9f-1b5ee87d7483.png)
-![image](https://user-images.githubusercontent.com/46324430/117676703-5c0bcd00-b1e0-11eb-8ea5-29477e300829.png)
+![image](https://user-images.githubusercontent.com/46324430/117748324-59da5a80-b242-11eb-9da8-5c5b46a7969a.png)
+![image](https://user-images.githubusercontent.com/46324430/117748293-4dee9880-b242-11eb-9b7b-dcbd677a2c2a.png)
+
 
 - /device-control/{name.no.event}
     - 向相应设备发布相应的指令 
