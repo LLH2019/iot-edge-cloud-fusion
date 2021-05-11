@@ -1,9 +1,10 @@
-package base.model.connect;
+package edge.connect;
 
+import base.model.connect.bean.KafkaMsg;
+import edge.global.GlobalKafkaConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
-import base.model.connect.bean.KafkaMsg;
 
 import java.util.Properties;
 
@@ -18,7 +19,7 @@ public class KafkaConnectOut {
     public KafkaConnectOut() {
         Properties kafkaProperties = new Properties();
         //配置broker地址，配置多个容错
-        kafkaProperties.put("bootstrap.servers", "192.168.123.131:9092");
+        kafkaProperties.put("bootstrap.servers", GlobalKafkaConfig.server);
         //配置key-value允许使用参数化类型
         kafkaProperties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         kafkaProperties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -31,7 +32,6 @@ public class KafkaConnectOut {
                 kafkaMsg.getTopic(), kafkaMsg.getKey(), kafkaMsg.getValue()
         );
         kafkaProducer.send(record);
-//        kafkaProducer.close();
     }
 
     public void sendMessageForgetResult(String topic, String key, String value) {
@@ -39,7 +39,6 @@ public class KafkaConnectOut {
                 topic, key, value
         );
         kafkaProducer.send(record);
-//        kafkaProducer.close();
     }
 
     public RecordMetadata sendMessageSync(String topic, String key, String value) throws Exception{
@@ -56,44 +55,6 @@ public class KafkaConnectOut {
         );
         kafkaProducer.send(record,new MyProducerCallback());
     }
-
-
-
-//    public static void main(String[] args) throws ExecutionException, InterruptedException {
-//        Properties kafkaPropertie = new Properties();
-//        //配置broker地址，配置多个容错
-//        kafkaPropertie.put("bootstrap.servers", "192.168.123.131:9092");
-//        //配置key-value允许使用参数化类型
-//        kafkaPropertie.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
-//        kafkaPropertie.put("value.serializer","org.apache.kafka.common.serialization.StringSerializer");
-//
-//        KafkaProducer kafkaProducer = new KafkaProducer(kafkaPropertie);
-//
-//        ProducerRecord<String, String> record = new ProducerRecord<String, String>("testTopic","key1","hello world");
-//
-//        kafkaProducer.send(record);
-//
-//    }
-    
-    
-
-//    public static void main(String[] args) throws ExecutionException, InterruptedException {
-//        Properties kafkaPropertie = new Properties();
-//        //配置broker地址，配置多个容错
-//        kafkaPropertie.put("bootstrap.servers", "192.168.123.131:9092");
-//        //配置key-value允许使用参数化类型
-//        kafkaPropertie.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
-//        kafkaPropertie.put("value.serializer","org.apache.kafka.common.serialization.StringSerializer");
-//
-//        KafkaProducer kafkaProducer = new KafkaProducer(kafkaPropertie);
-//        //创建消息对象，第一个为参数topic,第二个参数为key,第三个参数为value
-//        ProducerRecord<String, String> record = new ProducerRecord<String, String>("testTopic","key1","hello world");
-//
-//        //同步发送方式,get方法返回结果
-//        RecordMetadata metadata = (RecordMetadata) kafkaProducer.send(record).get();
-//        System.out.println("broker返回消息发送信息" + metadata);
-//
-//    }
 
     private static class MyProducerCallback implements org.apache.kafka.clients.producer.Callback {
         @Override

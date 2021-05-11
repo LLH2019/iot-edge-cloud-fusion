@@ -2,6 +2,7 @@ package cloud.connect;
 
 import akka.actor.typed.ActorRef;
 import cloud.bean.KafkaMsgList;
+import cloud.global.GlobalKafkaConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -21,9 +22,6 @@ import java.util.regex.Pattern;
  * @description：kafka 接入数据
  */
 public class CloudKafkaConnectIn {
-
-//    private Set<String> subscribedTopics = new HashSet<>();
-//    private int topicNum;
     private static Logger logger = Logger.getLogger(CloudKafkaConnectIn.class.getName());
 
     private ActorRef<BasicCommon> ref;
@@ -31,25 +29,8 @@ public class CloudKafkaConnectIn {
 
     public CloudKafkaConnectIn(ActorRef<BasicCommon> ref) {
         this.ref = ref;
-//        subscribedTopics.add(kafkaConfig.getTopic());
-//        topicNum = subscribedTopics.size();
-//        System.out.println("44444");
         init();
     }
-
-//    public void addTopics(List<String> topics) {
-//        System.out.println("addTopics");
-//        for(String topic : topics) {
-//            subscribedTopics.add(topic);
-//        }
-//        for (String topic: subscribedTopics) {
-//            System.out.print(topic + " ");
-//        }
-//        System.out.println();
-////        consumer.subscribe(new ArrayList<>(subscribedTopics));
-//
-//        System.out.println("addTopics--");
-//    }
 
     private void init() {
         Properties kafkaPropertie = new Properties();
@@ -62,18 +43,10 @@ public class CloudKafkaConnectIn {
         kafkaPropertie.put("group.id","1");
         //创建KafkaConsumer，将kafkaPropertie传入。
         consumer = new KafkaConsumer<String, String>(kafkaPropertie);
-        /*订阅主题，这里使用的是最简单的订阅testTopic主题，这里也可以出入正则表达式，来区分想要订阅的多个指定的主题，如：
-         *Pattern pattern = new Pattern.compile("testTopic");
-         * consumer.subscribe(pattern);
-         */
 
-//        System.out.println("222" + kafkaConfig.getTopic());
-        String topic = "cloud.*";
-        Pattern pattern = Pattern.compile(topic);
-//        List<String> topics = new ArrayList<>();
-//        topics.add(kafkaConfig.getTopic());
+        Pattern pattern = Pattern.compile(GlobalKafkaConfig.cloud_in_topic);
         consumer.subscribe(pattern);
-        logger.log(Level.INFO, "EdgeKafkaConnectIn is listening..." + topic);
+        logger.log(Level.INFO, "EdgeKafkaConnectIn is listening..." + GlobalKafkaConfig.cloud_in_topic);
         //轮询消息
         while (true) {
             //获取ConsumerRecords，一秒钟轮训一次
@@ -88,28 +61,10 @@ public class CloudKafkaConnectIn {
                 data.setKey(r.key());
                 data.setValue(r.value());
                 msgs.add(data);
-//                logger.log(Level.INFO, "kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
-//                System.out.println(ref  + " 222 " + data);
-
                 ref.tell(data);
-//                synchronized (this) {
-
-//                }
-//                LOGGER.error("partition:", r.partition());
-//                LOGGER.error("topic:", r.topic());
-//                LOGGER.error("offset:", r.offset());
                 System.out.println("kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
             }
 
-
-
-//            System.out.println("3333 " + topicNum);
-//            if (subscribedTopics.size() != topicNum) {
-//                topicNum = subscribedTopics.size();
-//                System.out.println("3333 " + topicNum);
-//                consumer.subscribe(subscribedTopics); // 重新订阅topic
-//            }
-//            Thread.sleep(1000);
         }
     }
 }

@@ -8,4 +8,5 @@ package edge.global;
 public class GlobalKafkaConfig {
     public final static String server = "192.168.123.131:9092";
     public final static String groupId = "1";
+    public final static String edge_in_topic = "edge.*";
 }

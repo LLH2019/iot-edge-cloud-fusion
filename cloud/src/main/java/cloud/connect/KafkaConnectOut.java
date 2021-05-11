@@ -1,9 +1,9 @@
-package base.model.connect;
+package cloud.connect;
 
-import base.model.connect.bean.KafkaMsg;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import base.model.connect.bean.KafkaMsg;
 
 import java.util.Properties;
 

@@ -7,19 +7,21 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import base.model.bean.BasicCommon;
 import base.model.bean.DeviceModel;
-import base.model.connect.KafkaConnectOut;
+import base.model.bean.Event;
+import edge.connect.EdgeMqttConnectOut;
+import edge.connect.KafkaConnectOut;
 import base.model.connect.bean.SubscribeTopic;
-import com.sandinh.paho.akka.MqttPubSub;
-import edge.connect.EdgeMqttConnectIn;
+import base.type.TopicKey;
 import base.model.connect.bean.KafkaMsg;
-import base.model.connect.bean.MqttConfig;
 import base.model.connect.bean.MqttInMsg;
 import edge.global.GlobalActorRefName;
 import edge.global.GlobalAkkaPara;
-import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,10 +36,12 @@ public class DeviceActor extends AbstractDeviceActor {
 
     private final ActorRef<BasicCommon> ref;
     private KafkaConnectOut kafkaConnectOut;
+    private EdgeMqttConnectOut mqttConnectOut;
     private final ActorRef<BasicCommon> edgeMqttConnectInActorRef;
     private final ActorRef<BasicCommon> edgeKafkaConnectInActorRef;
     private final DeviceModel deviceModel;
     private final String realName;
+    private final Set<String> eventSets = new HashSet<>();
 
     public DeviceActor(ActorContext<BasicCommon> context, DeviceModel deviceModel) {
         super(context);
@@ -47,10 +51,24 @@ public class DeviceActor extends AbstractDeviceActor {
         this.ref = context.getSelf();
         this.edgeMqttConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.EDGE_MQTT_CONNECT_IN_ACTOR);
         this.edgeKafkaConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR);
+        initEventSet();
         downConnectIn();
+        downConnectOut();
         upConnectOut();
         upConnectIn();
         logger.log(Level.INFO,"DeviceActor init...");
+    }
+
+    private void initEventSet() {
+        List<Event> eventList = deviceModel.getModel().getEvents();
+        for (Event e : eventList) {
+            eventSets.add(e.getName());
+        }
+    }
+
+    @Override
+    public void downConnectOut() {
+        this.mqttConnectOut = new EdgeMqttConnectOut();
     }
 
     @Override
@@ -90,6 +108,12 @@ public class DeviceActor extends AbstractDeviceActor {
     }
 
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
+        if(TopicKey.CONTROL_DEVICE.equals(msg.getKey()) && eventSets.contains(msg.getValue())) {
+            String pubTopic = "device/down/" + deviceModel.getModel().getName() + "/" + deviceModel.getModel().getNo();
+            mqttConnectOut.publishMessage(pubTopic, msg.getValue());
+            logger.log(Level.INFO, "success send to msg to mqtt" + pubTopic + " " +msg);
+        }
+
         logger.log(Level.INFO, "DeviceActor onHandleKafkaMsgAction " + msg);
         return this;
     }

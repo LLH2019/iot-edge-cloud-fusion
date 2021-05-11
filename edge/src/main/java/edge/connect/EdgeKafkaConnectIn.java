@@ -18,10 +18,9 @@ import java.util.regex.Pattern;
 /**
  * @author ：LLH
  * @date ：Created in 2021/4/16 15:42
- * @description：kafka 接入数据
+ * @description：边缘端 kafka 接入数据
  */
 public class EdgeKafkaConnectIn {
-
     private static Logger logger = Logger.getLogger(EdgeKafkaConnectIn.class.getName());
     private final ActorRef<BasicCommon> ref;
     private KafkaConsumer<String, String> consumer;
@@ -43,23 +42,13 @@ public class EdgeKafkaConnectIn {
         kafkaPropertie.put("group.id",GlobalKafkaConfig.groupId);
         //创建KafkaConsumer，将kafkaPropertie传入。
         consumer = new KafkaConsumer<String, String>(kafkaPropertie);
-        /*订阅主题，这里使用的是最简单的订阅testTopic主题，这里也可以出入正则表达式，来区分想要订阅的多个指定的主题，如：
-         *Pattern pattern = new Pattern.compile("testTopic");
-         * consumer.subscribe(pattern);
-         */
 
-//        System.out.println("222" + kafkaConfig.getTopic());
-        String topic = "edge.*";
-        Pattern pattern = Pattern.compile(topic);
-//        List<String> topics = new ArrayList<>();
-//        topics.add("edge.edge-pod-1");
-//        topics.add(kafkaConfig.getTopic());
+        Pattern pattern = Pattern.compile(GlobalKafkaConfig.edge_in_topic);
+
         consumer.subscribe(pattern);
-//        consumer.subscribe(topics);
-        logger.log(Level.INFO, "EdgeKafkaConnectIn is listening..." + topic);
+        logger.log(Level.INFO, "EdgeKafkaConnectIn is listening..." + GlobalKafkaConfig.edge_in_topic);
         //轮询消息
         while (true) {
-            //获取ConsumerRecords，一秒钟轮训一次
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(2000));
             //消费消息，遍历records
             for (ConsumerRecord<String, String> r : records) {
@@ -69,9 +58,6 @@ public class EdgeKafkaConnectIn {
                 data.setValue(r.value());
                 logger.log(Level.INFO, ref + r.topic() + ":" + r.key() + ":" + r.value());
                 ref.tell(data);
-//                LOGGER.error("partition:", r.partition());
-//                LOGGER.error("topic:", r.topic());
-//                LOGGER.error("offset:", r.offset());
                 System.out.println("kafkaConnectIn " + r.topic() + ":" + r.key() + ":" + r.value());
             }
         }

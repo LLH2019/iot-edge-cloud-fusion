@@ -2,7 +2,6 @@ package cloud;
 
 import akka.Done;
 import akka.actor.typed.ActorRef;
-import akka.actor.typed.ActorSystem;
 import akka.http.javadsl.server.AllDirectives;
 import akka.http.javadsl.server.Route;
 
@@ -12,7 +11,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import base.model.connect.KafkaConnectOut;
+import cloud.connect.KafkaConnectOut;
 import base.model.connect.bean.KafkaMsg;
 import base.type.TopicKey;
 import cloud.front.GetKafkaMsg;
@@ -136,14 +135,14 @@ public class HttpServer extends AllDirectives {
     }
 
     private CompletionStage<Done> publishEventToDevice(String event) {
-        String strs[] = event.split(".");
-        if(strs == null || strs.length != 2) {
+        String strs[] = event.split("\\.");
+        if(strs == null || strs.length != 3) {
+            logger.log(Level.WARNING, "i am back...");
             return CompletableFuture.completedFuture(Done.getInstance());
         }
         KafkaMsg kafkaMsg = new KafkaMsg();
         kafkaMsg.setTopic("edge." + strs[0] + "." + strs[1]);
         kafkaMsg.setKey(TopicKey.CONTROL_DEVICE);
-//        String jsonString = JSON.toJSONString(deviceModel);
         kafkaMsg.setValue(strs[2]);
         logger.log(Level.INFO, "publishEventToDevice " + kafkaMsg);
         kafkaConnectOut.sendMessageForgetResult(kafkaMsg);

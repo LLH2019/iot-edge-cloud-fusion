@@ -10,4 +10,5 @@ import lombok.Data;
 public class GlobalKafkaConfig {
     public final static String server = "192.168.123.131:9092";
     public final static String groupId = "1";
+    public final static String cloud_in_topic = "cloud.*";
 }

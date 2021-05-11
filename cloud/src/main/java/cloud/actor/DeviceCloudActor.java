@@ -7,7 +7,6 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import base.model.bean.Event;
 import base.model.bean.Property;
-import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.SubscribeTopic;
 import base.type.TopicKey;
 import cloud.front.DeviceInfo;
@@ -17,7 +16,7 @@ import cloud.global.GlobalAkkaPara;
 import com.alibaba.fastjson.JSON;
 import base.model.bean.DeviceModel;
 import base.model.bean.BasicCommon;
-import base.model.connect.KafkaConnectOut;
+import cloud.connect.KafkaConnectOut;
 import base.model.connect.bean.KafkaMsg;
 
 import java.util.ArrayList;
