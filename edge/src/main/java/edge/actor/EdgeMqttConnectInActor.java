@@ -35,7 +35,7 @@ public class EdgeMqttConnectInActor extends AbstractBehavior<BasicCommon> implem
     public EdgeMqttConnectInActor(ActorContext<BasicCommon> context) {
         super(context);
         this.ref = context.getSelf();
-        downConnectIn();
+//        downConnectIn();
     }
 
     @Override
@@ -64,6 +64,7 @@ public class EdgeMqttConnectInActor extends AbstractBehavior<BasicCommon> implem
 
     @Override
     public void downConnectIn() {
-        new EdgeMqttConnectIn();
+//        new EdgeMqttConnectIn();
+
     }
 }

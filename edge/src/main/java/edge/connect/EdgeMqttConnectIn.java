@@ -19,7 +19,9 @@ import java.util.logging.Logger;
  */
 public class EdgeMqttConnectIn {
     private static Logger logger = Logger.getLogger(EdgeMqttConnectIn.class.getName());
-    private ActorRef<BasicCommon> edgeMqttConnectInActorRef;
+    private final ActorRef<BasicCommon> edgeMqttConnectInActorRef;
+    private static MqttClient mqttClient = null;
+    private static MqttConnectOptions options = null;
 
     public EdgeMqttConnectIn() {
         this.edgeMqttConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.EDGE_MQTT_CONNECT_IN_ACTOR);
@@ -29,8 +31,8 @@ public class EdgeMqttConnectIn {
     private void init() {
         try {
             logger.log(Level.INFO, "MqttConnectIn init... ");
-            MqttClient client = new MqttClient(GlobalMqttConfig.brokenUrl, GlobalMqttConfig.clientId);
-            MqttConnectOptions options = new MqttConnectOptions();
+            this.mqttClient = new MqttClient(GlobalMqttConfig.brokenUrl, GlobalMqttConfig.clientId);
+            this.options = new MqttConnectOptions();
             options.setCleanSession(false);
             // 设置连接的用户名
 //            options.setUserName(mqttConfig.userName);
@@ -43,15 +45,57 @@ public class EdgeMqttConnectIn {
             //设置断开后重新连接
             options.setAutomaticReconnect(true);
             // 设置回调
-            client.setCallback(new PushCallback(edgeMqttConnectInActorRef));
-            client.connect(options);
+            mqttClient.setCallback(new PushCallback(edgeMqttConnectInActorRef));
+            mqttClient.connect(options);
             //订阅消息
             int Qos = 1;//0：最多一次 、1：最少一次 、2：只有一次
-            client.subscribe(GlobalMqttConfig.topic, Qos);
+            mqttClient.subscribe(GlobalMqttConfig.topic, Qos);
 
         } catch (MqttException e) {
             e.printStackTrace();
         }
+    }
+
+    public void publishMessage(String pubTopic, String message) {
+        if (null != mqttClient && mqttClient.isConnected()) {
+            MqttMessage mqttMessage = new MqttMessage();
+//            mqttMessage.setQos(qos);
+            mqttMessage.setPayload(message.getBytes());
+            MqttTopic topic = mqttClient.getTopic(pubTopic);
+            if (null != topic) {
+                try {
+                    MqttDeliveryToken publish = topic.publish(mqttMessage);
+                    if (!publish.isComplete()) {
+                        logger.log(Level.INFO, "消息发布成功:: "+ pubTopic + message);
+                    }
+                } catch (MqttException e) {
+                    logger.log(Level.INFO,"消息发布失败:: " + e.getMessage());
+                }
+            }
+
+        } else {
+            reConnect();
+            publishMessage(pubTopic, message);
+        }
+
+    }
+
+    //重新连接
+    public void reConnect() {
+        if (null != mqttClient) {
+            if (!mqttClient.isConnected()) {
+                if (null != options) {
+                    try {
+                        mqttClient.connect(options);
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            init();
+        }
+
     }
 
     public class PushCallback implements MqttCallback {

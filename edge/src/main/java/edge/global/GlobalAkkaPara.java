@@ -4,6 +4,7 @@ import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.javadsl.Behaviors;
 import base.model.bean.BasicCommon;
+import edge.connect.EdgeMqttConnectIn;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,4 +17,5 @@ import java.util.Map;
 public class GlobalAkkaPara {
     public final static Map<String, ActorRef<BasicCommon>> globalActorRefMap = new HashMap<>();
     public final static ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "bootstrap");
+    public static EdgeMqttConnectIn mqttConnect = null;
 }

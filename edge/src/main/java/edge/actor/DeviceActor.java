@@ -8,6 +8,7 @@ import akka.actor.typed.javadsl.Receive;
 import base.model.bean.BasicCommon;
 import base.model.bean.DeviceModel;
 import base.model.bean.Event;
+import edge.connect.EdgeMqttConnectIn;
 import edge.connect.EdgeMqttConnectOut;
 import edge.connect.KafkaConnectOut;
 import base.model.connect.bean.SubscribeTopic;
@@ -36,7 +37,7 @@ public class DeviceActor extends AbstractDeviceActor {
 
     private final ActorRef<BasicCommon> ref;
     private KafkaConnectOut kafkaConnectOut;
-    private EdgeMqttConnectOut mqttConnectOut;
+    private EdgeMqttConnectIn mqttConnectOut;
     private final ActorRef<BasicCommon> edgeMqttConnectInActorRef;
     private final ActorRef<BasicCommon> edgeKafkaConnectInActorRef;
     private final DeviceModel deviceModel;
@@ -68,7 +69,8 @@ public class DeviceActor extends AbstractDeviceActor {
 
     @Override
     public void downConnectOut() {
-        this.mqttConnectOut = new EdgeMqttConnectOut();
+        this.mqttConnectOut = GlobalAkkaPara.mqttConnect;
+//        this.mqttConnectOut = new EdgeMqttConnectOut();
     }
 
     @Override

@@ -11,6 +11,7 @@ import edge.actor.EdgeKafkaConnectInActor;
 import edge.actor.EdgeMqttConnectInActor;
 import edge.actor.PodActor;
 import base.model.connect.bean.KafkaConfig;
+import edge.connect.EdgeMqttConnectIn;
 import edge.global.GlobalActorRefName;
 import edge.global.GlobalAkkaPara;
 
@@ -47,6 +48,8 @@ public class EdgeBootstrapMain {
         ActorRef<BasicCommon> podActorRef = system.systemActorOf(PodActor.create(), GlobalActorRefName.POD_ACTOR, Props.empty());
         GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.POD_ACTOR, podActorRef);
         logger.log(Level.INFO, "init PodActor...");
+
+        GlobalAkkaPara.mqttConnect = new EdgeMqttConnectIn();
     }
 
 }
