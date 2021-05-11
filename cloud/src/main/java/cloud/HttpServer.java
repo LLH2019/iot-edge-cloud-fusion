@@ -137,7 +137,9 @@ public class HttpServer extends AllDirectives {
 
     private CompletionStage<Done> publishEventToDevice(String event) {
         String strs[] = event.split(".");
-
+        if(strs == null || strs.length != 2) {
+            return CompletableFuture.completedFuture(Done.getInstance());
+        }
         KafkaMsg kafkaMsg = new KafkaMsg();
         kafkaMsg.setTopic("edge." + strs[0] + "." + strs[1]);
         kafkaMsg.setKey(TopicKey.CONTROL_DEVICE);

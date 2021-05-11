@@ -61,26 +61,22 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 
     private Behavior<BasicCommon> onHandleSubscribeTopic(SubscribeTopic subscribeTopic) {
         String topic = subscribeTopic.getTopic();
-        subscribesRefMap.put(topic, subscribeTopic.getRef());
-
-        logger.log(Level.INFO, "CloudKafkaConnectInActor handleSubscribeTopic...");
+        if(topic != null && !"".equals(topic)) {
+            subscribesRefMap.put(topic, subscribeTopic.getRef());
+        }
+        logger.log(Level.INFO, "CloudKafkaConnectInActor handleSubscribeTopic..." + subscribeTopic);
         return this;
     }
 
 
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
-        System.out.println("77777" + msg);
-//        logger.log(Level.INFO, "6666CloudKafkaConnectInActor " + msg + subscribesRefMap);
-//        GetKafkaMsg.kafkaMsg = msg;
-
+        logger.log(Level.INFO, "CloudKafkaConnectInActor onHandleKafkaMsgAction " + msg );
         if("close".equals(msg.getValue())) {
             logger.log(Level.INFO, "DeviceCloudActor : kafka msg content is close...");
         } else {
 //            System.out.println("88888" + msg.getTopic());
-//            System.out.println("77777777" + TotalInfo.deviceInfoMap);
             if(TotalInfo.deviceInfoMap.containsKey(msg.getTopic())) {
                 Map<String, String> propertyMap = TotalInfo.deviceInfoMap.get(msg.getTopic()).getPropertyMap();
-//                System.out.println("6666666" + propertyMap);
                 String[] strs = msg.getValue().split(":");
                 if (strs.length == 2) {
                     propertyMap.put(strs[0], strs[1]);
@@ -88,19 +84,14 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
             }
 //            System.out.println("handle property map  : " + TotalInfo.deviceInfoMap);
         }
-//        handleMqttMsg(msg);
         String topic = msg.getTopic();
         ActorRef<BasicCommon> ref = subscribesRefMap.get(topic);
-        System.out.println("555" + ref);
         if(ref != null) {
             ref.tell(msg);
         }
+        logger.log(Level.INFO, "CloudKafkaConnectInActor pub msg "  + ref);
         return this;
     }
-
-//    private void handleMqttMsg(KafkaMsg msg) {
-//        logger.log(Level.INFO, "CloudKafkaConnectInActor " + msg );
-//    }
 
     public static Behavior<BasicCommon> create() {
         return Behaviors.setup(context -> new CloudKafkaConnectInActor(context));
