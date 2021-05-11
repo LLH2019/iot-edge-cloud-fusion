@@ -55,6 +55,7 @@ public class DeviceActor extends AbstractDeviceActor {
         SubscribeTopic sub = new SubscribeTopic();
         sub.setTopic(realName);
         sub.setRef(ref);
+        logger.log(Level.INFO, "device actor link to mqtt " + realName + ref);
         edgeMqttConnectInActorRef.tell(sub);
 
     }
