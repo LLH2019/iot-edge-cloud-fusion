@@ -34,8 +34,8 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         super(context);
         this.system = GlobalAkkaPara.system;
         this.ref = getContext().getSelf();
-//        new Thread(()->upConnectIn()).start();
-        upConnectIn();
+        new Thread(()->upConnectIn()).start();
+//        upConnectIn();
         logger.log(Level.INFO, "CloudKafkaConnectInActor init...");
     }
 

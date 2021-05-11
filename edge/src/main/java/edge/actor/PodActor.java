@@ -63,7 +63,7 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
     @Override
     public void upConnectIn() {
         SubscribeTopic subscribeTopic = new SubscribeTopic();
-        String topic = "edge." + system.settings().config().getString("akka.pod.no");
+        String topic = "edge." + system.settings().config().getString("akka-pod-no");
         subscribeTopic.setRef(ref);
         subscribeTopic.setTopic(topic);
         System.out.println("send connect in..." + kafkaConnectInActorRef + topic);
