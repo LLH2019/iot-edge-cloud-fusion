@@ -140,7 +140,7 @@ mvn compile exec:exec
     - 每一个设备连入情况 （活跃、待机）  待完成
 ![image](https://user-images.githubusercontent.com/46324430/117676546-3979b400-b1e0-11eb-80a4-1dfd4732d1d5.png)
 
-- /device-info/{name.no}
+- /device-info/{cloud.[name].[no]}
     - 将显示相应设备的状态信息，包括名称，最近上传属性值，能够向下发布的指令
 ![image](https://user-images.githubusercontent.com/46324430/117748324-59da5a80-b242-11eb-9da8-5c5b46a7969a.png)
 ![image](https://user-images.githubusercontent.com/46324430/117748293-4dee9880-b242-11eb-9b7b-dcbd677a2c2a.png)
