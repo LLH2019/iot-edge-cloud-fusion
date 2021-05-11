@@ -1,6 +1,7 @@
 package edge.actor;
 
 import akka.actor.typed.ActorRef;
+import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
@@ -27,11 +28,13 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
 
     private final ActorRef<BasicCommon> ref;
     private final ActorRef<BasicCommon> kafkaConnectInActorRef;
+    private final ActorSystem<?> system;
 
     public PodActor(ActorContext<BasicCommon> context) {
         super(context);
         this.ref = getContext().getSelf();
         this.kafkaConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR);
+        this.system = GlobalAkkaPara.system;
         System.out.println("kafkaConnectInActorRef " + kafkaConnectInActorRef);
         upConnectIn();
     }
@@ -60,7 +63,7 @@ public class PodActor extends AbstractBehavior<BasicCommon> implements UpConnect
     @Override
     public void upConnectIn() {
         SubscribeTopic subscribeTopic = new SubscribeTopic();
-        String topic = "edge.edge-pod-1";
+        String topic = "edge." + system.settings().config().getString("akka.pod.no");
         subscribeTopic.setRef(ref);
         subscribeTopic.setTopic(topic);
         System.out.println("send connect in..." + kafkaConnectInActorRef + topic);

@@ -46,7 +46,10 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
     private final String realName;
 
     private final Map<String, String> propertyMap = new HashMap<>();
+
     private final List<String> eventList = new ArrayList<>();
+
+    private static int index = 0;
 
     public static Behavior<BasicCommon> create(DeviceModel deviceModel) {
         return Behaviors.setup(context -> new DeviceCloudActor(context, deviceModel));
@@ -98,7 +101,9 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
 
     private void createEdgeActorAction() {
         KafkaMsg kafkaMsg = new KafkaMsg();
-        kafkaMsg.setTopic("edge.edge-pod-1");
+        kafkaMsg.setTopic("edge." + GlobalAkkaPara.podList.get(index));
+        index = (index+1)%index;
+        logger.log(Level.INFO, "Latest index num is : " + index);
         kafkaMsg.setKey(TopicKey.CREATE_EDGE_ACTOR);
         String jsonString = JSON.toJSONString(deviceModel);
         kafkaMsg.setValue(jsonString);

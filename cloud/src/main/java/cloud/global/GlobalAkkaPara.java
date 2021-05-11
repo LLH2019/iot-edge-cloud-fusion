@@ -5,8 +5,7 @@ import akka.actor.typed.ActorSystem;
 import akka.actor.typed.javadsl.Behaviors;
 import base.model.bean.BasicCommon;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author ：LLH
@@ -16,4 +15,5 @@ import java.util.Map;
 public class GlobalAkkaPara {
     public final static Map<String, ActorRef<BasicCommon>> globalActorRefMap = new HashMap<>();
     public final static ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "bootstrap");
+    public final static List<String> podList = new ArrayList<>(Arrays.asList("pod-1"));
 }
