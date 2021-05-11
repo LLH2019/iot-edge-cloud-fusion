@@ -35,6 +35,7 @@ public class DeviceActor extends AbstractDeviceActor {
     private final ActorRef<BasicCommon> ref;
     private KafkaConnectOut kafkaConnectOut;
     private final ActorRef<BasicCommon> edgeMqttConnectInActorRef;
+    private final ActorRef<BasicCommon> edgeKafkaConnectInActorRef;
     private final DeviceModel deviceModel;
     private final String realName;
 
@@ -45,9 +46,20 @@ public class DeviceActor extends AbstractDeviceActor {
         this.realName = deviceModel.getModel().getName() + "-" + deviceModel.getModel().getNo();
         this.ref = context.getSelf();
         this.edgeMqttConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.EDGE_MQTT_CONNECT_IN_ACTOR);
+        this.edgeKafkaConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.EDGE_KAFKA_CONNECT_IN_ACTOR);
         downConnectIn();
         upConnectOut();
+        upConnectIn();
         logger.log(Level.INFO,"DeviceActor init...");
+    }
+
+    @Override
+    public void upConnectIn() {
+        SubscribeTopic subscribeTopic = new SubscribeTopic();
+        String topic = "edge." + deviceModel.getModel().getName() + "." + deviceModel.getModel().getNo();
+        subscribeTopic.setTopic(topic);
+        subscribeTopic.setRef(ref);
+        edgeKafkaConnectInActorRef.tell(subscribeTopic);
     }
 
     @Override
@@ -95,7 +107,7 @@ public class DeviceActor extends AbstractDeviceActor {
         String key = df.format(new Date());
         kafkaMsg.setKey(key);
         kafkaMsg.setValue(msg.getMsg());
-        logger.log(Level.INFO, "DeviceActor " + kafkaMsg);
+        logger.log(Level.INFO, "DeviceActor send msg to kafka " + kafkaMsg);
         kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
     }
 }

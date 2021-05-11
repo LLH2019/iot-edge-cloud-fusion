@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> implements UpConnectIn {
     private static Logger logger = Logger.getLogger(EdgeKafkaConnectInActor.class.getName());
-    private final Map<String, List<ActorRef<BasicCommon>>> subscribesRefMap = new HashMap<>();
+    private final Map<String, ActorRef<BasicCommon>> subscribesRefMap = new HashMap<>();
     private final ActorRef<BasicCommon> ref;
 //    private final KafkaConfig kafkaConfig;
 //    private EdgeKafkaConnectIn edgeKafkaConnectIn;
@@ -50,32 +50,21 @@ public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> imple
 
     private Behavior<BasicCommon> onHandleSubscribeTopic(SubscribeTopic subscribeTopic) {
         String topic = subscribeTopic.getTopic();
-        if (topic != null && !"".equals(topic)) {
-//            for (String topic : topics) {
-            if (!subscribesRefMap.containsKey(topic)) {
-                List<ActorRef<BasicCommon>> list = new ArrayList<>();
-                list.add(subscribeTopic.getRef());
-                subscribesRefMap.put(topic, list);
-            } else {
-                List<ActorRef<BasicCommon>> list = subscribesRefMap.get(topic);
-                list.add(subscribeTopic.getRef());
-                subscribesRefMap.put(topic, list);
-            }
-//            }
-            System.out.println("onHandleSubscribeTopic...");
+        if(topic != null && !"".equals(topic)) {
+            subscribesRefMap.put(topic, subscribeTopic.getRef());
         }
+        logger.log(Level.INFO, "EdgeKafkaConnectInActor handleSubscribeTopic..." + subscribeTopic);
         return this;
     }
 
 
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
-//        handleMqttMsg(msg);
         String topic = msg.getTopic();
-        logger.log(Level.INFO, "EdgeKafkaConnectInActor " + msg + " " + topic);
-        List<ActorRef<BasicCommon>> refs = subscribesRefMap.get(topic);
-        for(ActorRef<BasicCommon> ref : refs) {
+        ActorRef<BasicCommon> ref = subscribesRefMap.get(topic);
+        if(ref != null) {
             ref.tell(msg);
         }
+        logger.log(Level.INFO, "EdgeKafkaConnectInActor pub msg "  + ref);
         return this;
     }
 
