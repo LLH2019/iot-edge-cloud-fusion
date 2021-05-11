@@ -28,23 +28,25 @@
 
 1、下载项目
 
-git clone [git@github.com](mailto:git@github.com):LLH2019/iot-edge-cloud-fusion.git
+- git clone [git@github.com](mailto:git@github.com):LLH2019/iot-edge-cloud-fusion.git
 
 2、配置运行云端中间件
 
-cd cloud
+- cd cloud
 
-docker-compose up
+- docker-compose up
 
 3、配置运行云端运行时环境
 
-mvn compile exec:exec
+- mvn compile exec:exec
 
 4、配置运行边缘端运行时环境
 
-cd edge
+- 边缘端将采用集群部署方式进行，针对于不同的运行环境，将选择不同的 conf 文件执行
 
-mvn compile exec:exec
+    - cd edge
+
+    - mvn compile exec:exec -DAPP_CONFIG={CONFIG_NAME}
 
 ## 项目详细介绍
 
@@ -138,11 +140,14 @@ mvn compile exec:exec
     - 将展示有多少个设备连入
     - 显示每一个设备的基本信息，暂时只包括名称
     - 每一个设备连入情况 （活跃、待机）  待完成
+
 ![image](https://user-images.githubusercontent.com/46324430/117676546-3979b400-b1e0-11eb-80a4-1dfd4732d1d5.png)
 
 - /device-info/{cloud.[name].[no]}
     - 将显示相应设备的状态信息，包括名称，最近上传属性值，能够向下发布的指令
+
 ![image](https://user-images.githubusercontent.com/46324430/117748324-59da5a80-b242-11eb-9da8-5c5b46a7969a.png)
+
 ![image](https://user-images.githubusercontent.com/46324430/117748293-4dee9880-b242-11eb-9b7b-dcbd677a2c2a.png)
 
 
