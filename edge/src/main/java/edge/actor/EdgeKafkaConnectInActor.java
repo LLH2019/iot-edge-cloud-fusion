@@ -9,14 +9,11 @@ import akka.actor.typed.javadsl.Receive;
 import base.model.bean.BasicCommon;
 import edge.connect.EdgeKafkaConnectIn;
 import base.model.connect.UpConnectIn;
-import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.KafkaMsg;
 import base.model.connect.bean.SubscribeTopic;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,13 +26,9 @@ public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> imple
     private static Logger logger = Logger.getLogger(EdgeKafkaConnectInActor.class.getName());
     private final Map<String, ActorRef<BasicCommon>> subscribesRefMap = new HashMap<>();
     private final ActorRef<BasicCommon> ref;
-//    private final KafkaConfig kafkaConfig;
-//    private EdgeKafkaConnectIn edgeKafkaConnectIn;
     public EdgeKafkaConnectInActor(ActorContext<BasicCommon> context) {
         super(context);
-//        this.kafkaConfig = kafkaConfig;
         this.ref = getContext().getSelf();
-//        System.out.println("KafkaConnectInActor--");
         new Thread(()->upConnectIn()).start();
         logger.log(Level.INFO, "EdgeKafkaConnectInActor init...");
     }
@@ -74,8 +67,6 @@ public class EdgeKafkaConnectInActor extends AbstractBehavior<BasicCommon> imple
 
     @Override
     public void upConnectIn() {
-//        System.out.println("888--upConnectIn" + kafkaConfig);
         new EdgeKafkaConnectIn(ref);
-//        System.out.println("888--upConnectIn");
     }
 }

@@ -11,7 +11,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import cloud.connect.KafkaConnectOut;
+import cloud.connect.CloudKafkaConnectOut;
 import base.model.connect.bean.KafkaMsg;
 import base.type.TopicKey;
 import cloud.front.GetKafkaMsg;
@@ -32,11 +32,11 @@ import static akka.http.javadsl.server.PathMatchers.segment;
 public class HttpServer extends AllDirectives {
     private static java.util.logging.Logger logger = Logger.getLogger(HttpServer.class.getName());
     private final ActorRef<BasicCommon> mongoDBActorRef;
-    private KafkaConnectOut kafkaConnectOut;
+    private CloudKafkaConnectOut cloudKafkaConnectOut;
 
     public HttpServer() {
         this.mongoDBActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.MONGODB_CONN_ACTOR);
-        this.kafkaConnectOut = new KafkaConnectOut();
+        this.cloudKafkaConnectOut = new CloudKafkaConnectOut();
         logger.log(Level.INFO, "HttpServer init...");
     }
 
@@ -145,7 +145,7 @@ public class HttpServer extends AllDirectives {
         kafkaMsg.setKey(TopicKey.CONTROL_DEVICE);
         kafkaMsg.setValue(strs[2]);
         logger.log(Level.INFO, "publishEventToDevice " + kafkaMsg);
-        kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
+        cloudKafkaConnectOut.sendMessageForgetResult(kafkaMsg);
 
         return CompletableFuture.completedFuture(Done.getInstance());
     }

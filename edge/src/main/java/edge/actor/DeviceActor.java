@@ -8,9 +8,8 @@ import akka.actor.typed.javadsl.Receive;
 import base.model.bean.BasicCommon;
 import base.model.bean.DeviceModel;
 import base.model.bean.Event;
-import edge.connect.EdgeMqttConnectIn;
-import edge.connect.EdgeMqttConnectOut;
-import edge.connect.KafkaConnectOut;
+import edge.connect.EdgeMqttConnect;
+import edge.connect.EdgeKafkaConnectOut;
 import base.model.connect.bean.SubscribeTopic;
 import base.type.TopicKey;
 import base.model.connect.bean.KafkaMsg;
@@ -36,8 +35,8 @@ public class DeviceActor extends AbstractDeviceActor {
     private static Logger logger = Logger.getLogger(DeviceActor.class.getName());
 
     private final ActorRef<BasicCommon> ref;
-    private KafkaConnectOut kafkaConnectOut;
-    private EdgeMqttConnectIn mqttConnectOut;
+    private EdgeKafkaConnectOut edgeKafkaConnectOut;
+    private EdgeMqttConnect edgeMqttConnect;
     private final ActorRef<BasicCommon> edgeMqttConnectInActorRef;
     private final ActorRef<BasicCommon> edgeKafkaConnectInActorRef;
     private final DeviceModel deviceModel;
@@ -69,8 +68,7 @@ public class DeviceActor extends AbstractDeviceActor {
 
     @Override
     public void downConnectOut() {
-        this.mqttConnectOut = GlobalAkkaPara.mqttConnect;
-//        this.mqttConnectOut = new EdgeMqttConnectOut();
+        this.edgeMqttConnect = GlobalAkkaPara.mqttConnect;
     }
 
     @Override
@@ -94,7 +92,7 @@ public class DeviceActor extends AbstractDeviceActor {
 
     @Override
     public void upConnectOut() {
-        this.kafkaConnectOut = new KafkaConnectOut();
+        this.edgeKafkaConnectOut = new EdgeKafkaConnectOut();
     }
 
     public static Behavior<BasicCommon> create(DeviceModel deviceModel) {
@@ -112,7 +110,7 @@ public class DeviceActor extends AbstractDeviceActor {
     private Behavior<BasicCommon> onHandleKafkaMsgAction(KafkaMsg msg) {
         if(TopicKey.CONTROL_DEVICE.equals(msg.getKey()) && eventSets.contains(msg.getValue())) {
             String pubTopic = "device/down/" + deviceModel.getModel().getName() + "/" + deviceModel.getModel().getNo();
-            mqttConnectOut.publishMessage(pubTopic, msg.getValue());
+            edgeMqttConnect.publishMessage(pubTopic, msg.getValue());
             logger.log(Level.INFO, "success send to msg to mqtt" + pubTopic + " " +msg);
         }
 
@@ -134,6 +132,6 @@ public class DeviceActor extends AbstractDeviceActor {
         kafkaMsg.setKey(key);
         kafkaMsg.setValue(msg.getMsg());
         logger.log(Level.INFO, "DeviceActor send msg to kafka " + kafkaMsg);
-        kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
+        edgeKafkaConnectOut.sendMessageForgetResult(kafkaMsg);
     }
 }

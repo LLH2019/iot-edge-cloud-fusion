@@ -2,7 +2,6 @@ package edge.connect;
 
 import akka.actor.typed.ActorRef;
 import base.model.bean.BasicCommon;
-import base.model.connect.bean.MqttConfig;
 import base.model.connect.bean.MqttInMsg;
 import edge.global.GlobalActorRefName;
 import edge.global.GlobalAkkaPara;
@@ -17,13 +16,13 @@ import java.util.logging.Logger;
  * @date ：Created in 2021/4/16 11:00
  * @description：MQTT接收外部消息
  */
-public class EdgeMqttConnectIn {
-    private static Logger logger = Logger.getLogger(EdgeMqttConnectIn.class.getName());
+public class EdgeMqttConnect {
+    private static Logger logger = Logger.getLogger(EdgeMqttConnect.class.getName());
     private final ActorRef<BasicCommon> edgeMqttConnectInActorRef;
     private static MqttClient mqttClient = null;
     private static MqttConnectOptions options = null;
 
-    public EdgeMqttConnectIn() {
+    public EdgeMqttConnect() {
         this.edgeMqttConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.EDGE_MQTT_CONNECT_IN_ACTOR);
         init();
     }

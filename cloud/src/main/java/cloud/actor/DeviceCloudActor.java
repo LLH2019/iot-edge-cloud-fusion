@@ -16,7 +16,7 @@ import cloud.global.GlobalAkkaPara;
 import com.alibaba.fastjson.JSON;
 import base.model.bean.DeviceModel;
 import base.model.bean.BasicCommon;
-import cloud.connect.KafkaConnectOut;
+import cloud.connect.CloudKafkaConnectOut;
 import base.model.connect.bean.KafkaMsg;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
 
     private final ActorRef<BasicCommon> ref;
 
-    private KafkaConnectOut kafkaConnectOut;
+    private CloudKafkaConnectOut cloudKafkaConnectOut;
 
     private final ActorRef<BasicCommon> kafkaConnectInActorRef;
 
@@ -103,7 +103,7 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
         String jsonString = JSON.toJSONString(deviceModel);
         kafkaMsg.setValue(jsonString);
         logger.log(Level.INFO, "DeviceCloudActor " + kafkaMsg);
-        kafkaConnectOut.sendMessageForgetResult(kafkaMsg);
+        cloudKafkaConnectOut.sendMessageForgetResult(kafkaMsg);
     }
 
 
@@ -128,7 +128,6 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
 
     @Override
     public void downConnectIn() {
-//        KafkaConfig kafkaConfig = deviceModel.getKafkaConfig();
         SubscribeTopic subscribeTopic = new SubscribeTopic();
         subscribeTopic.setRef(ref);
         subscribeTopic.setTopic(realName);
@@ -137,6 +136,6 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
 
     @Override
     public void upConnectOut() {
-        this.kafkaConnectOut = new KafkaConnectOut();
+        this.cloudKafkaConnectOut = new CloudKafkaConnectOut();
     }
 }

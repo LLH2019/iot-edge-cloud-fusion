@@ -8,13 +8,10 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import base.model.bean.BasicCommon;
 import base.model.connect.DownConnectIn;
-import base.model.connect.UpConnectIn;
 import base.model.connect.bean.MqttInMsg;
 import base.model.connect.bean.SubscribeTopic;
-import edge.connect.EdgeMqttConnectIn;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -23,7 +20,7 @@ import java.util.logging.Logger;
  * @date ：Created in 2021/5/10 10:56
  * @description：边缘端mqtt接入actor
  */
-public class EdgeMqttConnectInActor extends AbstractBehavior<BasicCommon> implements DownConnectIn {
+public class EdgeMqttConnectInActor extends AbstractBehavior<BasicCommon> {
     private static Logger logger = Logger.getLogger(EdgeMqttConnectInActor.class.getName());
     private final Map<String, ActorRef<BasicCommon>> subscribesRefMap = new HashMap<>();
     private final ActorRef<BasicCommon> ref;
@@ -35,7 +32,6 @@ public class EdgeMqttConnectInActor extends AbstractBehavior<BasicCommon> implem
     public EdgeMqttConnectInActor(ActorContext<BasicCommon> context) {
         super(context);
         this.ref = context.getSelf();
-//        downConnectIn();
     }
 
     @Override
@@ -53,7 +49,6 @@ public class EdgeMqttConnectInActor extends AbstractBehavior<BasicCommon> implem
         if(null != deviceActorRef) {
             deviceActorRef.tell(msg);
         }
-
         return this;
     }
 
@@ -62,9 +57,4 @@ public class EdgeMqttConnectInActor extends AbstractBehavior<BasicCommon> implem
         return this;
     }
 
-    @Override
-    public void downConnectIn() {
-//        new EdgeMqttConnectIn();
-
-    }
 }

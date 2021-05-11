@@ -3,15 +3,11 @@ package edge;
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Props;
-import akka.actor.typed.javadsl.Behaviors;
-import akka.management.cluster.bootstrap.ClusterBootstrap;
-import akka.management.javadsl.AkkaManagement;
 import base.model.bean.BasicCommon;
 import edge.actor.EdgeKafkaConnectInActor;
 import edge.actor.EdgeMqttConnectInActor;
 import edge.actor.PodActor;
-import base.model.connect.bean.KafkaConfig;
-import edge.connect.EdgeMqttConnectIn;
+import edge.connect.EdgeMqttConnect;
 import edge.global.GlobalActorRefName;
 import edge.global.GlobalAkkaPara;
 
@@ -49,7 +45,7 @@ public class EdgeBootstrapMain {
         GlobalAkkaPara.globalActorRefMap.put(GlobalActorRefName.POD_ACTOR, podActorRef);
         logger.log(Level.INFO, "init PodActor...");
 
-        GlobalAkkaPara.mqttConnect = new EdgeMqttConnectIn();
+        GlobalAkkaPara.mqttConnect = new EdgeMqttConnect();
     }
 
 }

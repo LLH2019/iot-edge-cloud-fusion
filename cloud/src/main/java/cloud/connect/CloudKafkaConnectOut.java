@@ -1,5 +1,6 @@
 package cloud.connect;
 
+import cloud.global.GlobalKafkaConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -12,13 +13,13 @@ import java.util.Properties;
  * @date ：Created in 2021/4/16 11:00
  * @description：kafka向外发布消息
  */
-public class KafkaConnectOut {
+public class CloudKafkaConnectOut {
     private KafkaProducer kafkaProducer;
 
-    public KafkaConnectOut() {
+    public CloudKafkaConnectOut() {
         Properties kafkaProperties = new Properties();
         //配置broker地址，配置多个容错
-        kafkaProperties.put("bootstrap.servers", "192.168.123.131:9092");
+        kafkaProperties.put("bootstrap.servers", GlobalKafkaConfig.server);
         //配置key-value允许使用参数化类型
         kafkaProperties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         kafkaProperties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");

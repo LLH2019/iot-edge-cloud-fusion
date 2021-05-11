@@ -13,10 +13,10 @@ import java.util.Properties;
  * @date ：Created in 2021/4/16 11:00
  * @description：kafka向外发布消息
  */
-public class KafkaConnectOut {
+public class EdgeKafkaConnectOut {
     private KafkaProducer kafkaProducer;
 
-    public KafkaConnectOut() {
+    public EdgeKafkaConnectOut() {
         Properties kafkaProperties = new Properties();
         //配置broker地址，配置多个容错
         kafkaProperties.put("bootstrap.servers", GlobalKafkaConfig.server);

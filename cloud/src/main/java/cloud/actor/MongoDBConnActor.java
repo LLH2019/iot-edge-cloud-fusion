@@ -94,7 +94,6 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
             conn.setConfig(config);
             createMongoDbConn(conn);
         }
-//        System.out.println("2222");
         MongoDatabase database = databaseMap.get(doc.getConnName());
         MongoCollection<Document> collection = database.getCollection(doc.getCollectionName());
         //要插入的数据
@@ -118,8 +117,6 @@ public class MongoDBConnActor extends AbstractBehavior<BasicCommon> {
             databaseMap.put(conn.getConnName(), database);
         }
     }
-
-
 
     public static Behavior<BasicCommon> create() {
         return Behaviors.setup(context -> new MongoDBConnActor(context));

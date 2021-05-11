@@ -8,15 +8,10 @@ import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import base.model.bean.BasicCommon;
-import cloud.bean.KafkaMsgList;
 import cloud.connect.CloudKafkaConnectIn;
 import base.model.connect.UpConnectIn;
-import base.model.connect.bean.KafkaConfig;
 import base.model.connect.bean.KafkaMsg;
 import base.model.connect.bean.SubscribeTopic;
-import cloud.connect.CloudKafkaConsumer;
-import cloud.front.DeviceInfo;
-import cloud.front.GetKafkaMsg;
 import cloud.front.TotalInfo;
 import cloud.global.GlobalAkkaPara;
 
@@ -39,8 +34,8 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         super(context);
         this.system = GlobalAkkaPara.system;
         this.ref = getContext().getSelf();
-        new Thread(()->upConnectIn()).start();
-
+//        new Thread(()->upConnectIn()).start();
+        upConnectIn();
         logger.log(Level.INFO, "CloudKafkaConnectInActor init...");
     }
 
@@ -49,14 +44,7 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         return newReceiveBuilder()
                 .onMessage(KafkaMsg.class, this::onHandleKafkaMsgAction)
                 .onMessage(SubscribeTopic.class, this::onHandleSubscribeTopic)
-                .onMessage(KafkaMsgList.class, this::onHandleKafkaMsgListAction)
                 .build();
-    }
-
-    private Behavior<BasicCommon> onHandleKafkaMsgListAction(KafkaMsgList kafkaMsgList) {
-        System.out.println(kafkaMsgList);
-
-        return this;
     }
 
     private Behavior<BasicCommon> onHandleSubscribeTopic(SubscribeTopic subscribeTopic) {
@@ -74,7 +62,6 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
         if("close".equals(msg.getValue())) {
             logger.log(Level.INFO, "DeviceCloudActor : kafka msg content is close...");
         } else {
-//            System.out.println("88888" + msg.getTopic());
             if(TotalInfo.deviceInfoMap.containsKey(msg.getTopic())) {
                 Map<String, String> propertyMap = TotalInfo.deviceInfoMap.get(msg.getTopic()).getPropertyMap();
                 String[] strs = msg.getValue().split(":");
@@ -82,7 +69,6 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
                     propertyMap.put(strs[0], strs[1]);
                 }
             }
-//            System.out.println("handle property map  : " + TotalInfo.deviceInfoMap);
         }
         String topic = msg.getTopic();
         ActorRef<BasicCommon> ref = subscribesRefMap.get(topic);
@@ -99,9 +85,6 @@ public class CloudKafkaConnectInActor extends AbstractBehavior<BasicCommon> impl
 
     @Override
     public void upConnectIn() {
-//        System.out.println("888--upConnectIn" + kafkaConfig);
-//        this.cloudKafkaConnectIn = new CloudKafkaConnectIn(kafkaConfig, ref);
-//        System.out.println("888--upConnectIn");
 //        new CloudKafkaConsumer(system, ref);
         new CloudKafkaConnectIn(ref);
     }
