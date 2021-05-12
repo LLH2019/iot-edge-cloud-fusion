@@ -115,6 +115,7 @@ public class DeviceActor extends AbstractDeviceActor {
         }
 
         logger.log(Level.INFO, "DeviceActor onHandleKafkaMsgAction " + msg);
+        System.out.println("3333333333333" + msg);
         return this;
     }
 

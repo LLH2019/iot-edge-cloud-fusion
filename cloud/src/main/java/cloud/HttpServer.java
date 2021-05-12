@@ -115,7 +115,7 @@ public class HttpServer extends AllDirectives {
                         pathPrefix("device-control", ()->
                                 path(segment(), (String event)-> {
                                     final CompletionStage<Done> futureStage = publishEventToDevice(event);
-                                    return onSuccess(futureStage, done -> complete("success publish event... "));
+                                    return onSuccess(futureStage, done -> complete("success publish event... " + event));
                                 })))
 //                post(() ->
 //                        path("test", () ->
@@ -147,15 +147,15 @@ public class HttpServer extends AllDirectives {
         model.setName("rpi");
         model.setNo(no);
 
-//        List<Property> properties = new ArrayList<>();
-//        Property property1 = new Property();
-//        property1.setName("humidity");
-//        properties.add(property1);
-//
-//        Property property2 = new Property();
-//        property2.setName("temperature");
-//        properties.add(property2);
-//        model.setProperties(properties);
+        List<Property> properties = new ArrayList<>();
+        Property property1 = new Property();
+        property1.setName("led");
+        properties.add(property1);
+
+        Property property2 = new Property();
+        property2.setName("fan");
+        properties.add(property2);
+        model.setProperties(properties);
 
         List<Event> events = new ArrayList<>();
         Event event1 = new Event();
@@ -176,15 +176,15 @@ public class HttpServer extends AllDirectives {
 
 
         Event event5 = new Event();
-        event2.setName("fan-positive");
+        event5.setName("fan-positive");
         events.add(event5);
 
         Event event6 = new Event();
-        event3.setName("fan-negative");
+        event6.setName("fan-negative");
         events.add(event6);
 
         Event event7 = new Event();
-        event4.setName("fan-stop");
+        event7.setName("fan-stop");
         events.add(event7);
 
         model.setEvents(events);

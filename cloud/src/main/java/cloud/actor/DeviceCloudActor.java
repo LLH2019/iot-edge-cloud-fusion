@@ -63,13 +63,17 @@ public class DeviceCloudActor extends AbstractCloudControlActor {
         this.realName = "cloud." + deviceModel.getModel().getName() + "." + deviceModel.getModel().getNo();
         this.kafkaConnectInActorRef = GlobalAkkaPara.globalActorRefMap.get(GlobalActorRefName.CLOUD_KAFKA_CONNECT_IN_ACTOR);
         List<Property> properties = deviceModel.getModel().getProperties();
-        for (Property p : properties) {
-            propertyMap.put(p.getName(), "0");
+        if (properties != null) {
+            for (Property p : properties) {
+                propertyMap.put(p.getName(), "0");
+            }
         }
 
         List<Event> events = deviceModel.getModel().getEvents();
-        for (Event e : events) {
-            eventList.add(e.getName());
+        if (events != null) {
+            for (Event e : events) {
+                eventList.add(e.getName());
+            }
         }
 
         initDeviceInfo();
