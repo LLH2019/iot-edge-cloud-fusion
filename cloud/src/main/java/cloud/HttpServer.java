@@ -60,11 +60,17 @@ public class HttpServer extends AllDirectives {
                                     final CompletionStage<Done> futureStage = createCC3200Model(no);
                                     return onSuccess(futureStage, done -> complete("success create cc3200 model" + no));
                                 }))),
+                get(()->
+                        pathPrefix("create-model-rpi", ()->
+                                path(segment(), (String no)-> {
+                                    final CompletionStage<Done> futureStage = createRpiModel(no);
+                                    return onSuccess(futureStage, done -> complete("success create pri model" + no));
+                                }))),
 
                 get(()->
-                        pathPrefix("link-device-no", ()->
+                        pathPrefix("link-device", ()->
                                 path(segment(), (String no)-> {
-                                    final CompletionStage<Done> futureStage = linkDeviceByNo(no);
+                                    final CompletionStage<Done> futureStage = linkDevice(no);
                                     return onSuccess(futureStage, done -> complete("success link device... " + no));
                                 }))),
 
@@ -134,6 +140,70 @@ public class HttpServer extends AllDirectives {
 //                );
     }
 
+    private CompletionStage<Done> createRpiModel(String no) {
+        InsertMongoDBDoc doc = new InsertMongoDBDoc();
+        Map<String,String> map = new HashMap<>();
+        AbstractModel model = new AbstractModel();
+        model.setName("rpi");
+        model.setNo(no);
+
+//        List<Property> properties = new ArrayList<>();
+//        Property property1 = new Property();
+//        property1.setName("humidity");
+//        properties.add(property1);
+//
+//        Property property2 = new Property();
+//        property2.setName("temperature");
+//        properties.add(property2);
+//        model.setProperties(properties);
+
+        List<Event> events = new ArrayList<>();
+        Event event1 = new Event();
+        event1.setName("led-R");
+        events.add(event1);
+
+        Event event2 = new Event();
+        event2.setName("led-G");
+        events.add(event2);
+
+        Event event3 = new Event();
+        event3.setName("led-B");
+        events.add(event3);
+
+        Event event4 = new Event();
+        event4.setName("led-end");
+        events.add(event4);
+
+
+        Event event5 = new Event();
+        event2.setName("fan-positive");
+        events.add(event5);
+
+        Event event6 = new Event();
+        event3.setName("fan-negative");
+        events.add(event6);
+
+        Event event7 = new Event();
+        event4.setName("fan-stop");
+        events.add(event7);
+
+        model.setEvents(events);
+
+        DeviceModel deviceModel = new DeviceModel();
+        deviceModel.setModel(model);
+
+        String str = JSON.toJSONString(deviceModel);
+
+        map.put("name","rpi-" + no);
+        map.put("model", str);
+        doc.setDocMap(map);
+        doc.setConnName("model");
+        doc.setCollectionName("model");
+//        System.out.println("11111");
+        mongoDBActorRef.tell(doc);
+        return CompletableFuture.completedFuture(Done.getInstance());
+    }
+
     private CompletionStage<Done> publishEventToDevice(String event) {
         String strs[] = event.split("\\.");
         if(strs == null || strs.length != 3) {
@@ -150,16 +220,16 @@ public class HttpServer extends AllDirectives {
         return CompletableFuture.completedFuture(Done.getInstance());
     }
 
-    private CompletionStage<Done> linkDeviceByNo(String no) {
+    private CompletionStage<Done> linkDevice(String str) {
         DeviceModel deviceModel = new DeviceModel();
 
         GetDeviceModelDoc doc = new GetDeviceModelDoc();
         doc.setKey("name");
-        doc.setValue("cc3200-" + no.trim());
+        doc.setValue(str);
         doc.setConnName("model");
         doc.setCollectionName("model");
         doc.setDeviceModel(deviceModel);
-        logger.log(Level.INFO, "device cc3200-" + no + "is up....");
+        logger.log(Level.INFO, "device " + str + "is up....");
         mongoDBActorRef.tell(doc);
         return CompletableFuture.completedFuture(Done.getInstance());
     }
