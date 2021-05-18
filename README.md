@@ -6,7 +6,7 @@
 
 - 此项目是一个利用基于JVM的akka框架编写的跨云、边对设备进行控制的一体化框架项目
 
-![image](https://user-images.githubusercontent.com/46324430/117656288-c154c380-b1ca-11eb-8563-182c5c0415e4.png)
+![image](https://user-images.githubusercontent.com/46324430/118600635-d9889c00-b7e3-11eb-9897-6d3a059f4bd3.png)
 
 ![image](https://user-images.githubusercontent.com/46324430/117656927-8737f180-b1cb-11eb-990f-5f651978b3f7.png)
 
@@ -63,11 +63,11 @@
         - 创建 DeviceActor,实现方式为根据接收到的kafka消息创建相应的DeviceActor
         - 监控运行时环境消耗资源情况 （待完成）
     - 交互情况
-        - 接受来自于 EdgeKafkaConnectInActor 接收的消息，topic 为 edge.edge-pod-[no]
+        - 接受来自于 EdgeKafkaConnectInActor 接收的消息，topic 为 edge.pod-[no]
 - Device Actor，对应于监控设备的Actor
     - 主要功能如下：
         - 接收相应设备发布的Mqtt消息，并根据对应物模型做相应的处理
-        - 接受来自于上层的指令消息，通过发Mqtt消息给相应设备下发指令 （待完成）
+        - 接受来自于上层的指令消息，通过发Mqtt消息给相应设备下发指令 
     - 交互情况
         - 接收来自于 EdgeKafkaConnectInActor 接收的消息，topic 为 edge.[name].[no]
         - 发布消息到kafka中， topic为 cloud.[name].[no]
@@ -84,16 +84,16 @@
 
 如下图所示，主要存在以下几类actor
 
-![image](https://user-images.githubusercontent.com/46324430/117658962-ef87d280-b1cd-11eb-87ae-40dcfa73fb54.png)
+![image](https://user-images.githubusercontent.com/46324430/118600925-33896180-b7e4-11eb-970a-155ec3b2eb8f.png)
 
 - Brain Actor， 云端的主要控制actor，运行时环境中只存在一个
     - 主要作用如下：
-        - 接受MongoDB查询物模型数据，然后创建DeviceCloudControlActor，以及发布消息到Kafka，边缘端接收到消息将创建对应的Device Actor
+        - 接受MongoDB查询物模型数据，然后创建DeviceCloudActor，以及发布消息到Kafka，边缘端接收到消息将创建对应的Device Actor
         - 监控云端运行时环境 （待完成）
 - MongoDBConnActor ，用于对MongoDB 进行相应的操作
     - 插入数据
     - 查询数据
-- DeviceCloudControlActor，作为端设备在云端的控制节点
+- DeviceCloudActor，作为端设备在云端的控制节点
     - 主要功能如下：
         - 将通过KafkaConnctInActor得到对应Device Actor发来的消息，然后做进一步处理
 - CloudKafkaConnctInActor， 类似于边缘端
@@ -179,10 +179,14 @@ kafka采用docker 进行安装
 
 
 ## 遇到问题
-* 边缘端无法将消息发送到云端的 kafka 中
+* 边缘端无法将消息发送到云端的 kafka 中 （已解决）
 
 ## 后期计划
 
+- 前端页面可视化 （展示较为简陋）
+- akka 集群加入 （初步实现，但对于集群的管理及可视化有一定工作量待完成）
+- event-source,事件溯源 (初步完成对DeviceCloudActor 的事件溯源实现，后期可能需要加入其他actor）
+- 数据持久化，需要考虑对哪些数据进行持久化，采用哪种持久化方式
 - 消息通信规则比较死板，有没有替换方案
 - 设备接入之后，能够自发现
 - 对于新的运行时环境启动后，云端能够及时发现，并且云端如何能够保证运行时环境的状态，是否是活跃状态等？
