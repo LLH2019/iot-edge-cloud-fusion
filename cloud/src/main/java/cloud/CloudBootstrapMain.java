@@ -3,24 +3,17 @@ package cloud;
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Props;
-import akka.actor.typed.javadsl.Behaviors;
 import akka.http.javadsl.Http;
 import akka.http.javadsl.ServerBinding;
 import cloud.actor.BrainControlActor;
 import cloud.actor.CloudKafkaConnectInActor;
 import cloud.actor.MongoDBConnActor;
-import base.model.bean.DeviceModel;
 import base.model.bean.BasicCommon;
-import base.model.bean.Event;
-import base.model.bean.Profile;
-import base.model.connect.bean.KafkaConfig;
 import cloud.global.GlobalActorRefName;
 import cloud.global.GlobalAkkaPara;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.CompletionStage;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
