@@ -3,6 +3,8 @@ package edge;
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Props;
+import akka.management.cluster.bootstrap.ClusterBootstrap;
+import akka.management.javadsl.AkkaManagement;
 import base.model.bean.BasicCommon;
 import edge.actor.EdgeKafkaConnectInActor;
 import edge.actor.EdgeMqttConnectInActor;
@@ -24,8 +26,8 @@ public class EdgeBootstrapMain {
 
     public static void main(String[] args) {
         ActorSystem<Void> system = GlobalAkkaPara.system;
-//        AkkaManagement.get(system).start();
-//        ClusterBootstrap.get(system).start();
+        AkkaManagement.get(system).start();
+        ClusterBootstrap.get(system).start();
         init(system);
         logger.log(Level.INFO, "EdgeBootstrapMain init...");
     }
