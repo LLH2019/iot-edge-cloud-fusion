@@ -6,10 +6,9 @@
 
 - 此项目是一个利用基于JVM的akka框架编写的跨云、边对设备进行控制的一体化框架项目
 
-![image](https://user-images.githubusercontent.com/46324430/118606130-a21cee00-b7e9-11eb-95be-30ffe42f4ae3.png)
+![image](https://user-images.githubusercontent.com/46324430/118607138-d0e79400-b7ea-11eb-970e-3cd32a5968c7.png)
 
-![image](https://user-images.githubusercontent.com/46324430/117656927-8737f180-b1cb-11eb-990f-5f651978b3f7.png)
-
+![image](https://user-images.githubusercontent.com/46324430/118607176-dcd35600-b7ea-11eb-94ec-f5b3ed5ab5e6.png)
 
 
 主要涉及组件：
@@ -56,7 +55,7 @@
 
 如下图所示，主要存在以下几类Actor
 
-![image](https://user-images.githubusercontent.com/46324430/117657194-daaa3f80-b1cb-11eb-8134-e2e7e7be12e0.png)
+![image](https://user-images.githubusercontent.com/46324430/118607304-feccd880-b7ea-11eb-8d79-015367511a90.png)
 
 - Pod Actor， 对应于每一个运行时环境存在一个，初始化时创建
     - 主要功能如下
@@ -84,7 +83,7 @@
 
 如下图所示，主要存在以下几类actor
 
-![image](https://user-images.githubusercontent.com/46324430/118600925-33896180-b7e4-11eb-970a-155ec3b2eb8f.png)
+![image](https://user-images.githubusercontent.com/46324430/118607264-f5437080-b7ea-11eb-87e7-90f496bd2052.png)
 
 - Brain Actor， 云端的主要控制actor，运行时环境中只存在一个
     - 主要作用如下：
