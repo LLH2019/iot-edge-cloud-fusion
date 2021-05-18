@@ -6,7 +6,7 @@
 
 - 此项目是一个利用基于JVM的akka框架编写的跨云、边对设备进行控制的一体化框架项目
 
-![image](https://user-images.githubusercontent.com/46324430/118600635-d9889c00-b7e3-11eb-9897-6d3a059f4bd3.png)
+![image](https://user-images.githubusercontent.com/46324430/118606130-a21cee00-b7e9-11eb-95be-30ffe42f4ae3.png)
 
 ![image](https://user-images.githubusercontent.com/46324430/117656927-8737f180-b1cb-11eb-990f-5f651978b3f7.png)
 
