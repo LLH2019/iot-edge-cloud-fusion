@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import base.model.connect.bean.KafkaMsg;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author ：LLH
@@ -43,12 +44,12 @@ public class CloudKafkaConnectOut {
 //        kafkaProducer.close();
     }
 
-    public RecordMetadata sendMessageSync(String topic, String key, String value) throws Exception{
+    public void sendMessageSync(String topic, String key, String value) throws Exception{
         ProducerRecord<String,String> record = new ProducerRecord<String,String>(
                 topic, key,value
         );
         RecordMetadata result = (RecordMetadata) kafkaProducer.send(record).get();
-        return result;
+        System.out.println(result);
     }
 
     public void sendMessageCallback(String topic, String key, String value){
@@ -70,14 +71,14 @@ public class CloudKafkaConnectOut {
 //
 //        KafkaProducer kafkaProducer = new KafkaProducer(kafkaPropertie);
 //
-//        ProducerRecord<String, String> record = new ProducerRecord<String, String>("testTopic","key1","hello world");
+//        ProducerRecord<String, String> record = new ProducerRecord<String, String>("test","key2","hello world");
 //
 //        kafkaProducer.send(record);
 //
 //    }
     
     
-
+//
 //    public static void main(String[] args) throws ExecutionException, InterruptedException {
 //        Properties kafkaPropertie = new Properties();
 //        //配置broker地址，配置多个容错
@@ -88,11 +89,11 @@ public class CloudKafkaConnectOut {
 //
 //        KafkaProducer kafkaProducer = new KafkaProducer(kafkaPropertie);
 //        //创建消息对象，第一个为参数topic,第二个参数为key,第三个参数为value
-//        ProducerRecord<String, String> record = new ProducerRecord<String, String>("testTopic","key1","hello world");
+//        ProducerRecord<String, String> record = new ProducerRecord<String, String>("test","key1","hello world");
 //
 //        //同步发送方式,get方法返回结果
 //        RecordMetadata metadata = (RecordMetadata) kafkaProducer.send(record).get();
-//        System.out.println("broker返回消息发送信息" + metadata);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        //        System.out.println("broker返回消息发送信息" + metadata);
 //
 //    }
 
