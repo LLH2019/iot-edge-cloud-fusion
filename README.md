@@ -78,6 +78,10 @@
 - EdgeMqttConnectInActor，每一个运行时环境存在一个，初始化时新建
     - 主要功能如下：
         - 接收来自于 Mqtt Broker 消息，然后根据 topic 转发给不同的 Device Actor 做相应处理
+- KafkaConnectIn，为KafkaConsumer的封装，接收kafka消息，然后转发给注册到其上的EdgeKafkaConnectInActor
+- KafkaConnectOut，为KafkaProducer的封装，发送kafka消息
+- MqttConnect，为mqttClient的封装，接收和发送mqtt消息
+- 此处，KafkaConnectIn、KafkaConnectOut、MqttConnect可理解为消息接收与发送件
 
 云端
 
